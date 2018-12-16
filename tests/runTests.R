@@ -1,0 +1,1 @@
+BiocGenerics:::testPackage('PCAtools')
