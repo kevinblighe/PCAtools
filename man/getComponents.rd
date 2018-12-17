@@ -58,27 +58,4 @@ Kevin Blighe <kevin@clinicalbioinformatics.co.uk>, Myles Lewis <myles.lewis@qmul
   p <- pca(mat, metadata = metadata, removeVar = 0.1)
 
   getComponents(p)
-
-  getVars(p)
-
-  screeplot(p)
-
-  screeplot(p, hline = 80)
-
-  biplot(p)
-
-  biplot(p, colby = 'Group', shape = 'Group')
-
-  biplot(p, colby = 'Group', colkey = c(A = 'forestgreen', B = 'gold'),
-    legendPosition = 'right')
-
-  biplot(p, colby = 'Group', colkey = c(A='forestgreen', B='gold'),
-    shape = 'Group', shapekey = c(A=10, B=21), legendPosition = 'bottom')
-
-  pairsplot(p, triangle = TRUE, plottitles = FALSE)
-
-  plotloadings(p, drawConnectors=TRUE)
-
-  eigencorplot(p, components = getComponents(p, 1:10),
-    metavars = c('ESR', 'CRP'))
 }
