@@ -2,13 +2,13 @@
 
 \alias{plotloadings}
 
-\title{PCAtools: everything Principal Components Analysis}
+\title{plotloadings}
 
 \description{Plot the component loadings for selected principal components / eigenvectors and label variables driving variation along these.}
 
 \usage{
   plotloadings(pcaobj,
-  components = getComponents(pcaobj, seq(1, 5)),
+  components = getComponents(pcaobj, seq_len(5)),
   rangeRetain = 0.05,
   absolute = FALSE,
   col = c('gold', 'white', 'royalblue'),
@@ -63,13 +63,13 @@
 \arguments{
   \item{pcaobj}{Object of class 'pca' created by pca(). REQUIRED.}
   \item{components}{The principal components to be included in the plot.
-  DEFAULT = getComponents(pcaobj, seq(1, 5)). OPTIONAL.}
+  DEFAULT = getComponents(pcaobj, seq_len(5)). OPTIONAL.}
   \item{rangeRetain}{Cut-off value for retaining variables. The function
   will look across each specified principal component and retain the variables
   that fall within this top/bottom fraction of the loadings range. DEFAULT
   = 0.05. OPTIONAL.}
-  \item{absolute}{Plot absolute loadings? (TRUE / FALSE). DEFAULT = FALSE.
-  OPTIONAL.}
+  \item{absolute}{Logical, indicating whether or not to plot absolute loadings.
+  DEFAULT = FALSE. OPTIONAL.}
   \item{col}{Colours used for generation of fill gradient according to
   loadings values. Can be 2 or 3 colours. DEFAULT =
   c('gold', 'white', 'royalblue'). OPTIONAL.}
@@ -88,8 +88,9 @@
   \item{labSize}{Size of labels. DEFAULT = 2.0. OPTIONAL.}
   \item{labhjust}{Horizontal adjustment of label. DEFAULT = 1.5. OPTIONAL.}
   \item{labvjust}{Vertical adjustment of label. DEFAULT = 0. OPTIONAL.}
-  \item{drawConnectors}{Fit labels onto plot and connect to their respective
-  points by line connectors (TRUE/FALSE). DEFAULT = FALSE. OPTIONAL.}
+  \item{drawConnectors}{Logical, indicating whether or not to connect plot
+  labels to their corresponding points by line connectors. DEFAULT = TRUE.
+  OPTIONAL.}
   \item{positionConnectors}{Position of the connectors and their labels with
   respect to the plotted points ('left', 'right'). DEFAULT = 'right'.
   OPTIONAL.}
@@ -136,19 +137,17 @@
   'dotdash', 'longdash', 'twodash'). DEFAULT = 'longdash'. OPTIONAL.}
   \item{vlineCol}{Colour of vline. DEFAULT = 'black'. OPTIONAL.}
   \item{vlineWidth}{Width of vline. DEFAULT = 0.4. OPTIONAL.}
-  \item{gridlines.major}{Draw major gridlines? (TRUE/FALSE). DEFAULT = TRUE.
-  OPTIONAL.}
-  \item{gridlines.minor}{Draw minor gridlines? (TRUE/FALSE). DEFAULT = TRUE.
-  OPTIONAL.}
+  \item{gridlines.major}{Logical, indicating whether or not to draw major
+  gridlines. DEFAULT = TRUE. OPTIONAL.}
+  \item{gridlines.minor}{Logical, indicating whether or not to draw minor
+  gridlines. DEFAULT = TRUE. OPTIONAL.}
   \item{borderWidth}{Width of the border on the x and y axes. DEFAULT = 0.8.
   OPTIONAL.}
   \item{borderColour}{Colour of the border on the x and y axes. DEFAULT =
   'black'. OPTIONAL.}
-  \item{returnPlot}{Return the plot object? (TRUE/FALSE). DEFAULT = TRUE.
-  OPTIONAL.}
+  \item{returnPlot}{Logical, indicating whether or not to return the plot
+  object. DEFAULT = TRUE. OPTIONAL.}
 }
-
-\details{Plot the component loadings for selected principal components / eigenvectors and label variables driving variation along these.}
 
 \value{
 A \code{\link{ggplot2}} object.

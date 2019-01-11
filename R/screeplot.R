@@ -46,7 +46,7 @@ screeplot <- function(
   plotobj <- data.frame(components, pcaobj$variance[components])
   colnames(plotobj) <- c('PC', 'Variance')
   plotobj$PC <- factor(plotobj$PC,
-    levels=plotobj$PC[seq_len(length(plotobj$PC))])
+    levels=plotobj$PC[seq_along(plotobj$PC)])
 
   # create a base theme that will later be modified
   th <- theme_bw(base_size=24) +
@@ -82,7 +82,7 @@ screeplot <- function(
   }
 
   # add cumulative sum points as geom_point
-  if (drawCumulativeSumLine == TRUE) {
+  if (drawCumulativeSumPoints == TRUE) {
     plot <- plot + geom_point(aes(y = cumsum(Variance)),
       colour = colCumulativeSumPoints,
       size = sizeCumulativeSumPoints,

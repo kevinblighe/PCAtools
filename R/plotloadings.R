@@ -1,6 +1,6 @@
 plotloadings <- function(
   pcaobj,
-  components = getComponents(pcaobj, seq(1, 5)),
+  components = getComponents(pcaobj, seq_len(5)),
   rangeRetain = 0.05,
   absolute = FALSE,
   col = c('gold', 'white', 'royalblue'),
@@ -54,7 +54,7 @@ plotloadings <- function(
   # filter in the variables in the top percentRetain of the loadings range
   x <- pcaobj$loadings[,components]
   retain <- c()
-  for (i in seq(length(components))) {
+  for (i in seq_along(components)) {
     # for each PC, based on the loadings range, calculate the rangeRetain
     # fraction of the range
     offset <- (max(x[,i]) - min(x[,i])) * rangeRetain
@@ -65,8 +65,8 @@ plotloadings <- function(
 
     # build a consensus list of variables that will be included
     retain <- unique(c(retain,
-      which((x[,i] >= uppercutoff) == TRUE),
-      which((x[,i] <= lowercutoff) == TRUE)))
+      which(x[,i] >= uppercutoff),
+      which(x[,i] <= lowercutoff)))
   }
   message('-- variables retained:')
   message(paste0(rownames(x)[retain], collapse = ', '))

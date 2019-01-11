@@ -1,6 +1,7 @@
 export('pca')
 export('getComponents')
 export('getVars')
+export('getLoadings')
 export('screeplot')
 export('biplot')
 export('pairsplot')

@@ -50,22 +50,25 @@ test_that('datatypes', {
   expect_type(getVars(components),
     c('language', 'character'))
 
+  # getLoadings
+  expect_is(getLoadings(pcaobj), class = 'pca')
+  expect_type(getLoadings(components),
+    c('language', 'character'))
+
   # pairsplot
   expect_is(pairsplot(pcaobj), class = 'pca')
   expect_type(pairsplot(components, x, y, colby, colkey, singlecol,
     legendPosition, selectLab, colConnectors, xlab, ylab, title,
-    subtitle, caption, hlineType, hlineCol, vlineType, vlineCol,
-    borderColour),
+    hlineType, hlineCol, vlineType, vlineCol, borderColour),
     c('language', 'character'))
-  expect_type(pairsplot(triangle, plottitles, plotaxeslab, drawConnectors,
+  expect_type(pairsplot(triangle, plotaxeslab, drawConnectors,
     gridlines.major, gridlines.minor, returnPlot),
     c('logical'))
   expect_type(pairsplot(trianglelabSize, margingaps, ncol, nrow, shape,
     shapekey, pointSize, legendLabSize, legendIconSize, xlim, ylim,
     labSize, labhjust, labvjust, widthConnectors, xlabAngle, xlabhjust,
     xlabvjust, ylabAngle, ylabhjust, ylabvjust, axisLabSize, titleLabSize,
-    subtitleLabSize, captionLabSize, hline, hlineWidth, vline, vlineWidth,
-    borderWidth),
+    hline, hlineWidth, vline, vlineWidth, borderWidth),
     c('double'))
 
   # plotloadings

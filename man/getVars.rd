@@ -2,7 +2,7 @@
 
 \alias{getVars}
 
-\title{PCAtools: everything Principal Components Analysis}
+\title{getVars}
 
 \description{Return the explained variance for each principal component for an object of class 'pca'.}
 
@@ -18,8 +18,6 @@ getVars(
   variances will be returned. If NULL, all values will be returned. DEFAULT
   = NULL. OPTIONAL.}
 }
-
-\details{Return the explained variance for each principal component for an object of class 'pca'.}
 
 \value{
 A \code{\link{numeric}} object.

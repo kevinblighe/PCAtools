@@ -2,7 +2,7 @@
 
 \alias{screeplot}
 
-\title{PCAtools: everything Principal Components Analysis}
+\title{screeplot}
 
 \description{Draw a SCREE plot, showing the distribution of explained variance across all or select principal components / eigenvectors.}
 
@@ -74,14 +74,14 @@
   \item{subtitleLabSize}{Size of plot subtitle. DEFAULT = 12. OPTIONAL.}
   \item{captionLabSize}{Size of plot caption. DEFAULT = 12. OPTIONAL.}
   \item{colBar}{DEFAULT = 'dodgerblue'. OPTIONAL.}
-  \item{drawCumulativeSumLine}{Overlay plot with cumulative explained variance
-  line? (TRUE/FALSE). DEFAULT = TRUE. OPTIONAL.}
+  \item{drawCumulativeSumLine}{Logical, indicating whether or not to overlay
+  plot with a cumulative explained variance line. DEFAULT = TRUE. OPTIONAL.}
   \item{colCumulativeSumLine}{Colour of cumulative explained variance line.
   DEFAULT = 'red2'. OPTIONAL.}
   \item{sizeCumulativeSumLine}{Size of cumulative explained variance line.
   DEFAULT = 1.5. OPTIONAL.}
-  \item{drawCumulativeSumPoints}{Draw cumulative explained variance points?
-  (TRUE/FALSE). DEFAULT = TRUE. OPTIONAL.}
+  \item{drawCumulativeSumPoints}{Logical, indicating whether or not to draw
+  the cumulative explained variance points. DEFAULT = TRUE. OPTIONAL.}
   \item{colCumulativeSumPoints}{Colour of cumulative explained variance
   points. DEFAULT = 'red2'. OPTIONAL.}
   \item{sizeCumulativeSumPoints}{Size of cumulative explained variance points.
@@ -102,19 +102,17 @@
   'dotdash', 'longdash', 'twodash'). DEFAULT = 'longdash'. OPTIONAL.}
   \item{vlineCol}{Colour of vline. DEFAULT = 'black'. OPTIONAL.}
   \item{vlineWidth}{Width of vline. DEFAULT = 0.4. OPTIONAL.}
-  \item{gridlines.major}{Draw major gridlines? (TRUE/FALSE). DEFAULT = TRUE.
-  OPTIONAL.}
-  \item{gridlines.minor}{Draw minor gridlines? (TRUE/FALSE). DEFAULT = TRUE.
-  OPTIONAL.}
+  \item{gridlines.major}{Logical, indicating whether or not to draw major
+  gridlines. DEFAULT = TRUE. OPTIONAL.}
+  \item{gridlines.minor}{Logical, indicating whether or not to draw minor
+  gridlines. DEFAULT = TRUE. OPTIONAL.}
   \item{borderWidth}{Width of the border on the x and y axes. DEFAULT = 0.8.
   OPTIONAL.}
   \item{borderColour}{Colour of the border on the x and y axes. DEFAULT =
   'black'. OPTIONAL.}
-  \item{returnPlot}{Return the plot object? (TRUE/FALSE). DEFAULT = TRUE.
-  OPTIONAL.}
+  \item{returnPlot}{Logical, indicating whether or not to return the plot
+  object. DEFAULT = TRUE. OPTIONAL.}
 }
-
-\details{Draw a SCREE plot, showing the distribution of explained variance across all or select principal components / eigenvectors.}
 
 \value{
 A \code{\link{ggplot2}} object.

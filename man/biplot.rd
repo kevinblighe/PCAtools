@@ -2,7 +2,7 @@
 
 \alias{biplot}
 
-\title{PCAtools: everything Principal Components Analysis}
+\title{biplot}
 
 \description{Draw a bi-plot, comparing 2 selected principal components / eigenvectors.}
 
@@ -89,16 +89,17 @@
   OPTIONAL.}
   \item{xlim}{Limits of the x-axis. DEFAULT = NULL. OPTIONAL.}
   \item{ylim}{Limits of the y-axis. DEFAULT = NULL. OPTIONAL.}
-  \item{lab}{Label the points in the plot space? (TRUE/FALSE). Labels will be
-  taken as the original colnames of the input object, usually sample IDs.
-  DEFAULT = TRUE. OPTIONAL.}
+  \item{lab}{Logical, indicating whether or not to label the points in the
+  plot space. Labels will be taken as the original colnames of the input
+  object, usually sample IDs. DEFAULT = TRUE. OPTIONAL.}
   \item{labSize}{Size of labels. DEFAULT = 3.0. OPTIONAL.}
   \item{labhjust}{Horizontal adjustment of label. DEFAULT = 1.5. OPTIONAL.}
   \item{labvjust}{Vertical adjustment of label. DEFAULT = 0. OPTIONAL.}
   \item{selectLab}{A vector containing a subset of lab to plot. DEFAULT =
   NULL. OPTIONAL.}
-  \item{drawConnectors}{Fit labels onto plot and connect to their respective
-  points by line connectors (TRUE/FALSE). DEFAULT = TRUE. OPTIONAL.}
+  \item{drawConnectors}{Logical, indicating whether or not to connect plot
+  labels to their corresponding points by line connectors. DEFAULT = TRUE.
+  OPTIONAL.}
   \item{widthConnectors}{Line width of connectors. DEFAULT = 0.5. OPTIONAL.}
   \item{colConnectors}{Line colour of connectors. DEFAULT = 'grey50'. OPTIONAL.}
   \item{xlab}{Label for x-axis. DEFAULT =
@@ -138,19 +139,17 @@
   'dotdash', 'longdash', 'twodash'). DEFAULT = 'longdash'. OPTIONAL.}
   \item{vlineCol}{Colour of vline. DEFAULT = 'black'. OPTIONAL.}
   \item{vlineWidth}{Width of vline. DEFAULT = 0.4. OPTIONAL.}
-  \item{gridlines.major}{Draw major gridlines? (TRUE/FALSE). DEFAULT = TRUE.
-  OPTIONAL.}
-  \item{gridlines.minor}{Draw minor gridlines? (TRUE/FALSE). DEFAULT = TRUE.
-  OPTIONAL.}
+  \item{gridlines.major}{Logical, indicating whether or not to draw major
+  gridlines. DEFAULT = TRUE. OPTIONAL.}
+  \item{gridlines.minor}{Logical, indicating whether or not to draw minor
+  gridlines. DEFAULT = TRUE. OPTIONAL.}
   \item{borderWidth}{Width of the border on the x and y axes. DEFAULT = 0.8.
   OPTIONAL.}
   \item{borderColour}{Colour of the border on the x and y axes. DEFAULT =
   'black'. OPTIONAL.}
-  \item{returnPlot}{Return the plot object? (TRUE/FALSE). DEFAULT = TRUE.
-  OPTIONAL.}
+  \item{returnPlot}{Logical, indicating whether or not to return the plot
+  object. DEFAULT = TRUE. OPTIONAL.}
 }
-
-\details{Draw a bi-plot, comparing 2 selected principal components / eigenvectors.}
 
 \value{
 A \code{\link{ggplot2}} object.

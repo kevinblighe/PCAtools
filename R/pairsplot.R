@@ -1,9 +1,8 @@
 pairsplot <- function(
   pcaobj,
-  components = getComponents(pcaobj, seq(1, 5)),
+  components = getComponents(pcaobj, seq_len(5)),
   triangle = TRUE,
   trianglelabSize = 18,
-  plottitles = FALSE,
   plotaxes = TRUE,
   margingaps = unit(c(0.1, 0.1, 0.1, 0.1), 'cm'),
   ncol = NULL,
@@ -39,12 +38,8 @@ pairsplot <- function(
   ylabhjust = 0.5,
   ylabvjust = 0.5,
   axisLabSize = 10,
-  title = '',
-  subtitle = '',
-  caption = '',
-  titleLabSize = 10,
-  subtitleLabSize = 6,
-  captionLabSize = 6,
+  title = NULL,
+  titleLabSize = 32,
   hline = NULL,
   hlineType = 'longdash',
   hlineCol = 'black',
@@ -123,12 +118,6 @@ pairsplot <- function(
           ylabhjust = ylabhjust,
           ylabvjust = ylabvjust,
           axisLabSize = axisLabSize,
-          title = title,
-          subtitle = subtitle,
-          caption = caption,
-          titleLabSize = titleLabSize,
-          subtitleLabSize = subtitleLabSize,
-          captionLabSize = captionLabSize,
           pointSize = pointSize,
           labSize = labSize,
           labhjust = labhjust,
@@ -158,6 +147,19 @@ pairsplot <- function(
       }
     }
   }
+
+  # specify margin (gaps and titles) that will be added to each plot
+  # remove titles, subtitles, caption
+  margin <- theme(
+    plot.margin = margingaps,
+    plot.title = element_blank(),
+    plot.subtitle = element_blank(),
+    plot.caption = element_blank())
+
+  # save the title as a ggdraw object
+  title <- ggdraw() + draw_label(title,
+    fontface = 'bold',
+    size = titleLabSize)
 
   # triangular layout?
   # with triangular layout, empty space is filled as empty
@@ -197,25 +199,6 @@ pairsplot <- function(
       }
     }
 
-    # remove or keep titles, subtitles, caption
-    # (removing saves valuable space)?
-    if (plottitles == FALSE) {
-      margin <- theme(
-        plot.margin = margingaps,
-        plot.title = element_blank(),
-        plot.subtitle = element_blank(),
-        plot.caption = element_blank())
-    } else if (plottitles == TRUE) {
-      margin <- theme(
-        plot.margin = margingaps,
-        plot.title = element_text(angle = 0, size = titleLabSize,
-          face = 'bold', vjust = 1),
-        plot.subtitle = element_text(angle = 0, size = subtitleLabSize,
-          face = 'plain', vjust = 1),
-        plot.caption=element_text(angle = 0, size = captionLabSize,
-          face = 'plain', vjust = 1))
-    }
-
     # remove axis labels and ticks?
     if (plotaxes == FALSE) {
       margin <- margin + theme(
@@ -234,9 +217,15 @@ pairsplot <- function(
 
     # return plot?
     if (returnPlot == TRUE) {
-      return(do.call(plot_grid, c(biplots.final, ncol = ncol, nrow = nrow)))
+      return(plot_grid(title,
+        do.call(plot_grid, c(biplots.final, ncol = ncol, nrow = nrow)),
+        ncol = 1,
+        rel_heights = c(0.1, 1)))
     } else if (returnPlot == FALSE) {
-      do.call(plot_grid, c(biplots.final, ncol = ncol, nrow = nrow))
+      plot_grid(title,
+        do.call(plot_grid, c(biplots.final, ncol = ncol, nrow = nrow)),
+        ncol = 1,
+        rel_heights = c(0.1, 1))
     }
 
   # triangular layout?
@@ -252,14 +241,6 @@ pairsplot <- function(
     } else {
       nrow <- nrow
     }
-
-    # if triangle == FALSE, titles, subtitles, captions
-    # are not included
-    margin <- theme(
-      plot.margin = margingaps,
-      plot.title = element_blank(),
-      plot.subtitle = element_blank(),
-      plot.caption = element_blank())
 
     # remove axis labels and ticks?
     if (plotaxes == FALSE) {
@@ -278,9 +259,15 @@ pairsplot <- function(
 
     # return plot?
     if (returnPlot == TRUE) {
-      return(do.call(plot_grid, c(biplots, ncol = ncol, nrow = nrow)))
+      return(plot_grid(title,
+        do.call(plot_grid, c(biplots.final, ncol = ncol, nrow = nrow)),
+        ncol = 1,
+        rel_heights = c(0.1, 1)))
     } else if (returnPlot == FALSE) {
-      do.call(plot_grid, c(biplots, ncol = ncol, nrow = nrow))
+      plot_grid(title,
+        do.call(plot_grid, c(biplots.final, ncol = ncol, nrow = nrow)),
+        ncol = 1,
+        rel_heights = c(0.1, 1))
     }
   }
 }

@@ -1,25 +1,26 @@
-\name{getComponents}
+\name{getLoadings}
 
-\alias{getComponents}
+\alias{getLoadings}
 
-\title{getComponents}
+\title{getLoadings}
 
-\description{Return the principal component labels for an object of class 'pca'.}
+\description{Return component loadings for principal components from an object of class 'pca'.}
 
 \usage{
-getComponents(
+getLoadings(
   pcaobj,
   components = NULL)
 }
 
 \arguments{
   \item{pcaobj}{Object of class 'pca' created by pca(). REQUIRED.}
-  \item{components}{Indices of the principal components whose names will be
-  returned. If NULL, all PC names will be returned. DEFAULT = NULL. OPTIONAL.}
+  \item{components}{Indices of the principal components whose component loadings
+  will be returned. If NULL, all PC names will be returned. DEFAULT = NULL.
+  OPTIONAL.}
 }
 
 \value{
-A \code{\link{character}} object.
+A \code{\link{data.frame}} object.
 }
 
 \author{
@@ -55,5 +56,5 @@ Kevin Blighe <kevin@clinicalbioinformatics.co.uk>, Myles Lewis <myles.lewis@qmul
 
   p <- pca(mat, metadata = metadata, removeVar = 0.1)
 
-  getComponents(p)
+  getLoadings(p)
 }

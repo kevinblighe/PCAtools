@@ -2,7 +2,7 @@
 
 \alias{pca}
 
-\title{PCAtools: everything Principal Components Analysis}
+\title{pca}
 
 \description{Principal Components Analysis (PCA) is a very powerful technique that has wide applicability in data science, bioinformatics, and further afield. It was initially developed to analyse large volumes of data in order to tease out the differences/relationships between the logical entities being analysed. It extracts the fundamental structure of the data without the need to build any model to represent it. This 'summary' of the data is arrived at through a process of reduction that can transform the large number of variables into a lesser number that are uncorrelated, i.e., the principal components', whilst at the same time being capable of easy interpretation on the original data.}
 
@@ -28,8 +28,6 @@ pca(
   \item{removeVar}{Remove this % of variables based on low variance.
   DEFAULT = NULL. OPTIONAL.}
 }
-
-\details{Principal Components Analysis (PCA) is a very powerful technique that has wide applicability in data science, bioinformatics, and further afield. It was initially developed to analyse large volumes of data in order to tease out the differences/relationships between the logical entities being analysed. It extracts the fundamental structure of the data without the need to build any model to represent it. This 'summary' of the data is arrived at through a process of reduction that can transform the large number of variables into a lesser number that are uncorrelated, i.e., the 'principal components', whilst at the same time being capable of easy interpretation on the original data.}
 
 \value{
 A \code{\link{pca}} object.
@@ -72,6 +70,8 @@ Kevin Blighe <kevin@clinicalbioinformatics.co.uk>, Myles Lewis <myles.lewis@qmul
 
   getVars(p)
 
+  getLoadings(p)
+
   screeplot(p)
 
   screeplot(p, hline = 80)
@@ -86,7 +86,7 @@ Kevin Blighe <kevin@clinicalbioinformatics.co.uk>, Myles Lewis <myles.lewis@qmul
   biplot(p, colby = 'Group', colkey = c(A='forestgreen', B='gold'),
     shape = 'Group', shapekey = c(A=10, B=21), legendPosition = 'bottom')
 
-  pairsplot(p, triangle = TRUE, plottitles = FALSE)
+  pairsplot(p, triangle = TRUE)
 
   plotloadings(p, drawConnectors=TRUE)
 

@@ -1,6 +1,6 @@
 eigencorplot <- function(
   pcaobj,
-  components = getComponents(pcaobj, seq(1, 10)),
+  components = getComponents(pcaobj, seq_len(10)),
   metavars,
   titleX = '',
   cexTitleX = 1.0,

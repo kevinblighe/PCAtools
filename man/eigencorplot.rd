@@ -2,13 +2,13 @@
 
 \alias{eigencorplot}
 
-\title{PCAtools: everything Principal Components Analysis}
+\title{eigencorplot}
 
 \description{Correlate principal components to continuous variable metadata and test significancies of these.}
 
 \usage{
 eigencorplot(pcaobj,
-  components = getComponents(pcaobj, seq(1, 10)),
+  components = getComponents(pcaobj, seq_len(10)),
   metavars,
   titleX = '',
   cexTitleX = 1.0,
@@ -54,7 +54,7 @@ eigencorplot(pcaobj,
 \arguments{
   \item{pcaobj}{Object of class 'pca' created by pca(). REQUIRED.}
   \item{components}{The principal components to be included in the plot.
-  DEFAULT = getComponents(pcaobj, seq(1, 10)). OPTIONAL.}
+  DEFAULT = getComponents(pcaobj, seq_len(10)). OPTIONAL.}
   \item{metavars}{A vector of column names in metadata representing continuos
   variables. REQUIRED.}
   \item{titleX}{X-axis title. DEFAULT = ''. OPTIONAL.}
@@ -92,8 +92,8 @@ eigencorplot(pcaobj,
   \item{colCorval}{Correlation values colour. DEFAULT = 'black'. OPTIONAL.}
   \item{fontCorval}{Correlation values font style. 1, plain; 2, bold; 3,
   italic; 4, bold-italic. DEFAULT = 1. OPTIONAL.}
-  \item{scale}{Scale the colour range to max and min cor values?
-  DEFAULT = TRUE. OPTIONAL.}
+  \item{scale}{Logical, indicating whether or not to scale the colour range
+  to max and min cor values. DEFAULT = TRUE. OPTIONAL.}
   \item{main}{Plot title. DEFAULT = ''. OPTIONAL.}
   \item{cexMain}{Plot title cex. DEFAULT = 2. OPTIONAL.}
   \item{rotMain}{Plot title rotation in degrees. DEFAULT = 0. OPTIONAL.}
@@ -111,13 +111,11 @@ eigencorplot(pcaobj,
   \item{signifCutpoints}{Cut-points for statistical significance. DEFAULT =
   c(0, 0.001, 0.01, 0.05, 1). OPTIONAL.}
   \item{colFrame}{Frame colour. DEFAULT = 'white'. OPTIONAL.}
-  \item{plotRsquared}{Plot R-squared values? TRUE / FALSE. DEFAULT = FALSE.
-  OPTIONAL.}
-  \item{returnPlot}{Return the plot object? (TRUE/FALSE). DEFAULT = TRUE.
-  OPTIONAL.}
+  \item{plotRsquared}{Logical, indicating whether or not to plot R-squared
+  values. DEFAULT = FALSE. OPTIONAL.}
+  \item{returnPlot}{Logical, indicating whether or not to return the plot
+  object. DEFAULT = TRUE. OPTIONAL.}
 }
-
-\details{Correlate principal components to continuous variable metadata and test significancies of these.}
 
 \value{
 A \code{\link{lattice}} object.

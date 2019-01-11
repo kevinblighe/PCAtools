@@ -1,2 +1,3 @@
 CHANGES IN VERSION 1.0.0
 ------------------------
+ - added new function getLoadings, which returns component loadings

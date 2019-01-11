@@ -10,7 +10,7 @@ pca <- function(
   # if metadata specified, enforce rule that rownames(metadata) is the
   # same as colnames(mat)
   if (!is.null(metadata)) {
-    if (all((colnames(mat) == rownames(metadata)) == TRUE) == FALSE) {
+    if(!all(colnames(mat) == rownames(metadata))) {
       stop('Colnames of \'mat\' object must equal and be in the same',
         ' order as the rownames of metadata')
     }
