@@ -260,12 +260,12 @@ pairsplot <- function(
     # return plot?
     if (returnPlot == TRUE) {
       return(plot_grid(title,
-        do.call(plot_grid, c(biplots.final, ncol = ncol, nrow = nrow)),
+        do.call(plot_grid, c(biplots, ncol = ncol, nrow = nrow)),
         ncol = 1,
         rel_heights = c(0.1, 1)))
     } else if (returnPlot == FALSE) {
       plot_grid(title,
-        do.call(plot_grid, c(biplots.final, ncol = ncol, nrow = nrow)),
+        do.call(plot_grid, c(biplots, ncol = ncol, nrow = nrow)),
         ncol = 1,
         rel_heights = c(0.1, 1))
     }

@@ -1,6 +1,6 @@
 ---
 title: "PCAtools: everything Principal Components Analysis"
-author: "Kevin Blighe, Myles Lewis"
+author: "Kevin Blighe"
 date: "`r Sys.Date()`"
 package: "`r packageVersion('PCAtools')`"
 output:
@@ -20,12 +20,10 @@ vignette: >
 
 Principal Components Analysis (PCA) is a very powerful technique that has wide applicability in data science, bioinformatics, and further afield. It was initially developed to analyse large volumes of data in order to tease out the differences/relationships between the logical entities being analysed. It extracts the fundamental structure of the data without the need to build any model to represent it. This 'summary' of the data is arrived at through a process of reduction that can transform the large number of variables into a lesser number that are uncorrelated (i.e. the ‘principal components'), whilst at the same time being capable of easy interpretation on the original data [@BligheK] [@PCAtools].
 
-
 ```{r, echo=FALSE}
 
     library(knitr)
-
-    opts_chunk$set(tidy = TRUE, message = FALSE, warning = FALSE)
+    opts_chunk$set(tidy = FALSE, message = FALSE, warning = FALSE)
 
 ```
 
@@ -36,9 +34,7 @@ Principal Components Analysis (PCA) is a very powerful technique that has wide a
 ```{r getPackage, eval=FALSE}
 
     if (!requireNamespace('BiocManager', quietly = TRUE))
-
         install.packages('BiocManager')
-
         BiocManager::install('PCAtools')
 
 ```
@@ -59,7 +55,6 @@ Note: to install development version:
 
 ```
 
-
 # Quick start
 
 For this vignette, we will load breast cancer gene expression data with
@@ -72,7 +67,6 @@ First, let's read in and prepare the data:
 ```{r}
 
   library(Biobase)
-
   library(GEOquery)
 
   # load series and platform data from GEO
@@ -117,7 +111,7 @@ First, let's read in and prepare the data:
   x <- x[,which(colnames(x) %in% rownames(metadata))]
 
   # check that sample names match exactly between pdata and expression data 
-  all((colnames(x) == rownames(metadata)) == TRUE)
+  all(colnames(x) == rownames(metadata))
 
 ```
 
@@ -129,56 +123,51 @@ Conduct principal components analysis (PCA)
 
 ```
 
-## Plot a SCREE plot to show the proportion of explained variance by PC
+## A SCREE plot
 
 
-```{r ex1, fig.height = 7, fig.width = 16, fig.cap = 'Basic SCREE plot.'}
+```{r ex1, fig.height = 7, fig.width = 16, fig.cap = 'Figure 1: A SCREE plot to show the proportion of explained variance by PC'}
 
   screeplot(p)
 
-
 ```
 
-## Plot a bi-plot of PC1 versus PC2
+## A bi-plot
 
 
-```{r ex2, fig.height = 7, fig.width = 8, fig.cap = 'Basic bi-plot.'}
+```{r ex2, fig.height = 7, fig.width = 8, fig.cap = 'Figure 2: A bi-plot of PC1 versus PC2'}
 
   biplot(p)
 
-
 ```
 
-## Produce a pairs plot, comparing PC1 - PC5 on a pairwise basis
+## A pairs plot
 
 
-```{r ex3, fig.height = 10, fig.width = 10, fig.cap = 'Basic pairs plot.'}
+```{r ex3, fig.height = 10, fig.width = 10, fig.cap = 'Figure 3: A pairs plot, comparing PC1 - PC5 on a pairwise basis'}
 
   pairsplot(p)
 
-
 ```
 
-## Plot the component loadings and label genes most responsible for variation
+## A loadings plot
 
 
-```{r ex4, fig.height = 7, fig.width = 9, fig.cap = 'Basic loadings plot.'}
+```{r ex4, fig.height = 7, fig.width = 9, fig.cap = 'Figure 4: Plot the component loadings and label genes most responsible for variation'}
 
   plotloadings(p)
 
-
 ```
 
-## Correlate PCs to metadata variables
+## An eigencor plot
 
 
-```{r ex5, fig.height = 5, fig.width = 9, fig.cap = 'Basic eigencor plot.'}
+```{r ex5, fig.height = 5, fig.width = 9, fig.cap = 'Figure 5: Correlate PCs to metadata variables'}
 
   eigencorplot(p,
     metavars = c('Age','Distant.RFS','ER','GGI','Grade','Size','Time.RFS'))
 
 ```
-
 
 # Advanced features
 
@@ -195,16 +184,13 @@ satisfy a certain threshold for expalined variation in a dataset.
 Horizontal and vertical lines can be added to the plot via 'hline' and 'vline'.
 We can add a text label with geom_text().
 
-```{r ex6, fig.height = 7, fig.width = 10, fig.cap = 'Advanced SCREE.'}
+```{r ex6, fig.height = 7, fig.width = 10, fig.cap = 'Figure 6: Advanced SCREE plot illustrating number of PCs comprising at least 80% explained variation'}
 
   library(ggplot2)
 
   screeplot(p,
-
     components = getComponents(p, 1:30),
-
     hline = 80, vline = 27) +
-
     geom_text(aes(20, 80, label = '80% explained variation', vjust = -1))
 
 ```
@@ -222,48 +208,36 @@ In a bi-plot, we can shade the points by different groups and add many more feat
 
 ### Colour by a factor from the metadata, add lines through center, and add legend
 
-```{r ex7, fig.height = 7, fig.width = 9, fig.cap = 'Advanced bi-plot I.'}
+```{r ex7, fig.height = 7, fig.width = 9, fig.cap = 'Figure 7: adding lines and a legend to a bi-plot'}
 
   biplot(p,
-
     colby = 'ER',
-
     hline = 0, vline = 0,
-
     legendPosition = 'right')
 
 ```
 
 ### Supply custom colours, add more lines, and increase legend size
 
-```{r ex8, fig.height = 8, fig.width = 8, fig.cap = 'Advanced bi-plot II.'}
+```{r ex8, fig.height = 8, fig.width = 8, fig.cap = 'Figure 8: supplying custom colours to a bi-plot'}
 
   biplot(p,
-
     colby = 'ER', colkey = c('ER+'='forestgreen', 'ER-'='purple'),
-
     hline = 0, vline = c(-25, 0, 25),
-
     legendPosition = 'top', legendLabSize = 16, legendIconSize = 8.0)
 
 ```
 
 ### Change shape based on tumour grade, remove connectors, and add titles
 
-```{r ex9, fig.height = 8, fig.width = 8, fig.cap = 'Advanced bi-plot III.'}
+```{r ex9, fig.height = 8, fig.width = 8, fig.cap = 'Figure 9: supplying custom colours and shapes to a bi-plot, removing connectors, and modifying titles'}
 
   biplot(p,
-
     colby = 'ER', colkey = c('ER+'='forestgreen', 'ER-'='purple'),
-
     hline = 0, vline = c(-25, 0, 25),
-
     legendPosition = 'top', legendLabSize = 16, legendIconSize = 8.0,
-
     shape = 'Grade', shapekey = c('Grade 1'=15, 'Grade 2'=17, 'Grade 3'=8),
-
     drawConnectors = FALSE,
-
     title = 'PCA bi-plot',
     subtitle = 'PC1 versus PC2',
     caption = '27 PCs == 80%')
@@ -272,28 +246,18 @@ In a bi-plot, we can shade the points by different groups and add many more feat
 
 ### Remove labels, modify line types, remove gridlines, and increase point size
 
-```{r ex10, fig.height = 7, fig.width = 9, fig.cap = 'Advanced bi-plot IV.'}
+```{r ex10, fig.height = 7, fig.width = 9, fig.cap = 'Figure 10: removing labels, modifying line types, removing gridlines, and increasing point size in a bi-plot'}
 
   biplot(p,
-
     lab = FALSE,
-
     colby = 'ER', colkey = c('ER+'='royalblue', 'ER-'='red3'),
-
     hline = 0, vline = c(-25, 0, 25),
-
     vlineType = c('dotdash', 'solid', 'dashed'),
-
     gridlines.major = FALSE, gridlines.minor = FALSE,
-
     pointSize = 5,
-
     legendPosition = 'left', legendLabSize = 16, legendIconSize = 8.0,
-
     shape = 'Grade', shapekey = c('Grade 1'=15, 'Grade 2'=17, 'Grade 3'=8),
-
     drawConnectors = FALSE,
-
     title = 'PCA bi-plot',
     subtitle = 'PC1 versus PC2',
     caption = '27 PCs == 80%')
@@ -302,39 +266,28 @@ In a bi-plot, we can shade the points by different groups and add many more feat
 
 ### Colour by a continuous variable (colour controlled by ggplot2 engine); plot other PCs
 
-```{r ex11, fig.height = 7, fig.width = 9, fig.cap = 'Advanced bi-plot V.'}
+```{r ex11, fig.height = 7, fig.width = 9, fig.cap = 'Figure 11: colouring by a continuous variable and plotting other PCs in a bi-plot'}
 
   biplot(p, x = 'PC10', y = 'PC50',
-
     lab = FALSE,
-
     colby = 'Age',
-
     hline = 0, vline = 0,
-
     hlineWidth = 1.0, vlineWidth = 1.0,
-
     gridlines.major = FALSE, gridlines.minor = TRUE,
-
     pointSize = 5,
-
     legendPosition = 'left', legendLabSize = 16, legendIconSize = 8.0,
-
     shape = 'Grade', shapekey = c('Grade 1'=15, 'Grade 2'=17, 'Grade 3'=8),
-
     drawConnectors = FALSE,
-
     title = 'PCA bi-plot',
     subtitle = 'PC10 versus PC50',
     caption = '27 PCs == 80%')
 
 ```
 
-
 ## Quickly explore potentially informative PCs via a pairs plot
 
 The pairs plot in PCA unfortunately suffers from a lack of use; however, for
-those who love exploring data and squeexing every last ounce of information of
+those who love exploring data and squeezing every last ounce of information out
 of data, a pairs plot provides for a relatively quick way to explore useful
 leads for other downstream analyses.
 
@@ -343,26 +296,17 @@ can shut off titles and axis labeling to save space. Reducing point size and
 colouring by a variable of interest can additionally help us to rapidly skim
 over the data.
 
-```{r ex12, fig.height = 9, fig.width = 8, fig.cap = 'Advanced pairs plot I.'}
+```{r ex12, fig.height = 9, fig.width = 8, fig.cap = 'Figure 12: Maximising available space in a pairs plot'}
 
   pairsplot(p,
-
     components = getComponents(p, c(1:10)),
-
     triangle = TRUE, trianglelabSize = 12,
-
     hline = 0, vline = 0,
-
     pointSize = 0.4,
-
     gridlines.major = FALSE, gridlines.minor = FALSE,
-
     colby = 'Grade',
-
-    plottitles = FALSE, plotaxes = FALSE,
-
+    title = 'Pairs plot', plotaxes = FALSE,
     margingaps = unit(c(-0.01, -0.01, -0.01, -0.01), 'cm'))
-
 
 ```
 
@@ -371,30 +315,19 @@ setting 'triangle = FALSE'. In this case, we can further control the layout
 with the 'ncol' and 'nrow' parameters, although, the function will
 automatically determine these based on your input data.
 
-```{r ex13, fig.height = 8, fig.width = 12, fig.cap = 'Advanced pairs plot II.'}
+```{r ex13, fig.height = 8, fig.width = 12, fig.cap = 'Figure 13: arranging a pairs plot horizontally'}
 
   pairsplot(p,
-
     components = getComponents(p, c(1,5,10,15,20,25,30,35,70)),
-
     triangle = FALSE,
-
     hline = 0, vline = 0,
-
     pointSize = 0.8,
-
     gridlines.major = FALSE, gridlines.minor = FALSE,
-
     colby = 'ER',
-
-    plottitles = FALSE, plotaxes = TRUE,
-
+    title = 'Pairs plot', plotaxes = TRUE,
     margingaps = unit(c(0.1, 0.1, 0.1, 0.1), 'cm'))
 
-
 ```
-
-
 
 ## Determine the variables that drive variation among each PC
 
@@ -411,24 +344,16 @@ cut-off for inclusion / exclusion of variables, we use 'rangeRetain', where
 0.01 equates to the top/bottom 1% of the loadings range per PC. We can also
 add a title, subtitle, and caption, and alter the shape and colour scheme.
 
-```{r ex14, fig.height = 7, fig.width = 10, fig.cap = 'Advanced plotloadings I'}
+```{r ex14, fig.height = 7, fig.width = 10, fig.cap = 'Figure 14: modifying cut-off for labeling in a loadings plot'}
 
   plotloadings(p,
-
     rangeRetain = 0.01,
-
     labSize = 3.0,
-
     title = 'Loadings plot',
-
     subtitle = 'PC1, PC2, PC3, PC4, PC5',
-
     caption = 'Top 1% variables',
-
     shape = 24,
-
     col = c('limegreen', 'black', 'red3'),
-
     drawConnectors = TRUE)
 
 ```
@@ -440,7 +365,6 @@ We can check the genes to which these relate by using biomaRt:
   library(biomaRt)
 
   mart <- useMart('ENSEMBL_MART_ENSEMBL')
-
   mart <- useDataset('hsapiens_gene_ensembl', mart)
 
   getBM(mart = mart,
@@ -454,7 +378,7 @@ We can check the genes to which these relate by using biomaRt:
 
 ```
 
-At least one interesting finding is 205225_at (ESR1), which is by far the gene
+At least one interesting finding is 205225_at (*ESR1*), which is by far the gene
 most responsible for variation along PC2. The previous bi-plots showed that
 this PC also segregated ER+ from ER- patients. The other results could be
 explored.
@@ -463,78 +387,53 @@ With the loadings plot, in addition, we can instead plot absolute values and
 modify the point sizes to be proportional to the loadings. We can also switch
 off the line connectors and plot the loadings for any PCs
 
-```{r ex15, fig.height = 9, fig.width = 11, fig.cap = 'Advanced plotloadings II'}
+```{r ex15, fig.height = 9, fig.width = 11, fig.cap = 'Figure 15: plotting absolute component loadings'}
 
   plotloadings(p,
-
     components = getComponents(p, c(1,5,10,15,20,25,30,35,70)),
-
     rangeRetain = 0.1,
-
     labSize = 3.0,
-
     absolute = TRUE,
-
     title = 'Loadings plot',
-
     subtitle = 'Misc PCs',
-
     caption = 'Top 10% variables',
-
     shape = 23, shapeSizeRange = c(1, 16),
-
     col = c('white', 'pink'),
-
     drawConnectors = FALSE)
 
 ```
 
-
 ## Correlate the principal components back to the clinical data
 
 Further exploration of the PCs can come through correlations with clinical data.
-This is also and mostly untapped resource in the era of 'big data' and can
-help to guide an analysis down a particular path (or not!).
+This is also a mostly untapped resource in the era of 'big data' and can help
+to guide an analysis down a particular path (or not!).
 
 We may wish, for example, to correlate all PCs that account for 80% variation in
 our dataset and then explore further the PCs that have statistically significant
 correlations.
 
-eigencorplot is built upon another function by the PCAtools developers, namely
+eigencorplot is built upon another function by the *PCAtools* developers, namely
 [CorLevelPlot](https://github.com/kevinblighe/CorLevelPlot). Further examples
 can be found there.
 
 
-```{r ex16, fig.height = 4, fig.width = 12, fig.cap = 'Advanced eigencorplot I.'}
+```{r ex16, fig.height = 4, fig.width = 12, fig.cap = 'Figure 16: correlating PCs that account for at least 80% variation to clinical variables'}
 
   eigencorplot(p,
-
     components = getComponents(p, 1:27),
-
     metavars = c('Age','Distant.RFS','ER','GGI','Grade','Size','Time.RFS'),
-
     col = c('darkblue', 'blue2', 'black', 'red2', 'darkred'),
-
     cexCorval = 0.7,
-
     colCorval = 'white',
-
     fontCorval = 2,
-
     posLab = 'bottomleft',
-
     rotLabX = 45,
-
     posColKey = 'top',
-
     cexLabColKey = 1.5,
-
     scale = TRUE,
-
     main = 'PC1-27 clinical correlations',
-
     colFrame = 'white',
-
     plotRsquared = FALSE)
 
 ```
@@ -542,45 +441,31 @@ can be found there.
 We can also supply different cut-offs for statistical significance, plot
 R-squared values, and specify correlation method:
 
-```{r ex17, fig.height = 5, fig.width = 12, fig.cap = 'Advanced eigencorplot I.'}
+```{r ex17, fig.height = 5, fig.width = 12, fig.cap = 'Figure 17: modifying cut-offs and symbols for statistical significance in eigencorplot'}
 
   eigencorplot(p,
-
     components = getComponents(p, 1:10),
-
     metavars = c('Age','Distant.RFS','ER','GGI','Grade','Size','Time.RFS'),
-
     col = c('white', 'cornsilk1', 'gold', 'forestgreen', 'darkgreen'),
-
     cexCorval = 1.2,
-
     fontCorval = 2,
-
     posLab = 'all',
-
     rotLabX = 45,
-
     scale = TRUE,
-
     main = bquote(Principal ~ component ~ Pearson ~ r^2 ~ clinical ~ correlates),
-
     plotRsquared = TRUE,
-
     corFUN = 'pearson',
-
     corUSE = 'pairwise.complete.obs',
-
     signifSymbols = c('****', '***', '**', '*', ''),
-
     signifCutpoints = c(0, 0.0001, 0.001, 0.01, 0.05, 1))
 
 ```
 
 Clearly, PC2 is coming across as the most interesting PC in this experiment,
-with highly sttatistically significant correlation (p<0.0001) to ER status,
+with highly statistically significant correlation (p<0.0001) to ER status,
 tumour grade, and GGI (genomic Grade Index), an indicator of response.
 It comes as no surprise that the gene driving most variationn along PC2 is
-ESR1, identified from our loadings plot.
+*ESR1*, identified from our loadings plot.
 
 This information is, of course, not new, but shows how PCA is much more than
 just a bi-plot used to identify outliers!
@@ -589,9 +474,7 @@ just a bi-plot used to identify outliers!
 
 ## Plot the entire project on a single panel
 
-
-
-```{r ex18, fig.height = 10, fig.width = 15, fig.cap = 'Plot multiple plots on the same page.'}
+```{r ex18, fig.height = 10, fig.width = 15, fig.cap = 'Figure 18: a merged panel of all PCAtools plots'}
 
   pscree <- screeplot(p, components = getComponents(p, 1:30),
     hline = 80, vline = 27, axisLabSize = 10, returnPlot = FALSE) +
@@ -602,7 +485,7 @@ just a bi-plot used to identify outliers!
     hline = 0, vline = 0,
     pointSize = 0.8, gridlines.major = FALSE, gridlines.minor = FALSE,
     colby = 'Grade',
-    plottitles = FALSE, plotaxes = FALSE,
+    title = 'Pairs plot', titleLabSize = 16, plotaxes = FALSE,
     margingaps = unit(c(0.01, 0.01, 0.01, 0.01), 'cm'),
     returnPlot = FALSE)
 
@@ -637,7 +520,7 @@ just a bi-plot used to identify outliers!
     posLab = 'all', 
     rotLabX = 45,
     scale = TRUE,
-    main = bquote(PC ~ clinical ~ correlates),
+    main = "PC clinical correlates",
     cexMain = 1.5,
     plotRsquared = FALSE,
     corFUN = 'pearson',
@@ -647,47 +530,30 @@ just a bi-plot used to identify outliers!
     returnPlot = FALSE)
 
     library(cowplot)
-
     library(ggplotify)
 
     top_row <- plot_grid(pscree, ppairs, pbiplot,
-
       ncol = 3,
-
-      labels = c('A', 'B', 'C'),
-
+      labels = c('A', 'B ', 'C'),
       label_fontfamily = 'serif',
-
       label_fontface = 'plain',
-
       label_size = 32,
-
       align = 'h',
-
       rel_widths = c(1.05, 0.9, 1.05))
 
     bottom_row <- plot_grid(ploadings,
-
       as.grob(peigencor),
-
       ncol = 2,
-
       labels = c('D', 'E'),
-
       label_fontfamily = 'serif',
-
       label_fontface = 'plain',
-
       label_size = 32,
-
       align = 'h',
-
       rel_widths = c(1.5, 1.5))
 
     plot_grid(top_row, bottom_row, ncol = 1, rel_heights = c(1.0, 1.0))
 
 ```
-
 
 # Acknowledgments
 
@@ -695,8 +561,6 @@ The development of *PCAtools* has benefited from contributions
 and suggestions from:
 
 Krushna Chandra Murmu
-
-
 
 # Session info
 

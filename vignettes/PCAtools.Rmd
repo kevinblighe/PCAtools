@@ -317,7 +317,7 @@ automatically determine these based on your input data.
 ```{r ex13, eval = FALSE, fig.height = 6, fig.width = 9, fig.cap = 'Figure 13: arranging a pairs plot horizontally'}
 
   pairsplot(p,
-    components = getComponents(p, c(1,5,10,15,20,25)),
+    components = getComponents(p, c(4,33,11,1)),
     triangle = FALSE,
     hline = 0, vline = 0,
     pointSize = 0.8,
@@ -389,10 +389,10 @@ off the line connectors and plot the loadings for any PCs
 ```{r ex15, eval = FALSE, fig.height = 9, fig.width = 11, fig.cap = 'Figure 15: plotting absolute component loadings'}
 
   plotloadings(p,
-    components = getComponents(p, c(1,5,10,15,20,25,30,35,70)),
+    components = getComponents(p, c(4,33,11,1)),
     rangeRetain = 0.1,
     labSize = 3.0,
-    absolute = TRUE,
+    absolute = FALSE,
     title = 'Loadings plot',
     subtitle = 'Misc PCs',
     caption = 'Top 10% variables',
@@ -481,7 +481,7 @@ just a bi-plot used to identify outliers!
     hline = 0, vline = 0,
     pointSize = 0.8, gridlines.major = FALSE, gridlines.minor = FALSE,
     colby = 'Grade',
-    title = 'Pairs plot', plotaxes = FALSE,
+    title = 'Pairs plot', titleLabSize = 16, plotaxes = FALSE,
     margingaps = unit(c(0.01, 0.01, 0.01, 0.01), 'cm'),
     returnPlot = FALSE)
 
