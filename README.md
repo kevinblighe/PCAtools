@@ -1,7 +1,7 @@
 PCAtools: everything Principal Components Analysis
 ================
 Kevin Blighe
-2019-01-11
+2019-01-12
 
 -   [Introduction](#introduction)
 -   [Installation](#installation)
