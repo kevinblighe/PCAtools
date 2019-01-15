@@ -220,12 +220,12 @@ pairsplot <- function(
       return(plot_grid(title,
         do.call(plot_grid, c(biplots.final, ncol = ncol, nrow = nrow)),
         ncol = 1,
-        rel_heights = c(0.1, 1)))
+        rel_heights = c(0.1, 1.0)))
     } else if (returnPlot == FALSE) {
       plot_grid(title,
         do.call(plot_grid, c(biplots.final, ncol = ncol, nrow = nrow)),
         ncol = 1,
-        rel_heights = c(0.1, 1))
+        rel_heights = c(0.1, 1.0))
     }
 
   # triangular layout?
@@ -262,12 +262,12 @@ pairsplot <- function(
       return(plot_grid(title,
         do.call(plot_grid, c(biplots, ncol = ncol, nrow = nrow)),
         ncol = 1,
-        rel_heights = c(0.1, 1)))
+        rel_heights = c(0.1, 1.0)))
     } else if (returnPlot == FALSE) {
       plot_grid(title,
         do.call(plot_grid, c(biplots, ncol = ncol, nrow = nrow)),
         ncol = 1,
-        rel_heights = c(0.1, 1))
+        rel_heights = c(0.1, 1.0))
     }
   }
 }

@@ -1,7 +1,7 @@
 PCAtools: everything Principal Components Analysis
 ================
 Kevin Blighe
-2019-01-12
+2019-01-15
 
 -   [Introduction](#introduction)
 -   [Installation](#installation)
@@ -417,7 +417,7 @@ Further exploration of the PCs can come through correlations with clinical data.
 
 We may wish, for example, to correlate all PCs that account for 80% variation in our dataset and then explore further the PCs that have statistically significant correlations.
 
-eigencorplot is built upon another function by the *PCAtools* developers, namely [CorLevelPlot](https://github.com/kevinblighe/CorLevelPlot). Further examples can be found there.
+'eigencorplot' is built upon another function by the *PCAtools* developers, namely [CorLevelPlot](https://github.com/kevinblighe/CorLevelPlot). Further examples can be found there.
 
 ``` r
   eigencorplot(p,
@@ -478,7 +478,7 @@ Plot the entire project on a single panel
     hline = 0, vline = 0,
     pointSize = 0.8, gridlines.major = FALSE, gridlines.minor = FALSE,
     colby = 'Grade',
-    title = 'Pairs plot', titleLabSize = 16, plotaxes = FALSE,
+    title = '', titleLabSize = 16, plotaxes = FALSE,
     margingaps = unit(c(0.01, 0.01, 0.01, 0.01), 'cm'),
     returnPlot = FALSE)
 
@@ -527,10 +527,10 @@ Plot the entire project on a single panel
 
     top_row <- plot_grid(pscree, ppairs, pbiplot,
       ncol = 3,
-      labels = c('A', 'B ', 'C'),
+      labels = c('A', 'B  Pairs plot', 'C'),
       label_fontfamily = 'serif',
-      label_fontface = 'plain',
-      label_size = 32,
+      label_fontface = 'bold',
+      label_size = 22,
       align = 'h',
       rel_widths = c(1.05, 0.9, 1.05))
 
@@ -539,8 +539,8 @@ Plot the entire project on a single panel
       ncol = 2,
       labels = c('D', 'E'),
       label_fontfamily = 'serif',
-      label_fontface = 'plain',
-      label_size = 32,
+      label_fontface = 'bold',
+      label_size = 22,
       align = 'h',
       rel_widths = c(1.5, 1.5))
 
@@ -586,7 +586,7 @@ sessionInfo()
     ## other attached packages:
     ##  [1] ggplotify_0.0.3     cowplot_0.9.4       biomaRt_2.37.9     
     ##  [4] ggplot2_3.1.0       bindrcpp_0.2.2      GEOquery_2.49.1    
-    ##  [7] Biobase_2.42.0      BiocGenerics_0.28.0 PCAtools_0.99.8    
+    ##  [7] Biobase_2.42.0      BiocGenerics_0.28.0 PCAtools_0.99.9    
     ## [10] knitr_1.20         
     ## 
     ## loaded via a namespace (and not attached):

@@ -412,7 +412,7 @@ We may wish, for example, to correlate all PCs that account for 80% variation in
 our dataset and then explore further the PCs that have statistically significant
 correlations.
 
-eigencorplot is built upon another function by the *PCAtools* developers, namely
+'eigencorplot' is built upon another function by the *PCAtools* developers, namely
 [CorLevelPlot](https://github.com/kevinblighe/CorLevelPlot). Further examples
 can be found there.
 
@@ -481,7 +481,7 @@ just a bi-plot used to identify outliers!
     hline = 0, vline = 0,
     pointSize = 0.8, gridlines.major = FALSE, gridlines.minor = FALSE,
     colby = 'Grade',
-    title = 'Pairs plot', titleLabSize = 16, plotaxes = FALSE,
+    title = '', titleLabSize = 16, plotaxes = FALSE,
     margingaps = unit(c(0.01, 0.01, 0.01, 0.01), 'cm'),
     returnPlot = FALSE)
 
@@ -530,10 +530,10 @@ just a bi-plot used to identify outliers!
 
     top_row <- plot_grid(pscree, ppairs, pbiplot,
       ncol = 3,
-      labels = c('A', 'B', 'C'),
+      labels = c('A', 'B  Pairs plot', 'C'),
       label_fontfamily = 'serif',
-      label_fontface = 'plain',
-      label_size = 32,
+      label_fontface = 'bold',
+      label_size = 22,
       align = 'h',
       rel_widths = c(1.05, 0.9, 1.05))
 
@@ -542,8 +542,8 @@ just a bi-plot used to identify outliers!
       ncol = 2,
       labels = c('D', 'E'),
       label_fontfamily = 'serif',
-      label_fontface = 'plain',
-      label_size = 32,
+      label_fontface = 'bold',
+      label_size = 22,
       align = 'h',
       rel_widths = c(1.5, 1.5))
 
