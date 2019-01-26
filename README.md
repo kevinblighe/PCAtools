@@ -1,7 +1,7 @@
 PCAtools: everything Principal Components Analysis
 ================
 Kevin Blighe
-2019-01-15
+2019-01-26
 
 -   [Introduction](#introduction)
 -   [Installation](#installation)
@@ -584,32 +584,33 @@ sessionInfo()
     ## [8] base     
     ## 
     ## other attached packages:
-    ##  [1] ggplotify_0.0.3     cowplot_0.9.4       biomaRt_2.37.9     
-    ##  [4] ggplot2_3.1.0       bindrcpp_0.2.2      GEOquery_2.49.1    
-    ##  [7] Biobase_2.42.0      BiocGenerics_0.28.0 PCAtools_0.99.9    
-    ## [10] knitr_1.20         
+    ##  [1] ggplotify_0.0.3     biomaRt_2.38.0      bindrcpp_0.2.2     
+    ##  [4] GEOquery_2.50.5     Biobase_2.42.0      BiocGenerics_0.28.0
+    ##  [7] PCAtools_0.99.13    cowplot_0.9.4       lattice_0.20-38    
+    ## [10] reshape2_1.4.3      ggrepel_0.8.0       ggplot2_3.1.0      
+    ## [13] knitr_1.21         
     ## 
     ## loaded via a namespace (and not attached):
-    ##  [1] progress_1.2.0       tidyselect_0.2.5     reshape2_1.4.3      
-    ##  [4] purrr_0.2.5          lattice_0.20-38      colorspace_1.3-2    
-    ##  [7] htmltools_0.3.6      stats4_3.5.2         yaml_2.2.0          
-    ## [10] gridGraphics_0.3-0   blob_1.1.1           XML_3.98-1.16       
-    ## [13] rlang_0.3.1          pillar_1.3.1         glue_1.3.0          
-    ## [16] withr_2.1.2          DBI_1.0.0            bit64_0.9-7         
-    ## [19] rvcheck_0.1.3        bindr_0.1.1          plyr_1.8.4          
-    ## [22] stringr_1.3.1        munsell_0.5.0        gtable_0.2.0        
-    ## [25] memoise_1.1.0        evaluate_0.12        labeling_0.3        
-    ## [28] IRanges_2.15.18      curl_3.2             AnnotationDbi_1.43.1
-    ## [31] highr_0.7            Rcpp_1.0.0           readr_1.1.1         
-    ## [34] scales_1.0.0         limma_3.37.3         S4Vectors_0.20.1    
-    ## [37] bit_1.1-14           hms_0.4.2            digest_0.6.18       
-    ## [40] stringi_1.2.4        dplyr_0.7.7          ggrepel_0.8.0       
-    ## [43] grid_3.5.2           tools_3.5.2          bitops_1.0-6        
-    ## [46] magrittr_1.5         lazyeval_0.2.1       RCurl_1.95-4.11     
-    ## [49] tibble_1.4.2         RSQLite_2.1.1        crayon_1.3.4        
-    ## [52] tidyr_0.8.1          pkgconfig_2.0.1      prettyunits_1.0.2   
-    ## [55] xml2_1.2.0           httr_1.3.1           assertthat_0.2.0    
-    ## [58] rmarkdown_1.11.3     R6_2.2.2             compiler_3.5.2
+    ##  [1] Rcpp_1.0.0           tidyr_0.8.2          prettyunits_1.0.2   
+    ##  [4] assertthat_0.2.0     digest_0.6.18        R6_2.3.0            
+    ##  [7] plyr_1.8.4           stats4_3.5.2         RSQLite_2.1.1       
+    ## [10] evaluate_0.12        httr_1.4.0           highr_0.7           
+    ## [13] pillar_1.3.1         rlang_0.3.1          progress_1.2.0      
+    ## [16] lazyeval_0.2.1       curl_3.3             blob_1.1.1          
+    ## [19] S4Vectors_0.20.1     rmarkdown_1.11.3     labeling_0.3        
+    ## [22] readr_1.3.1          stringr_1.3.1        RCurl_1.95-4.11     
+    ## [25] bit_1.1-14           munsell_0.5.0        compiler_3.5.2      
+    ## [28] xfun_0.4             gridGraphics_0.3-0   pkgconfig_2.0.2     
+    ## [31] htmltools_0.3.6      tidyselect_0.2.5     tibble_2.0.1        
+    ## [34] IRanges_2.16.0       XML_3.98-1.16        crayon_1.3.4        
+    ## [37] dplyr_0.7.8          withr_2.1.2          bitops_1.0-6        
+    ## [40] grid_3.5.2           gtable_0.2.0         DBI_1.0.0           
+    ## [43] magrittr_1.5         scales_1.0.0         stringi_1.2.4       
+    ## [46] limma_3.38.3         xml2_1.2.0           rvcheck_0.1.3       
+    ## [49] tools_3.5.2          bit64_0.9-7          glue_1.3.0          
+    ## [52] purrr_0.2.5          hms_0.4.2            yaml_2.2.0          
+    ## [55] AnnotationDbi_1.44.0 colorspace_1.4-0     memoise_1.1.0       
+    ## [58] bindr_0.1.1
 
 References
 ----------
