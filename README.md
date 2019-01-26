@@ -32,7 +32,7 @@ Kevin Blighe
 Introduction
 ============
 
-Principal Components Analysis (PCA) is a very powerful technique that has wide applicability in data science, bioinformatics, and further afield. It was initially developed to analyse large volumes of data in order to tease out the differences/relationships between the logical entities being analysed. It extracts the fundamental structure of the data without the need to build any model to represent it. This 'summary' of the data is arrived at through a process of reduction that can transform the large number of variables into a lesser number that are uncorrelated (i.e. the ‘principal components'), whilst at the same time being capable of easy interpretation on the original data (K 2013) (Blighe K 2018).
+Principal Components Analysis (PCA) is a very powerful technique that has wide applicability in data science, bioinformatics, and further afield. It was initially developed to analyse large volumes of data in order to tease out the differences/relationships between the logical entities being analysed. It extracts the fundamental structure of the data without the need to build any model to represent it. This 'summary' of the data is arrived at through a process of reduction that can transform the large number of variables into a lesser number that are uncorrelated (i.e. the ‘principal components'), whilst at the same time being capable of easy interpretation on the original data (Blighe 2013) (Blighe and Lewis 2018).
 
 Installation
 ============
@@ -615,10 +615,10 @@ sessionInfo()
 References
 ----------
 
-K (2013)
+Blighe (2013)
 
-Blighe K (2018)
+Blighe and Lewis (2018)
 
-Blighe K, Lewis M. 2018. “PCAtools: everything Principal Components Analysis.” <https://github.com/kevinblighe>.
+Blighe, Kevin. 2013. “Haplotype classification using copy number variation and principal components analysis.” The Open Bioinformatics Journal 7:19-24.
 
-K, Blighe. 2013. “Haplotype classification using copy number variation and principal components analysis.” The Open Bioinformatics Journal 7:19-24.
+Blighe, Kevin, and Myles Lewis. 2018. “PCAtools: everything Principal Components Analysis.” <https://github.com/kevinblighe>.
