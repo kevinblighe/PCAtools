@@ -1,7 +1,7 @@
 PCAtools: everything Principal Components Analysis
 ================
 Kevin Blighe
-2019-01-26
+2019-04-30
 
 -   [Introduction](#introduction)
 -   [Installation](#installation)
@@ -359,35 +359,35 @@ We can check the genes to which these relate by using biomaRt:
 
     ##    affy_hg_u133a ensembl_gene_id                       gene_biotype
     ## 1    208650_s_at ENSG00000185275               processed_pseudogene
-    ## 2    208650_s_at ENSG00000261333               processed_pseudogene
-    ## 3    211122_s_at ENSG00000169248                     protein_coding
-    ## 4      204540_at ENSG00000101210                     protein_coding
-    ## 5      205225_at ENSG00000091831                     protein_coding
-    ## 6      205380_at ENSG00000174827                     protein_coding
-    ## 7    215176_x_at ENSG00000242371                          IG_V_gene
-    ## 8    215176_x_at ENSG00000251546                          IG_V_gene
-    ## 9    202037_s_at ENSG00000104332                     protein_coding
-    ## 10     205044_at ENSG00000094755                     protein_coding
+    ## 2    208650_s_at ENSG00000272398                     protein_coding
+    ## 3      205225_at ENSG00000091831                     protein_coding
+    ## 4    208650_s_at ENSG00000261333               processed_pseudogene
+    ## 5      205044_at ENSG00000094755                     protein_coding
+    ## 6    215176_x_at ENSG00000242371                          IG_V_gene
+    ## 7    215176_x_at ENSG00000251546                          IG_V_gene
+    ## 8    202037_s_at ENSG00000104332                     protein_coding
+    ## 9    211122_s_at ENSG00000169248                     protein_coding
+    ## 10   215281_x_at ENSG00000143442                     protein_coding
     ## 11     205380_at ENSG00000215859 transcribed_unprocessed_pseudogene
-    ## 12   208650_s_at ENSG00000272398                     protein_coding
-    ## 13   215281_x_at ENSG00000143442                     protein_coding
-    ## 14     214464_at ENSG00000143776                     protein_coding
+    ## 12     214464_at ENSG00000143776                     protein_coding
+    ## 13     205380_at ENSG00000174827                     protein_coding
+    ## 14     204540_at ENSG00000101210                     protein_coding
     ## 15   215176_x_at ENSG00000282120                          IG_V_gene
     ##    external_gene_name
     ## 1              CD24P4
-    ## 2              CD24P2
-    ## 3              CXCL11
-    ## 4              EEF1A2
-    ## 5                ESR1
-    ## 6               PDZK1
-    ## 7            IGKV1-39
-    ## 8           IGKV1D-39
-    ## 9               SFRP1
-    ## 10              GABRP
+    ## 2                CD24
+    ## 3                ESR1
+    ## 4              CD24P2
+    ## 5               GABRP
+    ## 6            IGKV1-39
+    ## 7           IGKV1D-39
+    ## 8               SFRP1
+    ## 9              CXCL11
+    ## 10               POGZ
     ## 11            PDZK1P1
-    ## 12               CD24
-    ## 13               POGZ
-    ## 14           CDC42BPA
+    ## 12           CDC42BPA
+    ## 13              PDZK1
+    ## 14             EEF1A2
     ## 15           IGKV1-39
 
 At least one interesting finding is 205225\_at (*ESR1*), which is by far the gene most responsible for variation along PC2. The previous bi-plots showed that this PC also segregated ER+ from ER- patients. The other results could be explored.
@@ -563,12 +563,12 @@ Session info
 sessionInfo()
 ```
 
-    ## R version 3.5.2 (2018-12-20)
+    ## R version 3.6.0 (2019-04-26)
     ## Platform: x86_64-pc-linux-gnu (64-bit)
-    ## Running under: Ubuntu 16.04.5 LTS
+    ## Running under: Ubuntu 16.04.6 LTS
     ## 
     ## Matrix products: default
-    ## BLAS: /usr/lib/atlas-base/atlas/libblas.so.3.0
+    ## BLAS:   /usr/lib/atlas-base/atlas/libblas.so.3.0
     ## LAPACK: /usr/lib/atlas-base/atlas/liblapack.so.3.0
     ## 
     ## locale:
@@ -584,33 +584,31 @@ sessionInfo()
     ## [8] base     
     ## 
     ## other attached packages:
-    ##  [1] ggplotify_0.0.3     biomaRt_2.38.0      bindrcpp_0.2.2     
-    ##  [4] GEOquery_2.50.5     Biobase_2.42.0      BiocGenerics_0.28.0
-    ##  [7] PCAtools_0.99.13    cowplot_0.9.4       lattice_0.20-38    
-    ## [10] reshape2_1.4.3      ggrepel_0.8.0       ggplot2_3.1.0      
-    ## [13] knitr_1.21         
+    ##  [1] ggplotify_0.0.3     biomaRt_2.39.4      GEOquery_2.51.6    
+    ##  [4] Biobase_2.43.1      BiocGenerics_0.29.2 PCAtools_0.99.13   
+    ##  [7] cowplot_0.9.4       lattice_0.20-38     reshape2_1.4.3     
+    ## [10] ggrepel_0.8.0       ggplot2_3.1.1       knitr_1.22         
     ## 
     ## loaded via a namespace (and not attached):
-    ##  [1] Rcpp_1.0.0           tidyr_0.8.2          prettyunits_1.0.2   
-    ##  [4] assertthat_0.2.0     digest_0.6.18        R6_2.3.0            
-    ##  [7] plyr_1.8.4           stats4_3.5.2         RSQLite_2.1.1       
-    ## [10] evaluate_0.12        httr_1.4.0           highr_0.7           
-    ## [13] pillar_1.3.1         rlang_0.3.1          progress_1.2.0      
-    ## [16] lazyeval_0.2.1       curl_3.3             blob_1.1.1          
-    ## [19] S4Vectors_0.20.1     rmarkdown_1.11.3     labeling_0.3        
-    ## [22] readr_1.3.1          stringr_1.3.1        RCurl_1.95-4.11     
-    ## [25] bit_1.1-14           munsell_0.5.0        compiler_3.5.2      
-    ## [28] xfun_0.4             gridGraphics_0.3-0   pkgconfig_2.0.2     
-    ## [31] htmltools_0.3.6      tidyselect_0.2.5     tibble_2.0.1        
-    ## [34] IRanges_2.16.0       XML_3.98-1.16        crayon_1.3.4        
-    ## [37] dplyr_0.7.8          withr_2.1.2          bitops_1.0-6        
-    ## [40] grid_3.5.2           gtable_0.2.0         DBI_1.0.0           
-    ## [43] magrittr_1.5         scales_1.0.0         stringi_1.2.4       
-    ## [46] limma_3.38.3         xml2_1.2.0           rvcheck_0.1.3       
-    ## [49] tools_3.5.2          bit64_0.9-7          glue_1.3.0          
-    ## [52] purrr_0.2.5          hms_0.4.2            yaml_2.2.0          
-    ## [55] AnnotationDbi_1.44.0 colorspace_1.4-0     memoise_1.1.0       
-    ## [58] bindr_0.1.1
+    ##  [1] progress_1.2.0       tidyselect_0.2.5     xfun_0.6            
+    ##  [4] purrr_0.3.2          colorspace_1.4-1     htmltools_0.3.6     
+    ##  [7] stats4_3.6.0         yaml_2.2.0           gridGraphics_0.3-0  
+    ## [10] blob_1.1.1           XML_3.98-1.19        rlang_0.3.4         
+    ## [13] pillar_1.3.1         glue_1.3.1           withr_2.1.2         
+    ## [16] DBI_1.0.0            bit64_0.9-7          rvcheck_0.1.3       
+    ## [19] plyr_1.8.4           stringr_1.4.0        munsell_0.5.0       
+    ## [22] gtable_0.3.0         memoise_1.1.0        evaluate_0.13       
+    ## [25] labeling_0.3         IRanges_2.17.5       curl_3.3            
+    ## [28] AnnotationDbi_1.45.1 highr_0.8            Rcpp_1.0.1          
+    ## [31] readr_1.3.1          scales_1.0.0         limma_3.39.19       
+    ## [34] S4Vectors_0.21.24    bit_1.1-14           hms_0.4.2           
+    ## [37] digest_0.6.18        stringi_1.4.3        dplyr_0.8.0.1       
+    ## [40] grid_3.6.0           tools_3.6.0          bitops_1.0-6        
+    ## [43] magrittr_1.5         lazyeval_0.2.2       RCurl_1.95-4.12     
+    ## [46] tibble_2.1.1         RSQLite_2.1.1        crayon_1.3.4        
+    ## [49] tidyr_0.8.3          pkgconfig_2.0.2      prettyunits_1.0.2   
+    ## [52] xml2_1.2.0           httr_1.4.0           assertthat_0.2.1    
+    ## [55] rmarkdown_1.12       R6_2.4.0             compiler_3.6.0
 
 References
 ----------
