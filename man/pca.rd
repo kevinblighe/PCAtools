@@ -12,7 +12,9 @@ pca(
   metadata = NULL,
   center = TRUE,
   scale = FALSE,
-  removeVar = NULL)
+  rank = NULL, 
+  removeVar = NULL, 
+  BSPARAM = ExactParam())
 }
 
 \arguments{
@@ -25,8 +27,13 @@ pca(
   'center' parameter. DEFAULT = TRUE. OPTIONAL.}
   \item{scale}{Scale the data? Same as prcomp() 'scale' parameter. DEFAULT
   = FALSE. OPTIONAL.}
+  \item{rank}{An integer scalar specifying the number of PCs to retain.
+  OPTIONAL for an exact SVD, whereby it defaults to all PCs. Otherwise
+  REQUIRED for approximate SVD methods.}
   \item{removeVar}{Remove this % of variables based on low variance.
   DEFAULT = NULL. OPTIONAL.}
+  \item{BSPARAM}{A \linkS4class{BiocSingularParam} object specifying the 
+  algorithm to use for the SVD. Defaults to an exact SVD. OPTIONAL.}
 }
 
 \value{

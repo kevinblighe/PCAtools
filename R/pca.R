@@ -3,9 +3,14 @@ pca <- function(
   metadata = NULL,
   center = TRUE,
   scale = FALSE,
-  removeVar = NULL)
+  rank = NULL, 
+  removeVar = NULL, 
+  BSPARAM = ExactParam())
 {
-  mat <- as.data.frame(mat)
+  # avoid attempting to coerce S4 matrices into full matrices.
+  if (is.data.frame(mat)) {
+    mat <- as.matrix(mat)
+  }
 
   # if metadata specified, enforce rule that rownames(metadata) is the
   # same as colnames(mat)
@@ -17,26 +22,35 @@ pca <- function(
   }
 
   # remove lower portion of variables based on variation
+  vars <- rowVars(mat)
   if (!is.null(removeVar)) {
     message('-- removing the lower ', removeVar * 100,
       '% of variables based on variance')
-    vars <- apply(mat, 1, function(x) var(x))
     varorder <- order(vars, decreasing = FALSE)
     exclude <- varorder[seq_len(nrow(mat)*removeVar)]
     mat <- mat[-exclude,]
+    vars <- vars[-exclude]
   }
 
-  # perform pca via prcomp()
-  pcaobj <- prcomp(t(mat),
+  # Setting the default rank to all values if Exact.
+  if (is.null(rank)) {
+      if (is(BSPARAM, "ExactParam")) {
+          rank <- min(dim(mat))
+      } else {
+          stop("'rank' must be specified for approximate PCA methods")
+      }
+  }
+
+  # perform pca via BiocSingular::runPCA().
+  pcaobj <- runPCA(t(mat),
     center = center,
-    scale. = scale,
-    retx = TRUE,
-    tol = NULL,
-    rank. = NULL)
+    scale = scale,
+    rank = rank,
+    BSPARAM = BSPARAM)
 
   # Determine the proportion of variance of each component
-  # Proportion of variance equals (PC stdev^2) / (sum all PCs stdev^2)
-  proportionvar <- ((pcaobj$sdev ^ 2) / (sum(pcaobj$sdev ^ 2))) * 100
+  # Proportion of variance equals (PC stdev^2) / (total variance)
+  proportionvar <- (pcaobj$sdev ^ 2) / sum(vars) * 100
 
   # create a new object
   pcaobj <- list(
