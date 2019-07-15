@@ -4,45 +4,48 @@ pca <- function(
   center = TRUE,
   scale = FALSE,
   rank = NULL, 
-  removeVar = NULL, 
+  removeVar = NULL,
+  transposed = FALSE,
   BSPARAM = ExactParam())
 {
   # avoid attempting to coerce S4 matrices into full matrices.
   if (is.data.frame(mat)) {
     mat <- as.matrix(mat)
   }
+  if (!transposed) {
+    mat <- t(mat)
+  }
 
   # if metadata specified, enforce rule that rownames(metadata) is the
   # same as colnames(mat)
   if (!is.null(metadata)) {
-    if(!all(colnames(mat) == rownames(metadata))) {
-      stop('Colnames of \'mat\' object must equal and be in the same',
-        ' order as the rownames of metadata')
+    if(!identical(rownames(mat), rownames(metadata))) {
+      stop("'colnames(mat)' is not identical to 'rownames(metadata)'")
     }
   }
 
   # remove lower portion of variables based on variation
-  vars <- rowVars(mat)
+  vars <- colVars(mat)
   if (!is.null(removeVar)) {
     message('-- removing the lower ', removeVar * 100,
       '% of variables based on variance')
     varorder <- order(vars, decreasing = FALSE)
     exclude <- varorder[seq_len(nrow(mat)*removeVar)]
-    mat <- mat[-exclude,]
+    mat <- mat[,-exclude]
     vars <- vars[-exclude]
   }
 
   # Setting the default rank to all values if Exact.
   if (is.null(rank)) {
-      if (is(BSPARAM, "ExactParam")) {
-          rank <- min(dim(mat))
-      } else {
-          stop("'rank' must be specified for approximate PCA methods")
-      }
+    if (is(BSPARAM, "ExactParam")) {
+      rank <- min(dim(mat))
+    } else {
+      stop("'rank' must be specified for approximate PCA methods")
+    }
   }
 
   # perform pca via BiocSingular::runPCA().
-  pcaobj <- runPCA(t(mat),
+  pcaobj <- runPCA(mat,
     center = center,
     scale = scale,
     rank = rank,
@@ -58,8 +61,8 @@ pca <- function(
     loadings = data.frame(pcaobj$rotation),
     variance = proportionvar,
     metadata = metadata,
-    xvars = rownames(mat),
-    yvars = colnames(mat),
+    xvars = colnames(mat),
+    yvars = rownames(mat),
     components = colnames(pcaobj$x)
   )
 
