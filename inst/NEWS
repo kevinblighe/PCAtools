@@ -1,3 +1,8 @@
 CHANGES IN VERSION 1.0.0
 ------------------------
  - added new function getLoadings, which returns component loadings
+
+CHANGES IN VERSION 2.0.0
+------------------------
+ - added parallelPCA function to perform Horn's parallel analysis, which chooses an ideal number of principal components to retain (courtesy Aaron Lun)
+ - added findElbowPoint function, which finds the elbow point in the curve of variance explained and which can also be used to determine the number of principal components to retain (courtesy Aaron Lun)
