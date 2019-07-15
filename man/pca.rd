@@ -14,12 +14,14 @@ pca(
   scale = FALSE,
   rank = NULL, 
   removeVar = NULL, 
+  transposed = FALSE,
   BSPARAM = ExactParam())
 }
 
 \arguments{
   \item{mat}{A data-matrix or data-frame containing numerical data only.
-  REQUIRED.}
+  Variables are expected to be in the rows and samples in the columns
+  by default. REQUIRED.}
   \item{metadata}{A data-matrix or data-frame containing metadata. This will
   be stored in the resulting pca object. Strictly enforced that
   rownames(metadata) == colnames(mat). DEFAULT = NULL. OPTIONAL.}
@@ -30,10 +32,17 @@ pca(
   \item{rank}{An integer scalar specifying the number of PCs to retain.
   OPTIONAL for an exact SVD, whereby it defaults to all PCs. Otherwise
   REQUIRED for approximate SVD methods.}
-  \item{removeVar}{Remove this % of variables based on low variance.
+  \item{removeVar}{Remove this \% of variables based on low variance.
   DEFAULT = NULL. OPTIONAL.}
+  \item{transposed}{Is \code{mat} transposed? DEFAULT = FALSE. If set to TRUE,
+  samples are in the rows and variables are in the columns. OPTIONAL.}
   \item{BSPARAM}{A \linkS4class{BiocSingularParam} object specifying the 
   algorithm to use for the SVD. Defaults to an exact SVD. OPTIONAL.}
+}
+
+\details{
+\code{mat} is 
+If \code{transposed=TRUE}, \
 }
 
 \value{
