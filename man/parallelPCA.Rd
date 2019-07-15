@@ -6,7 +6,7 @@
 
 \usage{
 parallelPCA(mat, max.rank=100, ..., niters=50, threshold=0.1, 
-  BSPARAM=EmatactParam(), BPPARAM=SerialParam())
+  BSPARAM=ExactParam(), BPPARAM=SerialParam())
 }
 
 \arguments{
