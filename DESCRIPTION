@@ -18,7 +18,10 @@ Imports:
   stats,
   Matrix,
   DelayedMatrixStats,
-  BiocSingular
+  BiocSingular,
+  BiocParallel,
+  Rcpp,
+  dqrng
 Suggests:
   RUnit,
   BiocGenerics,
@@ -26,8 +29,15 @@ Suggests:
   Biobase,
   GEOquery,
   biomaRt,
-  ggplotify
+  ggplotify,
+  beachmat
+LinkingTo:
+  Rcpp,
+  beachmat,
+  BH,
+  dqrng
 URL: https://github.com/kevinblighe/PCAtools
 biocViews: RNASeq, GeneExpression, Transcription
 VignetteBuilder:
   knitr
+RoxygenNote: 6.1.1
