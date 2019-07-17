@@ -1,15 +1,6 @@
 # This checks the parallelPCA function.
 # require(PCAtools); require(testthat); source("test-parallel-pca.R")
 
-set.seed(1000)
-ngenes <- 1000
-ncells <- 200
-npops <- 10
-
-mu <- matrix(rnorm(npops*ngenes), ncol=npops)
-lcounts <- mu[,sample(ncol(mu), ncells, replace=TRUE)]
-lcounts <- lcounts + rnorm(length(lcounts))
-
 set.seed(1001)
 test_that("parallelPCA works as expected", {
     threshold <- 0.1
