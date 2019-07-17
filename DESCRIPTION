@@ -20,6 +20,7 @@ Imports:
   stats,
   Matrix,
   DelayedMatrixStats,
+  DelayedArray,
   BiocSingular,
   BiocParallel,
   Rcpp,
