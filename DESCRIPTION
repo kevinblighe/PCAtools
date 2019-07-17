@@ -18,14 +18,16 @@ Depends:
 Imports:
   methods,
   stats,
+  utils,
   Matrix,
   DelayedMatrixStats,
+  DelayedArray,
   BiocSingular,
   BiocParallel,
   Rcpp,
   dqrng
 Suggests:
-  RUnit,
+  testthat, 
   BiocGenerics,
   knitr,
   Biobase,
