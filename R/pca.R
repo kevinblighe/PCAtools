@@ -29,10 +29,10 @@ pca <- function(
   if (!is.null(removeVar)) {
     message('-- removing the lower ', removeVar * 100,
       '% of variables based on variance')
-    varorder <- order(vars, decreasing = FALSE)
-    exclude <- varorder[seq_len(ncol(mat)*removeVar)]
-    mat <- mat[,-exclude]
-    vars <- vars[-exclude]
+    varorder <- order(vars, decreasing = TRUE)
+    keep <- head(varorder, max(1, ncol(mat)*(1-removeVar)))
+    mat <- mat[,keep,drop=FALSE]
+    vars <- vars[keep]
   }
 
   # Setting the default rank to all values if Exact.

@@ -18,6 +18,7 @@ Depends:
 Imports:
   methods,
   stats,
+  utils,
   Matrix,
   DelayedMatrixStats,
   DelayedArray,

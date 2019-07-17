@@ -16,10 +16,21 @@ test_that("pca settings work as expected", {
 })
 
 test_that("removal of low-variance genes works", {
-    keep <- order(DelayedMatrixStats::rowVars(lcounts), decreasing=TRUE)[seq_len(nrow(lcounts)/2)]
+    v <- DelayedMatrixStats::rowVars(lcounts)
+    keep <- order(v, decreasing=TRUE)[seq_len(nrow(lcounts)/2)]
     ref <- pca(lcounts[keep,])
     alt <- pca(lcounts, removeVar=0.5)
     expect_equal(ref$variance, alt$variance)
+
+    # Works properly at extremes.
+    ref <- pca(lcounts)
+    alt <- pca(lcounts, removeVar=0)
+    expect_equal(ref$variance, alt$variance)
+
+    ref <- pca(lcounts[which.max(v),,drop=FALSE])
+    alt <- pca(lcounts, removeVar=1)
+    expect_equal(ref$variance, alt$variance)
+
 })
 
 test_that("pca works with alternative SVD algorithms", {
