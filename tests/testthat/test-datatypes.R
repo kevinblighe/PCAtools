@@ -1,4 +1,4 @@
-skip()
+skip("missing lots of things")
 
 test_that('datatypes', {
   # pca
@@ -78,7 +78,7 @@ test_that('datatypes', {
   expect_type(plotloadings(components, col, legendPosition,
     positionConnectors, typeConnectors, endsConnectors, colConnectors,
     xlab, ylab, title, subtitle, caption, hlineType, hlineCol, vlineType,
-    vlineCol, borderColour)),
+    vlineCol, borderColour),
     c('language', 'character'))
   expect_type(plotloadings(absolute, drawConnectors, gridlines.major,
     gridlines.minor, returnPlot),
@@ -95,7 +95,7 @@ test_that('datatypes', {
   expect_is(eigencorplot(pcaobj), class = 'pca')
   expect_type(eigencorplot(components, metavars, titleX, colTitleX, titleY,
     colTitleY, colLabX, colLabY, posLab, col, posColKey, colCorval, main,
-    colMain, corFUN, corUSE, signifSymbols, colFrame)),
+    colMain, corFUN, corUSE, signifSymbols, colFrame),
     c('language', 'character'))
   expect_type(eigencorplot(scale, plotRsquared, returnPlot),
     c('logical'))
