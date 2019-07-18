@@ -6,7 +6,7 @@
 
 \usage{
 parallelPCA(mat, max.rank=100, ..., niters=50, threshold=0.1, 
-  BSPARAM=ExactParam(), BPPARAM=SerialParam())
+  transposed=FALSE, BSPARAM=ExactParam(), BPPARAM=SerialParam())
 }
 
 \arguments{
@@ -15,6 +15,7 @@ parallelPCA(mat, max.rank=100, ..., niters=50, threshold=0.1,
 \item{...}{Further arguments to pass to \code{\link{pca}}.}
 \item{niters}{Integer scalar specifying the number of iterations to use for the parallel analysis.}
 \item{threshold}{Numeric scalar representing the \dQuote{p-value} threshold above which PCs are to be ignored.}
+\item{transposed}{Logical scalar indicating whether \code{mat} is transposed, i.e., rows are samples and columns are variables.}
 \item{BSPARAM}{A \linkS4class{BiocSingularParam} object specifying the algorithm to use for PCA.}
 \item{BPPARAM}{A \linkS4class{BiocParallelParam} object specifying how the iterations should be paralellized.}
 }

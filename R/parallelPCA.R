@@ -1,7 +1,9 @@
 parallelPCA <- function(mat, max.rank=100, ..., niters=50, threshold=0.1, 
-  BSPARAM=ExactParam(), BPPARAM=SerialParam()) 
+  transposed=FALSE, BSPARAM=ExactParam(), BPPARAM=SerialParam()) 
 {
-  mat <- t(mat)
+  if (!transposed) {
+    mat <- t(mat)
+  }
   original <- pca(mat, rank=max.rank, ..., transposed=TRUE, BSPARAM=BSPARAM)
   original.s2 <- original$variance
 
