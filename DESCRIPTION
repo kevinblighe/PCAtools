@@ -27,7 +27,8 @@ Imports:
   Rcpp,
   dqrng
 Suggests:
-  testthat, 
+  testthat,
+  scran,
   BiocGenerics,
   knitr,
   Biobase,
