@@ -45,4 +45,5 @@ URL: https://github.com/kevinblighe/PCAtools
 biocViews: RNASeq, GeneExpression, Transcription
 VignetteBuilder:
   knitr
+SystemRequirements: C++11
 RoxygenNote: 6.1.1
