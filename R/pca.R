@@ -66,6 +66,8 @@ pca <- function(
     components = colnames(pcaobj$x)
   )
 
+  rownames(pcaobj$rotated) <- pcaobj$yvars
+  rownames(pcaobj$loadings) <- pcaobj$xvars
   names(pcaobj$variance) <- pcaobj$components
 
   # assign class pca to object
