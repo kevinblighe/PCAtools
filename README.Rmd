@@ -21,10 +21,14 @@ Principal Components Analysis (PCA) is a very powerful technique that has wide a
 
 *PCAtools* provides functions for data exploration via PCA, and allows the user to generate publication-ready figures. PCA is performed via *BiocSingular* [@Lun] - users can also identify optimal number of principal components via different metrics, such as elbow method and Horn's parallel analysis [@Horn] [@Buja], which has relevance for data reduction in single-cell RNA-seq (scRNA-seq) and high dimensional mass cytometry data.
 
+## Availability
+
  - Release version: [PCAtools](https://www.bioconductor.org/packages/release/bioc/html/PCAtools.html)
 
  - Development version: [PCAtools](https://www.bioconductor.org/packages/devel/bioc/html/PCAtools.html)
 
  - Vignette: [PCAtools: everything Principal Components Analysis
 ](https://bioconductor.org/packages/release/bioc/vignettes/PCAtools/inst/doc/PCAtools.html)
+
+## Bibliography
 
