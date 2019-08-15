@@ -53,7 +53,12 @@ pca <- function(
 
   # Determine the proportion of variance of each component
   # Proportion of variance equals (PC stdev^2) / (total variance)
-  proportionvar <- (pcaobj$sdev ^ 2) / sum(vars) * 100
+  if (scale) {
+    total.var <- length(vars)
+  } else {
+    total.var <- sum(vars)
+  }
+  proportionvar <- (pcaobj$sdev ^ 2) / total.var * 100
 
   # create a new object
   pcaobj <- list(
