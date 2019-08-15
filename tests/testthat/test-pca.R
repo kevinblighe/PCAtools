@@ -45,8 +45,8 @@ test_that("percentage of variance calculations are correct", {
     expect_equal(nrow(removed$loadings), nrow(lcounts)/2)
 
     both <- pca(lcounts, rank=min(dim(lcounts)), removeVar=0.5, scale=TRUE)
-    expect_equal(sum(basic$variance), 100)
-    expect_equal(nrow(removed$loadings), nrow(lcounts)/2)
+    expect_equal(sum(both$variance), 100)
+    expect_equal(nrow(both$loadings), nrow(lcounts)/2)
     expect_false(isTRUE(all.equal(both, removed)))
 })
 
