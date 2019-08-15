@@ -30,7 +30,24 @@ test_that("removal of low-variance genes works", {
     ref <- pca(lcounts[which.max(v),,drop=FALSE])
     alt <- pca(lcounts, removeVar=1)
     expect_equal(ref$variance, alt$variance)
+})
 
+test_that("percentage of variance calculations are correct", {
+    basic <- pca(lcounts, rank=min(dim(lcounts)))
+    expect_equal(sum(basic$variance), 100)
+
+    scaled <- pca(lcounts, rank=min(dim(lcounts)), scale=TRUE)
+    expect_equal(sum(scaled$variance), 100)
+    expect_false(isTRUE(all.equal(scaled, basic)))
+
+    removed <- pca(lcounts, rank=min(dim(lcounts)), removeVar=0.5)
+    expect_equal(sum(removed$variance), 100)
+    expect_equal(nrow(removed$loadings), nrow(lcounts)/2)
+
+    both <- pca(lcounts, rank=min(dim(lcounts)), removeVar=0.5, scale=TRUE)
+    expect_equal(sum(basic$variance), 100)
+    expect_equal(nrow(removed$loadings), nrow(lcounts)/2)
+    expect_false(isTRUE(all.equal(both, removed)))
 })
 
 test_that("pca works with alternative SVD algorithms", {
