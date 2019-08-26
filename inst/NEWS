@@ -6,3 +6,5 @@ CHANGES IN VERSION 2.0.0
 ------------------------
  - added parallelPCA function to perform Horn's parallel analysis, which chooses an ideal number of principal components to retain (courtesy Aaron Lun)
  - added findElbowPoint function, which finds the elbow point in the curve of variance explained and which can also be used to determine the number of principal components to retain (courtesy Aaron Lun)
+ - user can now specify custom labels for points
+ - fixed bug with singlecol parameter for biplot colouring everything black

@@ -154,7 +154,7 @@ A \code{\link{ggplot2}} object.
 }
 
 \author{
-Kevin Blighe <kevin@clinicalbioinformatics.co.uk>, Myles Lewis <myles.lewis@qmul.ac.uk>
+Kevin Blighe <kevin@clinicalbioinformatics.co.uk>
 }
 
 \examples{

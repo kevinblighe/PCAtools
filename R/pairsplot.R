@@ -21,7 +21,7 @@ pairsplot <- function(
   legendIconSize = 1.5,
   xlim = NULL,
   ylim = NULL,
-  lab = FALSE,
+  lab = NULL,
   labSize = 1.5,
   labhjust = 1.5,
   labvjust = 0,

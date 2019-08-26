@@ -65,6 +65,7 @@ pca <- function(
     rotated = data.frame(pcaobj$x),
     loadings = data.frame(pcaobj$rotation),
     variance = proportionvar,
+    sdev = pcaobj$sdev,
     metadata = metadata,
     xvars = colnames(mat),
     yvars = rownames(mat),

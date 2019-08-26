@@ -4,7 +4,7 @@
 
 \title{pca}
 
-\description{Principal Components Analysis (PCA) is a very powerful technique that has wide applicability in data science, bioinformatics, and further afield. It was initially developed to analyse large volumes of data in order to tease out the differences/relationships between the logical entities being analysed. It extracts the fundamental structure of the data without the need to build any model to represent it. This 'summary' of the data is arrived at through a process of reduction that can transform the large number of variables into a lesser number that are uncorrelated, i.e., the principal components', whilst at the same time being capable of easy interpretation on the original data.}
+\description{Principal Component Analysis (PCA) is a very powerful technique that has wide applicability in data science, bioinformatics, and further afield. It was initially developed to analyse large volumes of data in order to tease out the differences/relationships between the logical entities being analysed. It extracts the fundamental structure of the data without the need to build any model to represent it. This 'summary' of the data is arrived at through a process of reduction that can transform the large number of variables into a lesser number that are uncorrelated, i.e., the principal components', whilst at the same time being capable of easy interpretation on the original data.}
 
 \usage{
 pca(
@@ -46,11 +46,24 @@ If \code{transposed=TRUE}, \
 }
 
 \value{
-A \code{\link{pca}} object.
+A \code{\link{pca}} object, containing:
+  \itemize{
+    \item \code{rotated}, a data frame of the rotated data, i.e., the centred and scaled (
+    if either or both are requested) input data multiplied by the variable loadings
+    ('loadings'). This is the same as the 'x' variable returned by prcomp().
+    \item \code{loadings}, a data frame of variable loadings ('rotation' variable returned
+    by prcomp()).
+    \item \code{variance}, a numeric vector of the explained variation for each principal component.
+    \item \code{sdev}, the standard deviations of the principal components.
+    \item \code{metadata}, the original metadata
+    \item \code{xvars}, a character vector of rownames from the input data.
+    \item \code{yvars}, a character vector of colnames from the input data.
+    \item \code{components}, a character vector of principal component / eigenvector names.
+  }
 }
 
 \author{
-Kevin Blighe <kevin@clinicalbioinformatics.co.uk>, Myles Lewis <myles.lewis@qmul.ac.uk>
+Kevin Blighe <kevin@clinicalbioinformatics.co.uk>, Aaron Lun
 }
 
 \examples{

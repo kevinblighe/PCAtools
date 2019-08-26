@@ -24,7 +24,7 @@ A \code{\link{data.frame}} object.
 }
 
 \author{
-Kevin Blighe <kevin@clinicalbioinformatics.co.uk>, Myles Lewis <myles.lewis@qmul.ac.uk>
+Kevin Blighe <kevin@clinicalbioinformatics.co.uk>
 }
 
 \examples{

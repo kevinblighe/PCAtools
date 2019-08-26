@@ -1,6 +1,6 @@
 ---
-title: "PCAtools: everything Principal Components Analysis"
-author: "Kevin Blighe"
+title: "PCAtools: everything Principal Component Analysis"
+author: "Kevin Blighe, Aaron Lun"
 date: "`r Sys.Date()`"
 package: "`r packageVersion('PCAtools')`"
 output:
@@ -13,7 +13,7 @@ output:
 fig_width: 7
 bibliography: library.bib
 vignette: >
-    %\VignetteIndexEntry{PCAtools: everything Principal Components Analysis}
+    %\VignetteIndexEntry{PCAtools: everything Principal Component Analysis}
     %\VignetteEngine{knitr::rmarkdown}
     %\VignetteEncoding{UTF-8}
     %\usepackage[utf8]{inputenc}
@@ -21,17 +21,9 @@ vignette: >
 
 # Introduction
 
-Principal Components Analysis (PCA) is a very powerful technique that has wide applicability in data science, bioinformatics, and further afield. It was initially developed to analyse large volumes of data in order to tease out the differences/relationships between the logical entities being analysed. It extracts the fundamental structure of the data without the need to build any model to represent it. This 'summary' of the data is arrived at through a process of reduction that can transform the large number of variables into a lesser number that are uncorrelated (i.e. the ‘principal components'), whilst at the same time being capable of easy interpretation on the original data [@PCAtools] [@BligheK].
+Principal Component Analysis (PCA) is a very powerful technique that has wide applicability in data science, bioinformatics, and further afield. It was initially developed to analyse large volumes of data in order to tease out the differences/relationships between the logical entities being analysed. It extracts the fundamental structure of the data without the need to build any model to represent it. This 'summary' of the data is arrived at through a process of reduction that can transform the large number of variables into a lesser number that are uncorrelated (i.e. the ‘principal components'), whilst at the same time being capable of easy interpretation on the original data [@PCAtools] [@BligheK].
 
 *PCAtools* provides functions for data exploration via PCA, and allows the user to generate publication-ready figures. PCA is performed via *BiocSingular* [@Lun] - users can also identify optimal number of principal components via different metrics, such as elbow method and Horn's parallel analysis [@Horn] [@Buja], which has relevance for data reduction in single-cell RNA-seq (scRNA-seq) and high dimensional mass cytometry data.
-
-```{r, echo=FALSE}
-
-    library(knitr)
-
-    opts_chunk$set(tidy = FALSE, message = FALSE, warning = FALSE)
-
-```
 
 # Installation
 
@@ -76,7 +68,7 @@ First, let's read in and prepare the data:
   library(GEOquery)
 
   # load series and platform data from GEO
-  gset <- getGEO('GSE2990', GSEMatrix =TRUE, getGPL=FALSE)
+  gset <- getGEO('GSE2990', GSEMatrix = TRUE, getGPL = FALSE)
 
   x <- exprs(gset[[1]])
 
@@ -121,7 +113,7 @@ First, let's read in and prepare the data:
 
 ```
 
-Conduct principal components analysis (PCA)
+Conduct principal component analysis (PCA)
 
 ```{r}
 
@@ -129,9 +121,9 @@ Conduct principal components analysis (PCA)
 
 ```
 
-## A SCREE plot
+## A scree plot
 
-```{r ex1, fig.height = 7, fig.width = 16, fig.cap = 'Figure 1: A SCREE plot to show the proportion of explained variance by PC'}
+```{r ex1, fig.height = 7, fig.width = 16, fig.cap = 'Figure 1: A scree plot to show the proportion of explained variance by PC'}
 
   screeplot(p)
 
@@ -177,26 +169,51 @@ general usage requirements. The following sections take a look at some of these
 advanced features, and form a somewhat practical example of how one can use
 PCAtools to make a clinical interpretation of data.
 
-## Determine PCs accounting for 80% explained variation
+## Determine optimum number of PCs to retain
 
-By analysing the SCREE plot, we can easily gauge how many PCs are required to
-satisfy a certain threshold for expalined variation in a dataset.
+A scree plot on its own just shows the accumulative proportion of explained variation,
+but how can we determine the optimum number of PCs to retain?  *PCAtools* provides two
+metrics for this purpose: elbow method and Horn's parallel analysis [@Horn] [@Buja].
 
-Horizontal and vertical lines can be added to the plot via 'hline' and 'vline'.
-We can add a text label with geom_text().
+Let's perform Horn's parallel analysis first:
 
-```{r ex6, fig.height = 7, fig.width = 10, fig.cap = 'Figure 6: Advanced SCREE plot illustrating number of PCs comprising at least 80% explained variation'}
+```{r}
+
+  horn <- parallelPCA(x)
+  horn$n
+
+```
+
+Now the elbow method:
+
+```{r}
+
+  elbow <- findElbowPoint(p$variance)
+  elbow
+
+```
+
+In most cases, the identified values will disagree. This is because finding the
+correct number of PCs is a difficult task and is akin to finding the 'correct'
+number of clusters in a dataset - there is no correct answer.
+
+Taking the value from Horn's parallel analyis, we can produce a new scree plot:
+
+```{r ex6, fig.height = 7, fig.width = 9, fig.cap = 'Figure 6: Advanced scree plot illustrating optimum number of PCs'}
 
   library(ggplot2)
 
   screeplot(p,
-    components = getComponents(p, 1:30),
-    hline = 80, vline = 27) +
-    geom_text(aes(20, 80, label = '80% explained variation', vjust = -1))
+    components = getComponents(p, 1:20),
+    vline = c(horn$n, elbow)) +
+    geom_text(aes(horn$n + 1, 50, label = "Horn's", vjust = -1)) +
+    geom_text(aes(elbow + 1, 50, label = "Elbow", vjust = -1))
 
 ```
 
-So, at least 27 PCs contribute to >80% explained variation.
+If all else fails, one can simply take the number of PCs that contributes to
+a pre-selected total of explained variation, e.g., in this case, 27 PCs account
+for >80% explained variation.
 
 ## Modify bi-plots
 
@@ -207,11 +224,12 @@ important parts of PCA.
 
 In a bi-plot, we can shade the points by different groups and add many more features.
 
-### Colour by a factor from the metadata, add lines through center, and add legend
+### Colour by a factor from the metadata, use a custom label, add lines through center, and add legend
 
 ```{r ex7, fig.height = 6, fig.width = 8, fig.cap = 'Figure 7: adding lines and a legend to a bi-plot'}
 
   biplot(p,
+    lab = paste0(p$metadata$Age, 'yo'),
     colby = 'ER',
     hline = 0, vline = 0,
     legendPosition = 'right')
@@ -220,7 +238,7 @@ In a bi-plot, we can shade the points by different groups and add many more feat
 
 ### Supply custom colours, add more lines, and increase legend size
 
-```{r ex8, eval = FALSE, fig.height = 7, fig.width = 7, fig.cap = 'Figure 8: supplying custom colours to a bi-plot'}
+```{r ex8, fig.height = 7, fig.width = 7, fig.cap = 'Figure 8: supplying custom colours to a bi-plot'}
 
   biplot(p,
     colby = 'ER', colkey = c('ER+'='forestgreen', 'ER-'='purple'),
@@ -250,7 +268,7 @@ In a bi-plot, we can shade the points by different groups and add many more feat
 ```{r ex10, fig.height = 6, fig.width = 8, fig.cap = 'Figure 10: removing labels, modifying line types, removing gridlines, and increasing point size in a bi-plot'}
 
   biplot(p,
-    lab = FALSE,
+    lab = NULL,
     colby = 'ER', colkey = c('ER+'='royalblue', 'ER-'='red3'),
     hline = 0, vline = c(-25, 0, 25),
     vlineType = c('dotdash', 'solid', 'dashed'),
@@ -267,10 +285,10 @@ In a bi-plot, we can shade the points by different groups and add many more feat
 
 ### Colour by a continuous variable (colour controlled by ggplot2 engine); plot other PCs
 
-```{r ex11, eval = FALSE, fig.height = 6, fig.width = 8, fig.cap = 'Figure 11: colouring by a continuous variable and plotting other PCs in a bi-plot'}
+```{r ex11, fig.height = 6, fig.width = 8, fig.cap = 'Figure 11: colouring by a continuous variable and plotting other PCs in a bi-plot'}
 
   biplot(p, x = 'PC10', y = 'PC50',
-    lab = FALSE,
+    lab = NULL,
     colby = 'Age',
     hline = 0, vline = 0,
     hlineWidth = 1.0, vlineWidth = 1.0,
@@ -297,7 +315,7 @@ can shut off titles and axis labeling to save space. Reducing point size and
 colouring by a variable of interest can additionally help us to rapidly skim
 over the data.
 
-```{r ex12, eval = FALSE, fig.height = 8, fig.width = 7, fig.cap = 'Figure 12: maximising available space in a pairs plot'}
+```{r ex12, fig.height = 8, fig.width = 7, fig.cap = 'Figure 12: maximising available space in a pairs plot'}
 
   pairsplot(p,
     components = getComponents(p, c(1:10)),
@@ -316,7 +334,7 @@ setting 'triangle = FALSE'. In this case, we can further control the layout
 with the 'ncol' and 'nrow' parameters, although, the function will
 automatically determine these based on your input data.
 
-```{r ex13, eval = FALSE, fig.height = 6, fig.width = 9, fig.cap = 'Figure 13: arranging a pairs plot horizontally'}
+```{r ex13, fig.height = 6, fig.width = 9, fig.cap = 'Figure 13: arranging a pairs plot horizontally'}
 
   pairsplot(p,
     components = getComponents(p, c(4,33,11,1)),
@@ -388,7 +406,7 @@ With the loadings plot, in addition, we can instead plot absolute values and
 modify the point sizes to be proportional to the loadings. We can also switch
 off the line connectors and plot the loadings for any PCs
 
-```{r ex15, eval = FALSE, fig.height = 9, fig.width = 11, fig.cap = 'Figure 15: plotting absolute component loadings'}
+```{r ex15, fig.height = 9, fig.width = 11, fig.cap = 'Figure 15: plotting absolute component loadings'}
 
   plotloadings(p,
     components = getComponents(p, c(4,33,11,1)),
@@ -441,10 +459,10 @@ can be found there.
 We can also supply different cut-offs for statistical significance, plot
 R-squared values, and specify correlation method:
 
-```{r ex17, eval = FALSE, fig.height = 5, fig.width = 12, fig.cap = 'Figure 17: modifying cut-offs and symbols for statistical significance in eigencorplot'}
+```{r ex17, fig.height = 5, fig.width = 12, fig.cap = 'Figure 17: modifying cut-offs and symbols for statistical significance in eigencorplot'}
 
   eigencorplot(p,
-    components = getComponents(p, 1:10),
+    components = getComponents(p, 1:horn$n),
     metavars = c('Age','Distant.RFS','ER','GGI','Grade','Size','Time.RFS'),
     col = c('white', 'cornsilk1', 'gold', 'forestgreen', 'darkgreen'),
     cexCorval = 1.2,
@@ -472,7 +490,7 @@ just a bi-plot used to identify outliers!
 
 ## Plot the entire project on a single panel
 
-```{r ex18, eval = FALSE, fig.height = 10, fig.width = 15, fig.cap = 'Figure 18: a merged panel of all PCAtools plots'}
+```{r ex18, fig.height = 10, fig.width = 15, fig.cap = 'Figure 18: a merged panel of all PCAtools plots'}
 
   pscree <- screeplot(p, components = getComponents(p, 1:30),
     hline = 80, vline = 27, axisLabSize = 10, returnPlot = FALSE) +
@@ -487,7 +505,7 @@ just a bi-plot used to identify outliers!
     margingaps = unit(c(0.01, 0.01, 0.01, 0.01), 'cm'),
     returnPlot = FALSE)
 
-  pbiplot <- biplot(p, lab = FALSE,
+  pbiplot <- biplot(p, lab = NULL,
     colby = 'ER', colkey = c('ER+'='royalblue', 'ER-'='red3'),
     hline = 0, vline = c(-25, 0, 25), vlineType = c('dotdash', 'solid', 'dashed'),
     gridlines.major = FALSE, gridlines.minor = FALSE,
@@ -560,6 +578,8 @@ and suggestions from:
 
 Krushna Chandra Murmu
 
+Jinsheng
+
 # Session info
 
 ```{r}
@@ -568,13 +588,5 @@ sessionInfo()
 
 ```
 
-## References
-
-@BligheK
-
-@Buja
-
-@Horn
-
-@PCAtools
+# References
 

@@ -13,7 +13,7 @@ biplot <- function(
   legendIconSize = 5.0,
   xlim = NULL,
   ylim = NULL,
-  lab = TRUE,
+  lab = rownames(pcaobj$metadata),
   labSize = 3.0,
   labhjust = 1.5,
   labvjust = 0,
@@ -85,21 +85,32 @@ biplot <- function(
   plotobj <- NULL
   plotobj$x <- pcaobj$rotated[,x]
   plotobj$y <- pcaobj$rotated[,y]
-  plotobj$lab <- rownames(pcaobj$rotated)
+  if (!is.null(lab)) {
+    plotobj$lab <- lab
+  }
   plotobj <- as.data.frame(plotobj, stringsAsFactors = FALSE)
 
   # If user has supplied values in selectLab, convert labels to
   # NA and then re-set with those in selectLab
   if (!is.null(selectLab)) {
-    names.new <- rep(NA, length(plotobj$lab))
-    indices <- which(plotobj$lab %in% selectLab)
-    names.new[indices] <- plotobj$lab[indices]
-    plotobj$lab <- names.new
+    if (is.null(lab)) {
+      stop(paste0('You have specified lab as NULL ',
+        '- no labels can be selected!'))
+    } else {
+      names.new <- rep(NA, length(plotobj$lab))
+      indices <- which(plotobj$lab %in% selectLab)
+      names.new[indices] <- plotobj$lab[indices]
+      plotobj$lab <- names.new
+    }
   }
 
   # decide on how to colour the points, and specify the shape of these
   if (is.null(colby)) {
-    plotobj$col <- plotobj$lab
+    if (!is.null(lab)) {
+      plotobj$col <- lab
+    } else {
+      plotobj$col <- c(1:length(pcaobj$yvars))
+    }
   } else {
     plotobj$col <- pcaobj$metadata[,colby]
   }
@@ -127,10 +138,10 @@ biplot <- function(
     }
   } else if (!is.null(singlecol)) {
     if (!is.null(shape)) {
-      plot <- plot + geom_point(aes(fill = singlecol, shape = shape),
+      plot <- plot + geom_point(aes(color = singlecol, shape = shape),
         size = pointSize)
     } else {
-      plot <- plot + geom_point(aes(fill = singlecol),
+      plot <- plot + geom_point(aes(color = singlecol),
         size = pointSize)
     }
   }
@@ -193,7 +204,7 @@ biplot <- function(
   # For labeling with geom_text_repel (connectors) and
   # geom_text(.., check_overlap = TRUE), 4 possible scenarios
   # can arise
-  if (lab == TRUE) {
+  if (!is.null(lab)) {
     if (drawConnectors == TRUE && is.null(selectLab)) {
       plot <- plot + geom_text_repel(
         data = plotobj,

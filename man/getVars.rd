@@ -4,7 +4,7 @@
 
 \title{getVars}
 
-\description{Return the explained variance for each principal component for an object of class 'pca'.}
+\description{Return the explained variation for each principal component for an object of class 'pca'.}
 
 \usage{
 getVars(
@@ -24,7 +24,7 @@ A \code{\link{numeric}} object.
 }
 
 \author{
-Kevin Blighe <kevin@clinicalbioinformatics.co.uk>, Myles Lewis <myles.lewis@qmul.ac.uk>
+Kevin Blighe <kevin@clinicalbioinformatics.co.uk>
 }
 
 \examples{

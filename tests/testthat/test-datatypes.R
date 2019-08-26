@@ -29,10 +29,10 @@ test_that('datatypes', {
   # biplot
   expect_is(biplot(pcaobj), class = 'pca')
   expect_type(biplot(x, y, colby, colkey, singlecol, legendPosition,
-    selectLab, colConnectors, xlab, ylab, title, subtitle, caption,
-    hlineType, hlineCol, vlineType, vlineCol, borderColour),
+    lab, selectLab, colConnectors, xlab, ylab, title, subtitle,
+    caption, hlineType, hlineCol, vlineType, vlineCol, borderColour),
     c('language', 'character'))
-  expect_type(biplot(lab, drawConnectors, gridlines.major, gridlines.minor,
+  expect_type(biplot(drawConnectors, gridlines.major, gridlines.minor,
     returnPlot),
     c('logical'))
   expect_type(biplot(shape, shapekey, pointSize, legendLabSize, legendIconSize,
@@ -60,8 +60,8 @@ test_that('datatypes', {
   # pairsplot
   expect_is(pairsplot(pcaobj), class = 'pca')
   expect_type(pairsplot(components, x, y, colby, colkey, singlecol,
-    legendPosition, selectLab, colConnectors, xlab, ylab, title,
-    hlineType, hlineCol, vlineType, vlineCol, borderColour),
+    legendPosition, lab, selectLab, colConnectors, xlab, ylab,
+    title, hlineType, hlineCol, vlineType, vlineCol, borderColour),
     c('language', 'character'))
   expect_type(pairsplot(triangle, plotaxeslab, drawConnectors,
     gridlines.major, gridlines.minor, returnPlot),

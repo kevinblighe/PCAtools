@@ -28,7 +28,7 @@
   legendIconSize = 1.5,
   xlim = NULL,
   ylim = NULL,
-  lab = FALSE,
+  lab = NULL,
   labSize = 1.5,
   labhjust = 1.5,
   labvjust = 0,
@@ -104,9 +104,8 @@
   OPTIONAL.}
   \item{xlim}{Limits of the x-axis. DEFAULT = NULL. OPTIONAL.}
   \item{ylim}{Limits of the y-axis. DEFAULT = NULL. OPTIONAL.}
-  \item{lab}{Logical, indicating whether or not to label the points in the
-  plot space. Labels will be taken as the original colnames of the input
-  object, usually sample IDs. DEFAULT = FALSE. OPTIONAL.}
+  \item{lab}{A vector containing labels to add to the plot. DEFAULT = NULL.
+  OPTIONAL.}
   \item{labSize}{Size of labels. DEFAULT = 1.5. OPTIONAL.}
   \item{labhjust}{Horizontal adjustment of label. DEFAULT = 1.5. OPTIONAL.}
   \item{labvjust}{Vertical adjustment of label. DEFAULT = 0. OPTIONAL.}
@@ -165,7 +164,7 @@ A \code{\link{cowplot}} object.
 }
 
 \author{
-Kevin Blighe <kevin@clinicalbioinformatics.co.uk>, Myles Lewis <myles.lewis@qmul.ac.uk>
+Kevin Blighe <kevin@clinicalbioinformatics.co.uk>
 }
 
 \examples{
