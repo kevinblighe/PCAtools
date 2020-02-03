@@ -1,7 +1,7 @@
 Package: PCAtools
 Type: Package
 Title: PCAtools: Everything Principal Components Analysis
-Version: 1.1.10
+Version: 1.1.12
 Authors@R: c(
     person("Kevin", "Blighe", role=c("aut", "cre"), email="kevin@clinicalbioinformatics.co.uk"),
     person("Myles", "Lewis", role=c("ctb")),

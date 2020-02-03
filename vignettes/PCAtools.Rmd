@@ -1,6 +1,6 @@
 ---
 title: "PCAtools: everything Principal Component Analysis"
-author: "Kevin Blighe, Aaron Lun"
+author: "Kevin Blighe"
 date: "`r Sys.Date()`"
 package: "`r packageVersion('PCAtools')`"
 output:
@@ -383,7 +383,7 @@ We can check the genes to which these relate by using biomaRt:
 
   library(biomaRt)
 
-  mart <- useMart('ENSEMBL_MART_ENSEMBL')
+  mart <- useMart('ENSEMBL_MART_ENSEMBL', host = 'useast.ensembl.org')
   mart <- useDataset('hsapiens_gene_ensembl', mart)
 
   getBM(mart = mart,
