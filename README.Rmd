@@ -18,9 +18,9 @@ vignette: >
 
 # Introduction
 
-Principal Component Analysis (PCA) is a very powerful technique that has wide applicability in data science, bioinformatics, and further afield. It was initially developed to analyse large volumes of data in order to tease out the differences/relationships between the logical entities being analysed. It extracts the fundamental structure of the data without the need to build any model to represent it. This 'summary' of the data is arrived at through a process of reduction that can transform the large number of variables into a lesser number that are uncorrelated (i.e. the ‘principal components'), whilst at the same time being capable of easy interpretation on the original data [@PCAtools] [@BligheK].
+Principal Component Analysis (PCA) is a very powerful technique that has wide applicability in data science, bioinformatics, and further afield. It was initially developed to analyse large volumes of data in order to tease out the differences/relationships between the logical entities being analysed. It extracts the fundamental structure of the data without the need to build any model to represent it. This 'summary' of the data is arrived at through a process of reduction that can transform the large number of variables into a lesser number that are uncorrelated (i.e. the ‘principal component'), whilst at the same time being capable of easy interpretation on the original data [@PCAtools] [@BligheK].
 
-*PCAtools* provides functions for data exploration via PCA, and allows the user to generate publication-ready figures. PCA is performed via *BiocSingular* [@Lun] - users can also identify optimal number of principal components via different metrics, such as elbow method and Horn's parallel analysis [@Horn] [@Buja], which has relevance for data reduction in single-cell RNA-seq (scRNA-seq) and high dimensional mass cytometry data.
+*PCAtools* provides functions for data exploration via PCA, and allows the user to generate publication-ready figures. PCA is performed via *BiocSingular* [@Lun] - users can also identify optimal number of principal component via different metrics, such as elbow method and Horn's parallel analysis [@Horn] [@Buja], which has relevance for data reduction in single-cell RNA-seq (scRNA-seq) and high dimensional mass cytometry data.
 
 # Installation
 
@@ -30,7 +30,8 @@ Principal Component Analysis (PCA) is a very powerful technique that has wide ap
 
     if (!requireNamespace('BiocManager', quietly = TRUE))
         install.packages('BiocManager')
-        BiocManager::install('PCAtools')
+
+    BiocManager::install('PCAtools')
 
 ```
 
@@ -59,7 +60,7 @@ recurrence free survival (RFS) from
 First, let's read in and prepare the data:
 
 
-```{r}
+```{r, message = FALSE}
 
   library(Biobase)
   library(GEOquery)
@@ -120,7 +121,7 @@ Conduct principal component analysis (PCA)
 
 ## A scree plot
 
-```{r ex1, fig.height = 7, fig.width = 16, fig.cap = 'Figure 1: A scree plot to show the proportion of explained variance by PC'}
+```{r ex1, warning = FALSE, fig.height = 7, fig.width = 18, fig.cap = 'Figure 1: A scree plot to show the proportion of explained variance by PC'}
 
   screeplot(p)
 
@@ -136,7 +137,7 @@ Conduct principal component analysis (PCA)
 
 ## A pairs plot
 
-```{r ex3, fig.height = 10, fig.width = 10, fig.cap = 'Figure 3: A pairs plot, comparing PC1 - PC5 on a pairwise basis'}
+```{r ex3, message = FALSE, fig.height = 10, fig.width = 10, fig.cap = 'Figure 3: A pairs plot, comparing PC1 - PC5 on a pairwise basis'}
 
   pairsplot(p)
 
@@ -152,7 +153,7 @@ Conduct principal component analysis (PCA)
 
 ## An eigencor plot
 
-```{r ex5, fig.height = 4, fig.width = 8, fig.cap = 'Figure 5: Correlate PCs to metadata variables'}
+```{r ex5, warning = FALSE, fig.height = 4, fig.width = 8, fig.cap = 'Figure 5: Correlate PCs to metadata variables'}
 
   eigencorplot(p,
     metavars = c('Age','Distant.RFS','ER','GGI','Grade','Size','Time.RFS'))
@@ -174,7 +175,7 @@ metrics for this purpose: elbow method and Horn's parallel analysis [@Horn] [@Bu
 
 Let's perform Horn's parallel analysis first:
 
-```{r}
+```{r, warning = FALSE}
 
   horn <- parallelPCA(x)
   horn$n
@@ -235,7 +236,7 @@ In a bi-plot, we can shade the points by different groups and add many more feat
 
 ### Supply custom colours, add more lines, and increase legend size
 
-```{r ex8, fig.height = 7, fig.width = 7, fig.cap = 'Figure 8: supplying custom colours to a bi-plot'}
+```{r ex8, message = FALSE, fig.height = 7, fig.width = 7, fig.cap = 'Figure 8: supplying custom colours to a bi-plot'}
 
   biplot(p,
     colby = 'ER', colkey = c('ER+'='forestgreen', 'ER-'='purple'),
@@ -246,7 +247,7 @@ In a bi-plot, we can shade the points by different groups and add many more feat
 
 ### Change shape based on tumour grade, remove connectors, and add titles
 
-```{r ex9, fig.height = 7, fig.width = 7, fig.cap = 'Figure 9: supplying custom colours and shapes to a bi-plot, removing connectors, and modifying titles'}
+```{r ex9, message = FALSE, fig.height = 7, fig.width = 7, fig.cap = 'Figure 9: supplying custom colours and shapes to a bi-plot, removing connectors, and modifying titles'}
 
   biplot(p,
     colby = 'ER', colkey = c('ER+'='forestgreen', 'ER-'='purple'),
@@ -262,7 +263,7 @@ In a bi-plot, we can shade the points by different groups and add many more feat
 
 ### Remove labels, modify line types, remove gridlines, and increase point size
 
-```{r ex10, fig.height = 6, fig.width = 8, fig.cap = 'Figure 10: removing labels, modifying line types, removing gridlines, and increasing point size in a bi-plot'}
+```{r ex10, message = FALSE, fig.height = 6, fig.width = 8, fig.cap = 'Figure 10: removing labels, modifying line types, removing gridlines, and increasing point size in a bi-plot'}
 
   biplot(p,
     lab = NULL,
@@ -312,7 +313,7 @@ can shut off titles and axis labeling to save space. Reducing point size and
 colouring by a variable of interest can additionally help us to rapidly skim
 over the data.
 
-```{r ex12, fig.height = 8, fig.width = 7, fig.cap = 'Figure 12: maximising available space in a pairs plot'}
+```{r ex12, message = FALSE, fig.height = 8, fig.width = 7, fig.cap = 'Figure 12: maximising available space in a pairs plot'}
 
   pairsplot(p,
     components = getComponents(p, c(1:10)),
@@ -331,7 +332,7 @@ setting 'triangle = FALSE'. In this case, we can further control the layout
 with the 'ncol' and 'nrow' parameters, although, the function will
 automatically determine these based on your input data.
 
-```{r ex13, fig.height = 6, fig.width = 9, fig.cap = 'Figure 13: arranging a pairs plot horizontally'}
+```{r ex13, fig.height = 6, fig.width = 8, fig.cap = 'Figure 13: arranging a pairs plot horizontally'}
 
   pairsplot(p,
     components = getComponents(p, c(4,33,11,1)),
@@ -433,7 +434,7 @@ correlations.
 [CorLevelPlot](https://github.com/kevinblighe/CorLevelPlot). Further examples
 can be found there.
 
-```{r ex16, fig.height = 4, fig.width = 12, fig.cap = 'Figure 16: correlating PCs that account for at least 80% variation to clinical variables'}
+```{r ex16, warning = FALSE, fig.height = 4, fig.width = 12, fig.cap = 'Figure 16: correlating PCs that account for at least 80% variation to clinical variables'}
 
   eigencorplot(p,
     components = getComponents(p, 1:27),
@@ -456,7 +457,7 @@ can be found there.
 We can also supply different cut-offs for statistical significance, plot
 R-squared values, and specify correlation method:
 
-```{r ex17, fig.height = 5, fig.width = 12, fig.cap = 'Figure 17: modifying cut-offs and symbols for statistical significance in eigencorplot'}
+```{r ex17, warning = FALSE, fig.height = 5, fig.width = 12, fig.cap = 'Figure 17: modifying cut-offs and symbols for statistical significance in eigencorplot'}
 
   eigencorplot(p,
     components = getComponents(p, 1:horn$n),
@@ -487,7 +488,7 @@ just a bi-plot used to identify outliers!
 
 ## Plot the entire project on a single panel
 
-```{r ex18, fig.height = 10, fig.width = 15, fig.cap = 'Figure 18: a merged panel of all PCAtools plots'}
+```{r ex18, message = FALSE, warning = FALSE, fig.height = 10, fig.width = 15, fig.cap = 'Figure 18: a merged panel of all PCAtools plots'}
 
   pscree <- screeplot(p, components = getComponents(p, 1:30),
     hline = 80, vline = 27, axisLabSize = 10, returnPlot = FALSE) +
@@ -573,9 +574,10 @@ just a bi-plot used to identify outliers!
 The development of *PCAtools* has benefited from contributions
 and suggestions from:
 
-Krushna Chandra Murmu
+* Krushna Chandra Murmu
+* Jinsheng
+* Myles Lewis
 
-Jinsheng
 
 # Session info
 
@@ -586,4 +588,14 @@ sessionInfo()
 ```
 
 # References
+
+@PCAtools
+
+@BligheK
+
+@Horn
+
+@Buja
+
+@Lun
 
