@@ -5,7 +5,7 @@ date: "`r Sys.Date()`"
 package: "`r packageVersion('PCAtools')`"
 output:
   github_document:
-    toc: false
+    toc: true
     toc_depth: 3
 fig_width: 7
 bibliography: library.bib
@@ -577,7 +577,6 @@ and suggestions from:
 * Krushna Chandra Murmu
 * Jinsheng
 * Myles Lewis
-
 
 # Session info
 

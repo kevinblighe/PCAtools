@@ -1,12 +1,38 @@
 PCAtools: everything Principal Component Analysis
 ================
 Kevin Blighe, Aaron Lun
-2020-02-06
+2020-02-07
+
+-   [Introduction](#introduction)
+-   [Installation](#installation)
+    -   [1. Download the package from Bioconductor](#download-the-package-from-bioconductor)
+    -   [2. Load the package into R session](#load-the-package-into-r-session)
+-   [Quick start](#quick-start)
+    -   [A scree plot](#a-scree-plot)
+    -   [A bi-plot](#a-bi-plot)
+    -   [A pairs plot](#a-pairs-plot)
+    -   [A loadings plot](#a-loadings-plot)
+    -   [An eigencor plot](#an-eigencor-plot)
+-   [Advanced features](#advanced-features)
+    -   [Determine optimum number of PCs to retain](#determine-optimum-number-of-pcs-to-retain)
+    -   [Modify bi-plots](#modify-bi-plots)
+        -   [Colour by a factor from the metadata, use a custom label, add lines through center, and add legend](#colour-by-a-factor-from-the-metadata-use-a-custom-label-add-lines-through-center-and-add-legend)
+        -   [Supply custom colours, add more lines, and increase legend size](#supply-custom-colours-add-more-lines-and-increase-legend-size)
+        -   [Change shape based on tumour grade, remove connectors, and add titles](#change-shape-based-on-tumour-grade-remove-connectors-and-add-titles)
+        -   [Remove labels, modify line types, remove gridlines, and increase point size](#remove-labels-modify-line-types-remove-gridlines-and-increase-point-size)
+        -   [Colour by a continuous variable (colour controlled by ggplot2 engine); plot other PCs](#colour-by-a-continuous-variable-colour-controlled-by-ggplot2-engine-plot-other-pcs)
+    -   [Quickly explore potentially informative PCs via a pairs plot](#quickly-explore-potentially-informative-pcs-via-a-pairs-plot)
+    -   [Determine the variables that drive variation among each PC](#determine-the-variables-that-drive-variation-among-each-pc)
+    -   [Correlate the principal components back to the clinical data](#correlate-the-principal-components-back-to-the-clinical-data)
+    -   [Plot the entire project on a single panel](#plot-the-entire-project-on-a-single-panel)
+-   [Acknowledgments](#acknowledgments)
+-   [Session info](#session-info)
+-   [References](#references)
 
 Introduction
 ============
 
-Principal Component Analysis (PCA) is a very powerful technique that has wide applicability in data science, bioinformatics, and further afield. It was initially developed to analyse large volumes of data in order to tease out the differences/relationships between the logical entities being analysed. It extracts the fundamental structure of the data without the need to build any model to represent it. This 'summary' of the data is arrived at through a process of reduction that can transform the large number of variables into a lesser number that are uncorrelated (i.e. the ‘principal component'), whilst at the same time being capable of easy interpretation on the original data (Blighe, Lewis, and Lun 2018) (Blighe 2013).
+Principal Component Analysis (PCA) is a very powerful technique that has wide applicability in data science, bioinformatics, and further afield. It was initially developed to analyse large volumes of data in order to tease out the differences/relationships between the logical entities being analysed. It extracts the fundamental structure of the data without the need to build any model to represent it. This 'summary' of the data is arrived at through a process of reduction that can transform the large number of variables into a lesser number that are uncorrelated (i.e. the ‘principal component'), whilst at the same time being capable of easy interpretation on the original data (Blighe and Lun 2018) (Blighe 2013).
 
 *PCAtools* provides functions for data exploration via PCA, and allows the user to generate publication-ready figures. PCA is performed via *BiocSingular* (Lun 2019) - users can also identify optimal number of principal component via different metrics, such as elbow method and Horn's parallel analysis (Horn 1965) (Buja and Eyuboglu 1992), which has relevance for data reduction in single-cell RNA-seq (scRNA-seq) and high dimensional mass cytometry data.
 
@@ -638,7 +664,7 @@ sessionInfo()
 References
 ==========
 
-Blighe, Lewis, and Lun (2018)
+Blighe and Lun (2018)
 
 Blighe (2013)
 
@@ -650,7 +676,7 @@ Lun (2019)
 
 Blighe, K. 2013. “Haplotype classification using copy number variation and principal components analysis.” The Open Bioinformatics Journal 7:19-24.
 
-Blighe, K, M Lewis, and A Lun. 2018. “PCAtools: everything Principal Components Analysis.” <https://github.com/kevinblighe>.
+Blighe, K, and A Lun. 2018. “PCAtools: everything Principal Components Analysis.” <https://github.com/kevinblighe>.
 
 Buja, A, and N Eyuboglu. 1992. “Remarks on Parallel Analysis.” Multivariate Behav. Res. 27, 509-40.
 
