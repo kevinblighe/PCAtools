@@ -74,14 +74,16 @@ eigencorplot <- function(
   # let's make sure that anything that isnt' numeric becomes a numeric
   # find all the character columns
   # ---select all the columns which are characters
-    chararcter_columns = yvals %>% 
-      dplyr::select(which(sapply(.,is.character))) %>% colnames()
-
+  # using base R now for dependencies sake 
+    chararcter_columns = unlist(lapply(yvals, is.numeric))  
+    # negate it - basically if it
+    chararcter_columns = !chararcter_columns
+    # select only  the names that are true 
+    chararcter_columns = names(which(chararcter_columns))
     for (c in chararcter_columns){
       print(c)
       yvals[, eval(quote(c))] = as.numeric(as.factor(yvals[, eval(quote(c))]))}
 
-    
     
   yvals <- data.matrix(yvals)
 
