@@ -41,11 +41,14 @@ eigencorplot <- function(
   colFrame = 'white',
   plotRsquared = FALSE,
   returnPlot = TRUE)
+
 {
   data <- pcaobj$rotated
   metadata <- pcaobj$metadata
 
-  # issue warning if any columns to use are not numeric
+  # issue warning if any columns to use are not numeric --- This is kind of annoying
+  # --- and there should be an option to force numeric conversion as anyway I'm doing it in advance
+  
   for (i in seq_len(length(components))) {
     if(!is.numeric(data[,components[i]])) {
       warning(components[i],
@@ -57,7 +60,7 @@ eigencorplot <- function(
     if(!is.numeric(metadata[,metavars[i]])) {
       warning(metavars[i],
         ' is not numeric - please check the source data',
-        ' as everything will be converted to a matrix')
+        ' as non-numeric variables will be coerced to numeric')
     }
   }
 
@@ -68,7 +71,19 @@ eigencorplot <- function(
   #	Factors are converted to numbers based on level ordering
   xvals <- data.matrix(data[,which(colnames(data) %in% components)])
   yvals <- metadata[,which(colnames(metadata) %in% metavars)]
-  yvals <- data.matrix(metadata[,which(colnames(metadata) %in% metavars)])
+  # let's make sure that anything that isnt' numeric becomes a numeric
+  # find all the character columns
+  # ---select all the columns which are characters
+    chararcter_columns = yvals %>% 
+      dplyr::select(which(sapply(.,is.character))) %>% colnames()
+
+    for (c in chararcter_columns){
+      print(c)
+      yvals[, eval(quote(c))] = as.numeric(as.factor(yvals[, eval(quote(c))]))}
+
+    
+    
+  yvals <- data.matrix(yvals)
 
   # create correlation table
   corvals <- cor(xvals, yvals, use = corUSE, method = corFUN)
