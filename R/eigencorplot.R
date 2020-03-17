@@ -36,16 +36,20 @@ eigencorplot <- function(
   fontMain = 2,
   corFUN = 'pearson',
   corUSE = 'pairwise.complete.obs',
+  corMultipleTestCorrection = 'none',
   signifSymbols = c('***', '**', '*', ''),
   signifCutpoints = c(0, 0.001, 0.01, 0.05, 1),
   colFrame = 'white',
   plotRsquared = FALSE,
   returnPlot = TRUE)
+
 {
   data <- pcaobj$rotated
   metadata <- pcaobj$metadata
 
-  # issue warning if any columns to use are not numeric
+  # issue warning if any columns to use are not numeric --- This is kind of annoying
+  # --- and there should be an option to force numeric conversion as anyway I'm doing it in advance
+  
   for (i in seq_len(length(components))) {
     if(!is.numeric(data[,components[i]])) {
       warning(components[i],
@@ -57,7 +61,7 @@ eigencorplot <- function(
     if(!is.numeric(metadata[,metavars[i]])) {
       warning(metavars[i],
         ' is not numeric - please check the source data',
-        ' as everything will be converted to a matrix')
+        ' as non-numeric variables will be coerced to numeric')
     }
   }
 
@@ -68,25 +72,59 @@ eigencorplot <- function(
   #	Factors are converted to numbers based on level ordering
   xvals <- data.matrix(data[,which(colnames(data) %in% components)])
   yvals <- metadata[,which(colnames(metadata) %in% metavars)]
-  yvals <- data.matrix(metadata[,which(colnames(metadata) %in% metavars)])
+  # let's make sure that anything that isnt' numeric becomes a numeric
+  # find all the character columns
+  # ---select all the columns which are characters
+  # using base R now for dependencies sake 
+    chararcter_columns = unlist(lapply(yvals, is.numeric))  
+    # negate it - basically if it
+    chararcter_columns = !chararcter_columns
+    # select only  the names that are true 
+    chararcter_columns = names(which(chararcter_columns))
+    for (c in chararcter_columns){
+      print(c)
+      yvals[, eval(quote(c))] = as.numeric(as.factor(yvals[, eval(quote(c))]))}
+
+    
+  yvals <- data.matrix(yvals)
 
   # create correlation table
   corvals <- cor(xvals, yvals, use = corUSE, method = corFUN)
 
   # create a new df with same dimensions as corvals and fill with P values
-  pvals <- corvals
+  # total number of tests we perform
+  N <- ncol(xvals) * ncol(yvals)
+  pvals <- data.frame(pval = numeric(N),
+                       i = numeric(N),
+                       j = numeric(N))
+  k <- 0
   for (i in seq_len(ncol(xvals))) {
-    for (j in seq_len(ncol(yvals))) {
-      pvals[i,j] <- cor.test(xvals[,i],
-        yvals[,j],
-        use = corUSE,
-        method = corFUN)$p.value
-      colnames(pvals)[j] <- colnames(yvals)[j]
+    for (j in seq_len(ncol(yvals))) { 
+      k <- k + 1
+      pvals[k,'pval'] <- cor.test(xvals[,i],
+                             yvals[,j],
+                             use = corUSE,
+                             method = corFUN)$p.value
+      pvals[k,"i"] <- colnames(xvals)[i]
+      pvals[k,"j"] <- colnames(yvals)[j]
+
     }
-
-    rownames(pvals)[i] <- colnames(xvals)[i]
   }
+  # -----if you want to adjust the p-values for multiple testing
+  if(corMultipleTestCorrection != "none"){
+    pvals$pval <- p.adjust(pvals$pval, method = corMultipleTestCorrection)
+  }
+  
+  
 
+  pvals <- reshape2::dcast(pvals, i ~ j, value.var = "pval")
+  # -----make sure the pvals matchs the order of corrvals table
+  rownames(pvals) <- pvals$i
+  pvals$i <- NULL
+  pvals <- pvals[match(rownames(corvals), rownames(pvals)), ]
+  # ---make sure the columns are in the correct order
+  pvals <- pvals[colnames(corvals)]
+  # ------
   # are we plotting R^2 values?
   if (plotRsquared==TRUE) {
     corvals <- corvals ^ 2
