@@ -454,8 +454,8 @@ can be found there.
 
 ```
 
-We can also supply different cut-offs for statistical significance, plot
-R-squared values, and specify correlation method:
+We can also supply different cut-offs for statistical significance, apply
+p-value adjustment, plot R-squared values, and specify correlation method:
 
 ```{r ex17, warning = FALSE, fig.height = 5, fig.width = 12, fig.cap = 'Figure 17: modifying cut-offs and symbols for statistical significance in eigencorplot'}
 
@@ -472,6 +472,7 @@ R-squared values, and specify correlation method:
     plotRsquared = TRUE,
     corFUN = 'pearson',
     corUSE = 'pairwise.complete.obs',
+    corMultipleTestCorrection = 'BH',
     signifSymbols = c('****', '***', '**', '*', ''),
     signifCutpoints = c(0, 0.0001, 0.001, 0.01, 0.05, 1))
 
@@ -577,6 +578,7 @@ and suggestions from:
 * Krushna Chandra Murmu
 * Jinsheng
 * Myles Lewis
+* Anna-Leigh Brown
 
 # Session info
 

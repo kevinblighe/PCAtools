@@ -72,19 +72,22 @@ eigencorplot <- function(
   #	Factors are converted to numbers based on level ordering
   xvals <- data.matrix(data[,which(colnames(data) %in% components)])
   yvals <- metadata[,which(colnames(metadata) %in% metavars)]
-  # let's make sure that anything that isnt' numeric becomes a numeric
-  # find all the character columns
-  # ---select all the columns which are characters
-  # using base R now for dependencies sake 
-    chararcter_columns = unlist(lapply(yvals, is.numeric))  
-    # negate it - basically if it
-    chararcter_columns = !chararcter_columns
-    # select only  the names that are true 
-    chararcter_columns = names(which(chararcter_columns))
-    for (c in chararcter_columns){
-      print(c)
-      yvals[, eval(quote(c))] = as.numeric(as.factor(yvals[, eval(quote(c))]))}
 
+  ### code courtesy of aleighbrown
+    # let's make sure that anything that isnt' numeric becomes a numeric
+    # find all the character columns
+    # ---select all the columns which are characters
+    # using base R now for dependencies sake 
+      chararcter_columns = unlist(lapply(yvals, is.numeric))  
+      # negate it - basically if it
+      chararcter_columns = !chararcter_columns
+      # select only the names that are true 
+      chararcter_columns = names(which(chararcter_columns))
+      for (c in chararcter_columns) {
+        print(c)
+        yvals[, eval(quote(c))] = as.numeric(as.factor(yvals[, eval(quote(c))]))
+      }
+  ### END
     
   yvals <- data.matrix(yvals)
 
@@ -110,21 +113,23 @@ eigencorplot <- function(
 
     }
   }
-  # -----if you want to adjust the p-values for multiple testing
-  if(corMultipleTestCorrection != "none"){
-    pvals$pval <- p.adjust(pvals$pval, method = corMultipleTestCorrection)
-  }
-  
-  
 
-  pvals <- reshape2::dcast(pvals, i ~ j, value.var = "pval")
-  # -----make sure the pvals matchs the order of corrvals table
-  rownames(pvals) <- pvals$i
-  pvals$i <- NULL
-  pvals <- pvals[match(rownames(corvals), rownames(pvals)), ]
-  # ---make sure the columns are in the correct order
-  pvals <- pvals[colnames(corvals)]
-  # ------
+  ### code courtesy of aleighbrown
+    # -----if you want to adjust the p-values for multiple testing
+    if(corMultipleTestCorrection != "none"){
+      pvals$pval <- p.adjust(pvals$pval, method = corMultipleTestCorrection)
+    }
+
+    pvals <- reshape2::dcast(pvals, i ~ j, value.var = "pval")
+    # -----make sure the pvals matchs the order of corrvals table
+    rownames(pvals) <- pvals$i
+    pvals$i <- NULL
+    pvals <- pvals[match(rownames(corvals), rownames(pvals)), ]
+    # ---make sure the columns are in the correct order
+    pvals <- pvals[colnames(corvals)]
+    # ------
+  ### END
+
   # are we plotting R^2 values?
   if (plotRsquared==TRUE) {
     corvals <- corvals ^ 2

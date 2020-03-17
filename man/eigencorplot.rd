@@ -44,6 +44,7 @@ eigencorplot(pcaobj,
   fontMain = 2,
   corFUN = 'pearson',
   corUSE = 'pairwise.complete.obs',
+  corMultipleTestCorrection = 'none',
   signifSymbols = c('***', '**', '*', ''),
   signifCutpoints = c(0, 0.001, 0.01, 0.05, 1),
   colFrame = 'white',
@@ -106,6 +107,10 @@ eigencorplot(pcaobj,
   function via ?cor). 'everything', 'all.obs', 'complete.obs',
   'na.or.complete', or 'pairwise.complete.obs'. DEFAULT =
   'pairwise.complete.obs'. OPTIONAL.}
+  \item{corMultipleTestCorrection}{Multiple testing p-value adjustment method.
+    Any method from stats::p.adjust() can be used. Activating this function means that
+    signifSymbols and signifCutpoints then relate to adjusted (not nominal) 
+    p-values. DEFAULT = 'none'.}
   \item{signifSymbols}{Statistical significance symbols to display beside
   correlation values. DEFAULT = c('***', '**', '*', ''). OPTIONAL.}
   \item{signifCutpoints}{Cut-points for statistical significance. DEFAULT =

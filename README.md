@@ -1,7 +1,7 @@
 PCAtools: everything Principal Component Analysis
 ================
 Kevin Blighe, Aaron Lun
-2020-02-15
+2020-03-17
 
 -   [Introduction](#introduction)
 -   [Installation](#installation)
@@ -175,6 +175,10 @@ An eigencor plot
   eigencorplot(p,
     metavars = c('Age','Distant.RFS','ER','GGI','Grade','Size','Time.RFS'))
 ```
+
+    ## [1] "Distant.RFS"
+    ## [1] "ER"
+    ## [1] "Grade"
 
 ![Figure 5: Correlate PCs to metadata variables](README_files/figure-markdown_github/ex5-1.png)
 
@@ -479,9 +483,13 @@ We may wish, for example, to correlate all PCs that account for 80% variation in
     plotRsquared = FALSE)
 ```
 
+    ## [1] "Distant.RFS"
+    ## [1] "ER"
+    ## [1] "Grade"
+
 ![Figure 16: correlating PCs that account for at least 80% variation to clinical variables](README_files/figure-markdown_github/ex16-1.png)
 
-We can also supply different cut-offs for statistical significance, plot R-squared values, and specify correlation method:
+We can also supply different cut-offs for statistical significance, apply p-value adjustment, plot R-squared values, and specify correlation method:
 
 ``` r
   eigencorplot(p,
@@ -497,9 +505,14 @@ We can also supply different cut-offs for statistical significance, plot R-squar
     plotRsquared = TRUE,
     corFUN = 'pearson',
     corUSE = 'pairwise.complete.obs',
+    corMultipleTestCorrection = 'BH',
     signifSymbols = c('****', '***', '**', '*', ''),
     signifCutpoints = c(0, 0.0001, 0.001, 0.01, 0.05, 1))
 ```
+
+    ## [1] "Distant.RFS"
+    ## [1] "ER"
+    ## [1] "Grade"
 
 ![Figure 17: modifying cut-offs and symbols for statistical significance in eigencorplot](README_files/figure-markdown_github/ex17-1.png)
 
@@ -563,7 +576,13 @@ Plot the entire project on a single panel
     signifSymbols = c('****', '***', '**', '*', ''),
     signifCutpoints = c(0, 0.0001, 0.001, 0.01, 0.05, 1),
     returnPlot = FALSE)
+```
 
+    ## [1] "Distant.RFS"
+    ## [1] "ER"
+    ## [1] "Grade"
+
+``` r
     library(cowplot)
     library(ggplotify)
 
@@ -599,6 +618,7 @@ The development of *PCAtools* has benefited from contributions and suggestions f
 -   Krushna Chandra Murmu
 -   Jinsheng
 -   Myles Lewis
+-   Anna-Leigh Brown
 
 Session info
 ============
@@ -607,7 +627,7 @@ Session info
 sessionInfo()
 ```
 
-    ## R version 3.6.2 (2019-12-12)
+    ## R version 3.6.3 (2020-02-29)
     ## Platform: x86_64-pc-linux-gnu (64-bit)
     ## Running under: Ubuntu 16.04.6 LTS
     ## 
@@ -629,7 +649,7 @@ sessionInfo()
     ## 
     ## other attached packages:
     ##  [1] ggplotify_0.0.4     biomaRt_2.42.0      GEOquery_2.54.0    
-    ##  [4] Biobase_2.46.0      BiocGenerics_0.32.0 PCAtools_1.2.0     
+    ##  [4] Biobase_2.46.0      BiocGenerics_0.32.0 PCAtools_1.99.4    
     ##  [7] cowplot_1.0.0       lattice_0.20-38     reshape2_1.4.3     
     ## [10] ggrepel_0.8.1       ggplot2_3.2.1      
     ## 
@@ -637,7 +657,7 @@ sessionInfo()
     ##  [1] httr_1.4.1               BiocSingular_1.2.0       tidyr_1.0.0             
     ##  [4] bit64_0.9-7              DelayedMatrixStats_1.8.0 assertthat_0.2.1        
     ##  [7] askpass_1.1              BiocManager_1.30.9       rvcheck_0.1.6           
-    ## [10] BiocFileCache_1.10.2     highr_0.8                stats4_3.6.2            
+    ## [10] BiocFileCache_1.10.2     highr_0.8                stats4_3.6.3            
     ## [13] dqrng_0.2.1              blob_1.2.0               yaml_2.2.0              
     ## [16] progress_1.2.2           pillar_1.4.2             RSQLite_2.1.2           
     ## [19] backports_1.1.5          glue_1.3.1               limma_3.42.0            
@@ -648,12 +668,12 @@ sessionInfo()
     ## [34] IRanges_2.20.0           ellipsis_0.3.0           withr_2.1.2             
     ## [37] lazyeval_0.2.2           magrittr_1.5             crayon_1.3.4            
     ## [40] memoise_1.1.0            evaluate_0.14            xml2_1.2.2              
-    ## [43] tools_3.6.2              prettyunits_1.0.2        hms_0.5.2               
+    ## [43] tools_3.6.3              prettyunits_1.0.2        hms_0.5.2               
     ## [46] lifecycle_0.1.0          matrixStats_0.55.0       stringr_1.4.0           
     ## [49] S4Vectors_0.24.0         munsell_0.5.0            DelayedArray_0.12.0     
-    ## [52] irlba_2.3.3              AnnotationDbi_1.48.0     compiler_3.6.2          
+    ## [52] irlba_2.3.3              AnnotationDbi_1.48.0     compiler_3.6.3          
     ## [55] rsvd_1.0.2               gridGraphics_0.4-1       rlang_0.4.1             
-    ## [58] grid_3.6.2               rappdirs_0.3.1           labeling_0.3            
+    ## [58] grid_3.6.3               rappdirs_0.3.1           labeling_0.3            
     ## [61] rmarkdown_1.17           gtable_0.3.0             DBI_1.0.0               
     ## [64] curl_4.2                 R6_2.4.1                 knitr_1.26              
     ## [67] dplyr_0.8.3              bit_1.1-14               zeallot_0.1.0           
