@@ -1,7 +1,7 @@
 PCAtools: everything Principal Component Analysis
 ================
 Kevin Blighe, Aaron Lun
-2020-03-17
+2020-04-02
 
 -   [Introduction](#introduction)
 -   [Installation](#installation)
@@ -381,9 +381,9 @@ The loadings plot, like all others, is highly configurable. To modify the cut-of
 
 We can check the genes to which these relate by using biomaRt:
 
-``` r
-  library(biomaRt)
+*not run*
 
+``` r
   mart <- useMart('ENSEMBL_MART_ENSEMBL', host = 'useast.ensembl.org')
   mart <- useDataset('hsapiens_gene_ensembl', mart)
 
@@ -396,41 +396,6 @@ We can check the genes to which these relate by using biomaRt:
       '205380_at'),
     uniqueRows = TRUE)
 ```
-
-    ## Cache found
-
-    ##    affy_hg_u133a ensembl_gene_id                       gene_biotype
-    ## 1      214464_at ENSG00000143776                     protein_coding
-    ## 2      205380_at ENSG00000215859 transcribed_unprocessed_pseudogene
-    ## 3    208650_s_at ENSG00000272398                     protein_coding
-    ## 4    211122_s_at ENSG00000169248                     protein_coding
-    ## 5      204540_at ENSG00000101210                     protein_coding
-    ## 6      205225_at ENSG00000091831                     protein_coding
-    ## 7    215176_x_at ENSG00000242371                          IG_V_gene
-    ## 8    215176_x_at ENSG00000251546                          IG_V_gene
-    ## 9      205380_at ENSG00000174827                     protein_coding
-    ## 10     205044_at ENSG00000094755                     protein_coding
-    ## 11   215281_x_at ENSG00000143442                     protein_coding
-    ## 12   208650_s_at ENSG00000185275               processed_pseudogene
-    ## 13   208650_s_at ENSG00000261333               processed_pseudogene
-    ## 14   202037_s_at ENSG00000104332                     protein_coding
-    ## 15   215176_x_at ENSG00000282120                          IG_V_gene
-    ##    external_gene_name
-    ## 1            CDC42BPA
-    ## 2             PDZK1P1
-    ## 3                CD24
-    ## 4              CXCL11
-    ## 5              EEF1A2
-    ## 6                ESR1
-    ## 7            IGKV1-39
-    ## 8           IGKV1D-39
-    ## 9               PDZK1
-    ## 10              GABRP
-    ## 11               POGZ
-    ## 12             CD24P4
-    ## 13             CD24P2
-    ## 14              SFRP1
-    ## 15           IGKV1-39
 
 At least one interesting finding is 205225\_at (ESR1), which is by far the gene most responsible for variation along PC2. The previous bi-plots showed that this PC also segregated ER+ from ER- patients. The other results could be explored.
 
@@ -648,38 +613,32 @@ sessionInfo()
     ## [8] base     
     ## 
     ## other attached packages:
-    ##  [1] ggplotify_0.0.4     biomaRt_2.42.0      GEOquery_2.54.0    
-    ##  [4] Biobase_2.46.0      BiocGenerics_0.32.0 PCAtools_1.99.4    
-    ##  [7] cowplot_1.0.0       lattice_0.20-38     reshape2_1.4.3     
-    ## [10] ggrepel_0.8.1       ggplot2_3.2.1      
+    ##  [1] ggplotify_0.0.4     GEOquery_2.54.0     Biobase_2.46.0     
+    ##  [4] BiocGenerics_0.32.0 PCAtools_1.99.6     cowplot_1.0.0      
+    ##  [7] lattice_0.20-40     reshape2_1.4.3      ggrepel_0.8.1      
+    ## [10] ggplot2_3.2.1      
     ## 
     ## loaded via a namespace (and not attached):
-    ##  [1] httr_1.4.1               BiocSingular_1.2.0       tidyr_1.0.0             
-    ##  [4] bit64_0.9-7              DelayedMatrixStats_1.8.0 assertthat_0.2.1        
-    ##  [7] askpass_1.1              BiocManager_1.30.9       rvcheck_0.1.6           
-    ## [10] BiocFileCache_1.10.2     highr_0.8                stats4_3.6.3            
-    ## [13] dqrng_0.2.1              blob_1.2.0               yaml_2.2.0              
-    ## [16] progress_1.2.2           pillar_1.4.2             RSQLite_2.1.2           
-    ## [19] backports_1.1.5          glue_1.3.1               limma_3.42.0            
-    ## [22] digest_0.6.22            colorspace_1.4-1         htmltools_0.4.0         
-    ## [25] Matrix_1.2-17            plyr_1.8.4               XML_3.98-1.20           
-    ## [28] pkgconfig_2.0.3          purrr_0.3.3              scales_1.0.0            
-    ## [31] BiocParallel_1.20.0      tibble_2.1.3             openssl_1.4.1           
-    ## [34] IRanges_2.20.0           ellipsis_0.3.0           withr_2.1.2             
-    ## [37] lazyeval_0.2.2           magrittr_1.5             crayon_1.3.4            
-    ## [40] memoise_1.1.0            evaluate_0.14            xml2_1.2.2              
-    ## [43] tools_3.6.3              prettyunits_1.0.2        hms_0.5.2               
-    ## [46] lifecycle_0.1.0          matrixStats_0.55.0       stringr_1.4.0           
-    ## [49] S4Vectors_0.24.0         munsell_0.5.0            DelayedArray_0.12.0     
-    ## [52] irlba_2.3.3              AnnotationDbi_1.48.0     compiler_3.6.3          
-    ## [55] rsvd_1.0.2               gridGraphics_0.4-1       rlang_0.4.1             
-    ## [58] grid_3.6.3               rappdirs_0.3.1           labeling_0.3            
-    ## [61] rmarkdown_1.17           gtable_0.3.0             DBI_1.0.0               
-    ## [64] curl_4.2                 R6_2.4.1                 knitr_1.26              
-    ## [67] dplyr_0.8.3              bit_1.1-14               zeallot_0.1.0           
-    ## [70] readr_1.3.1              stringi_1.4.3            Rcpp_1.0.3              
-    ## [73] vctrs_0.2.0              dbplyr_1.4.2             tidyselect_0.2.5        
-    ## [76] xfun_0.11
+    ##  [1] Rcpp_1.0.3               rsvd_1.0.2               tidyr_1.0.0             
+    ##  [4] assertthat_0.2.1         zeallot_0.1.0            digest_0.6.22           
+    ##  [7] R6_2.4.1                 plyr_1.8.4               backports_1.1.5         
+    ## [10] stats4_3.6.3             evaluate_0.14            highr_0.8               
+    ## [13] pillar_1.4.2             rlang_0.4.1              lazyeval_0.2.2          
+    ## [16] curl_4.2                 irlba_2.3.3              S4Vectors_0.24.0        
+    ## [19] Matrix_1.2-17            rmarkdown_1.17           labeling_0.3            
+    ## [22] BiocParallel_1.20.0      readr_1.3.1              stringr_1.4.0           
+    ## [25] munsell_0.5.0            DelayedArray_0.12.0      compiler_3.6.3          
+    ## [28] BiocSingular_1.2.0       xfun_0.11                pkgconfig_2.0.3         
+    ## [31] gridGraphics_0.4-1       htmltools_0.4.0          tidyselect_0.2.5        
+    ## [34] tibble_2.1.3             IRanges_2.20.0           matrixStats_0.55.0      
+    ## [37] crayon_1.3.4             dplyr_0.8.3              withr_2.1.2             
+    ## [40] grid_3.6.3               gtable_0.3.0             lifecycle_0.1.0         
+    ## [43] magrittr_1.5             scales_1.0.0             dqrng_0.2.1             
+    ## [46] stringi_1.4.3            limma_3.42.0             xml2_1.2.2              
+    ## [49] rvcheck_0.1.6            DelayedMatrixStats_1.8.0 ellipsis_0.3.0          
+    ## [52] vctrs_0.2.0              tools_3.6.3              glue_1.3.1              
+    ## [55] purrr_0.3.3              hms_0.5.2                yaml_2.2.0              
+    ## [58] colorspace_1.4-1         BiocManager_1.30.9       knitr_1.26
 
 References
 ==========

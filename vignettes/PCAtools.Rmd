@@ -380,7 +380,9 @@ add a title, subtitle, and caption, and alter the shape and colour scheme.
 
 We can check the genes to which these relate by using biomaRt:
 
-```{r eval=TRUE}
+*not run*
+
+```{r eval = FALSE}
 
   library(biomaRt)
 

@@ -377,9 +377,9 @@ add a title, subtitle, and caption, and alter the shape and colour scheme.
 
 We can check the genes to which these relate by using biomaRt:
 
-```{r eval=TRUE}
+*not run*
 
-  library(biomaRt)
+```{r eval = FALSE}
 
   mart <- useMart('ENSEMBL_MART_ENSEMBL', host = 'useast.ensembl.org')
   mart <- useDataset('hsapiens_gene_ensembl', mart)
