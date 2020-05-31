@@ -2,6 +2,19 @@ biplot <- function(
   pcaobj,
   x = 'PC1',
   y = 'PC2',
+  showLoadings = FALSE,
+  ntopLoadings = 5,
+  showLoadingsNames = if (showLoadings) TRUE else FALSE,
+  colLoadingsNames = 'black',
+  sizeLoadingsNames = 3,
+  boxedLoadingsNames = TRUE,
+  drawConnectorsLoadings = TRUE,
+  widthConnectorsLoadings = 0.5,
+  colConnectorsLoadings = 'grey50',
+  lengthLoadingsArrowsFactor = 1.5,
+  colLoadingsArrows = 'black',
+  widthLoadingsArrows = 0.5,
+  alphaLoadingsArrow = 1.0,
   colby = NULL,
   colkey = NULL,
   singlecol = NULL,
@@ -11,24 +24,25 @@ biplot <- function(
   legendPosition = 'none',
   legendLabSize = 12,
   legendIconSize = 5.0,
-  xlim = NULL,
-  ylim = NULL,
+  xlim = c(min(pcaobj$rotated[,x]) - 5, max(pcaobj$rotated[,x]) + 5),
+  ylim = c(min(pcaobj$rotated[,y]) - 5, max(pcaobj$rotated[,y]) + 5),
   lab = rownames(pcaobj$metadata),
   labSize = 3.0,
   labhjust = 1.5,
   labvjust = 0,
+  boxedLabels = FALSE,
   selectLab = NULL,
   drawConnectors = TRUE,
   widthConnectors = 0.5,
   colConnectors = 'grey50',
   xlab = paste0(x, ', ',
-    round(pcaobj$variance[x], digits=2),
+    round(pcaobj$variance[x], digits = 2),
     '% variation'),
   xlabAngle = 0,
   xlabhjust = 0.5,
   xlabvjust = 0.5,
   ylab = paste0(y, ', ',
-    round(pcaobj$variance[y], digits=2),
+    round(pcaobj$variance[y], digits = 2),
     '% variation'),
   ylabAngle = 0,
   ylabhjust = 0.5,
@@ -54,32 +68,35 @@ biplot <- function(
   borderColour = 'black',
   returnPlot = TRUE)
 {
+
+  labFun <- xidx <- yidx <- NULL
+
   # create a base theme that will later be modified
-  th <- theme_bw(base_size=24) +
+  th <- theme_bw(base_size = 24) +
 
     theme(
-      legend.background=element_rect(),
+      legend.background = element_rect(),
 
-      plot.title=element_text(angle=0, size=titleLabSize,
-        face='bold', vjust=1),
-      plot.subtitle=element_text(angle = 0, size = subtitleLabSize,
+      plot.title = element_text(angle = 0, size = titleLabSize,
+        face = 'bold', vjust = 1),
+      plot.subtitle = element_text(angle = 0, size = subtitleLabSize,
         face = 'plain', vjust = 1),
-      plot.caption=element_text(angle = 0, size = captionLabSize,
+      plot.caption = element_text(angle = 0, size = captionLabSize,
         face = 'plain', vjust = 1),
 
-      axis.text.x=element_text(angle = xlabAngle, size = axisLabSize,
+      axis.text.x = element_text(angle = xlabAngle, size = axisLabSize,
         hjust = xlabhjust, vjust = xlabvjust),
-      axis.text.y=element_text(angle = ylabAngle, size = axisLabSize,
+      axis.text.y = element_text(angle = ylabAngle, size = axisLabSize,
         hjust = ylabhjust, vjust = ylabvjust),
-      axis.title=element_text(size=axisLabSize),
+      axis.title = element_text(size=axisLabSize),
 
-      legend.position=legendPosition,
-      legend.key=element_blank(),
-      legend.key.size=unit(0.5, 'cm'),
-      legend.text=element_text(size=legendLabSize),
+      legend.position = legendPosition,
+      legend.key = element_blank(),
+      legend.key.size = unit(0.5, 'cm'),
+      legend.text = element_text(size = legendLabSize),
 
-      title=element_text(size=legendLabSize),
-      legend.title=element_blank())
+      title = element_text(size = legendLabSize),
+      legend.title = element_blank())
 
   # set plot data labels (e.g. sample names)
   plotobj <- NULL
@@ -109,7 +126,7 @@ biplot <- function(
     if (!is.null(lab)) {
       plotobj$col <- lab
     } else {
-      plotobj$col <- c(1:length(pcaobj$yvars))
+      plotobj$col <- seq_along(1:length(pcaobj$yvars))
     }
   } else {
     plotobj$col <- pcaobj$metadata[,colby]
@@ -153,6 +170,83 @@ biplot <- function(
   }
   if (!is.null(shapekey)) {
     plot <- plot + scale_shape_manual(values = shapekey)
+  }
+
+  # plot loadings arrows?
+  if (showLoadings) {
+    # get top ntopLoadings to display
+    xidx <- order(abs(pcaobj$loadings[,x]), decreasing = TRUE)
+    yidx <- order(abs(pcaobj$loadings[,y]), decreasing = TRUE)
+    vars <- unique(c(
+      rownames(pcaobj$loadings)[xidx][seq_along(1:ntopLoadings)],
+      rownames(pcaobj$loadings)[yidx][seq_along(1:ntopLoadings)]))
+
+    # get scaling parameter to match between variable loadings and rotated loadings
+    r <- min(
+      (max(pcaobj$rotated[,x]) - min(pcaobj$rotated[,x]) /
+        (max(pcaobj$loadings[,x]) - min(pcaobj$loadings[,x]))),
+      (max(pcaobj$rotated[,y]) - min(pcaobj$rotated[,y]) /
+        (max(pcaobj$loadings[,y]) - min(pcaobj$loadings[,y]))))
+
+    plot <- plot +
+      geom_segment(data = pcaobj$loadings[vars,],
+        aes(x = 0, y = 0,
+          xend = pcaobj$loadings[vars,x] * r * lengthLoadingsArrowsFactor,
+          yend = pcaobj$loadings[vars,y] * r * lengthLoadingsArrowsFactor),
+        arrow = arrow(length = unit(1/2, 'picas'), ends = 'last'), 
+        color = colLoadingsArrows,
+        size = widthLoadingsArrows,
+        alpha = alphaLoadingsArrow,
+        show.legend = NA)
+
+    if (showLoadingsNames) {
+      if (drawConnectorsLoadings) {
+        if (boxedLoadingsNames) {
+          plot <- plot + coord_equal() +
+            geom_label_repel(data = pcaobj$loadings[vars,], 
+              aes(label = vars,
+                x = pcaobj$loadings[vars,x] * r * lengthLoadingsArrowsFactor,
+                y = pcaobj$loadings[vars,y] * r * lengthLoadingsArrowsFactor,
+              hjust = 0),
+              color = colLoadingsNames,
+              size = sizeLoadingsNames,
+              segment.color = colConnectorsLoadings,
+              segment.size = widthConnectorsLoadings)
+        } else {
+          plot <- plot + coord_equal() +
+            geom_text_repel(data = pcaobj$loadings[vars,], 
+              aes(label = vars,
+                x = pcaobj$loadings[vars,x] * r * lengthLoadingsArrowsFactor,
+                y = pcaobj$loadings[vars,y] * r * lengthLoadingsArrowsFactor,
+              hjust = 0),
+              color = colLoadingsNames,
+              size = sizeLoadingsNames,
+              segment.color = colConnectorsLoadings,
+              segment.size = widthConnectorsLoadings)
+        }
+      } else {
+        if (boxedLoadingsNames) {
+          plot <- plot + coord_equal() +
+            geom_label(data = pcaobj$loadings[vars,], 
+              aes(label = vars,
+                x = pcaobj$loadings[vars,x] * r * lengthLoadingsArrowsFactor,
+                y = pcaobj$loadings[vars,y] * r * lengthLoadingsArrowsFactor,
+              hjust = 0),
+              color = colLoadingsNames,
+              size = sizeLoadingsNames)
+        } else {
+          plot <- plot + coord_equal() +
+            geom_text(data = pcaobj$loadings[vars,], 
+              aes(label = vars,
+                x = pcaobj$loadings[vars,x] * r * lengthLoadingsArrowsFactor,
+                y = pcaobj$loadings[vars,y] * r * lengthLoadingsArrowsFactor,
+              hjust = 0),
+              color = colLoadingsNames,
+              size = sizeLoadingsNames,
+              check_overlap = TRUE)
+        }
+      }
+    }
   }
 
   # add elements to the plot for xy labeling and axis limits
@@ -201,12 +295,24 @@ biplot <- function(
     plot <- plot + theme(panel.grid.minor = element_blank())
   }
 
-  # For labeling with geom_text_repel (connectors) and
-  # geom_text(.., check_overlap = TRUE), 4 possible scenarios
-  # can arise
+  # labeling
+  if (boxedLabels) {
+    if (drawConnectors) {
+      labFun <- function(...) geom_label_repel(...)
+    } else {
+      labFun <- function(...) geom_label(...)
+    }
+  } else {
+    if (drawConnectors) {
+      labFun <- function(...) geom_text_repel(...)
+    } else {
+      labFun <- function(...) geom_text(...)
+    }
+  }
+
   if (!is.null(lab)) {
-    if (drawConnectors == TRUE && is.null(selectLab)) {
-      plot <- plot + geom_text_repel(
+    if (drawConnectors && is.null(selectLab)) {
+      plot <- plot + labFun(
         data = plotobj,
           aes(label = lab),
           size = labSize,
@@ -214,8 +320,8 @@ biplot <- function(
           segment.size = widthConnectors,
           hjust = labhjust,
           vjust = labvjust)
-    } else if (drawConnectors == TRUE && !is.null(selectLab)) {
-      plot <- plot + geom_text_repel(
+    } else if (drawConnectors && !is.null(selectLab)) {
+      plot <- plot + labFun(
         data=subset(plotobj,
           !is.na(plotobj[,'lab'])),
           aes(label = lab),
@@ -224,30 +330,51 @@ biplot <- function(
           segment.size = widthConnectors,
           hjust = labhjust,
           vjust = labvjust)
-    } else if (drawConnectors == FALSE && !is.null(selectLab)) {
-      plot <- plot + geom_text(
-        data=subset(plotobj,
-          !is.na(plotobj[,'lab'])),
-          aes(label = lab),
-          size = labSize,
-          check_overlap = TRUE,
-          hjust = labhjust,
-          vjust = labvjust)
-    } else if (drawConnectors == FALSE && is.null(selectLab)) {
-      plot <- plot + geom_text(
-        data = plotobj,
-          aes(label = lab),
-          size = labSize,
-          check_overlap = TRUE,
-          hjust = labhjust,
-          vjust = labvjust)
+    } else if (!drawConnectors && !is.null(selectLab)) {
+      if (boxedLabels) {
+        plot <- plot + labFun(
+          data=subset(plotobj,
+            !is.na(plotobj[,'lab'])),
+            aes(label = lab),
+            size = labSize,
+            hjust = labhjust,
+            vjust = labvjust)
+      } else {
+        plot <- plot + labFun(
+          data=subset(plotobj,
+            !is.na(plotobj[,'lab'])),
+            aes(label = lab),
+            size = labSize,
+            check_overlap = TRUE,
+            hjust = labhjust,
+            vjust = labvjust)
+      }
+    } else if (!drawConnectors && is.null(selectLab)) {
+      if (boxedLabels) {
+        plot <- plot + labFun(
+          data = plotobj,
+            aes(label = lab),
+            size = labSize,
+            check_overlap = TRUE,
+            hjust = labhjust,
+            vjust = labvjust)
+      } else {
+        plot <- plot + labFun(
+          data = plotobj,
+            aes(label = lab),
+            size = labSize,
+            check_overlap = TRUE,
+            hjust = labhjust,
+            vjust = labvjust)
+      }
     }
   }
 
   # return plot?
-  if (returnPlot == TRUE) {
+  if (returnPlot) {
     return(plot)
-  } else if (returnPlot == FALSE) {
+  } else if (!returnPlot) {
     plot
   }
 }
+

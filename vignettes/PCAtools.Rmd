@@ -25,6 +25,7 @@ Principal Component Analysis (PCA) is a very powerful technique that has wide ap
 
 *PCAtools* provides functions for data exploration via PCA, and allows the user to generate publication-ready figures. PCA is performed via *BiocSingular* [@Lun] - users can also identify optimal number of principal components via different metrics, such as elbow method and Horn's parallel analysis [@Horn] [@Buja], which has relevance for data reduction in single-cell RNA-seq (scRNA-seq) and high dimensional mass cytometry data.
 
+
 # Installation
 
 ## 1. Download the package from Bioconductor
@@ -124,19 +125,38 @@ Conduct principal component analysis (PCA)
 
 ## A scree plot
 
-```{r ex1, warning = FALSE, fig.height = 7, fig.width = 18, fig.cap = 'Figure 1: A scree plot to show the proportion of explained variance by PC'}
+```{r ex1, warning = FALSE, fig.height = 7, fig.width = 20, fig.cap = 'Figure 1: A scree plot to show the proportion of explained variance by PC'}
 
-  screeplot(p)
+  screeplot(p, axisLabSize = 20, titleLabSize = 22)
 
 ```
 
 ## A bi-plot
 
-```{r ex2, fig.height = 7, fig.width = 8, fig.cap = 'Figure 2: A bi-plot of PC1 versus PC2'}
+Different interpretations of the biplot exist. In the OMICs era, for most
+general users, a biplot is a simple representation of samples in a 2-dimensional space:
+
+```{r ex2a, fig.height = 6, fig.width = 7, fig.cap = 'Figure 2a: A bi-plot of PC1 versus PC2'}
 
   biplot(p)
 
 ```
+
+However, the original definition of a biplot by Gabriel KR [@Gabriel] is a plot that plots
+both variables and observatinos (samples) in the same space. The variables are indicated by
+arrows drawn from the origin, which indicate their 'weight' in different directions. We touch
+on this later via the *plotLoadings* function.
+
+```{r ex2b, fig.height = 6, fig.width = 7, fig.cap = 'Figure 2b: A bi-plot of PC1 versus PC2'}
+
+  biplot(p, showLoadings = TRUE, lab = NULL)
+
+```
+
+One of the probes pointing downward is *205225_at*, which targets the *ESR1* gene. This is already
+a useful validation, as the oestrogen receptor, which is in part encoded by *ESR1*, is strongly
+represented by PC2 (y-axis), with negative-to-positive receptor status going from top-to-bottom.
+More on this later in this vignette.
 
 ## A pairs plot
 
@@ -148,9 +168,11 @@ Conduct principal component analysis (PCA)
 
 ## A loadings plot
 
+If the biplot was previously generated with *showLoadings = TRUE*, check how this loadings plot corresponds to the biplot loadings - they should match up for the top hits.
+
 ```{r ex4, fig.height = 6, fig.width = 8, fig.cap = 'Figure 4: Plot the component loadings and label genes most responsible for variation'}
 
-  plotloadings(p)
+  plotloadings(p, labSize = 3)
 
 ```
 
@@ -163,12 +185,46 @@ Conduct principal component analysis (PCA)
 
 ```
 
+## Access the internal data
+
+The rotated data that represents the observatinos / samples is stored in *rotated*,
+while the variable loadings are stored in *loadings*
+
+```{r}
+
+  p$rotated[1:5,1:5]
+
+  p$loadings[1:5,1:5]
+
+```
+
+
+
 # Advanced features
 
 All plots in PCAtools are highly configurable and should cover virtually all
 general usage requirements. The following sections take a look at some of these
 advanced features, and form a somewhat practical example of how one can use
 PCAtools to make a clinical interpretation of data.
+
+First, let's sort out the gene annotation by mapping the probe IDs to gene symbols.
+The array used for this study was the Affymetrix U133a, so let's use the *hgu133a.db*
+Bioconductor package:
+
+```{r, messages = FALSE}
+
+  suppressMessages(require(hgu133a.db))
+  newnames <- mapIds(hgu133a.db,
+    keys = rownames(p$loadings),
+    column = c('SYMBOL'),
+    keytype = 'PROBEID')
+
+  # tidy up for NULL mappings and duplicated gene symbols
+  newnames <- ifelse(is.na(newnames) | duplicated(newnames),
+    names(newnames), newnames)
+  rownames(p$loadings) <- newnames
+    
+```
 
 ## Determine optimum number of PCs to retain
 
@@ -207,8 +263,8 @@ Taking the value from Horn's parallel analyis, we can produce a new scree plot:
   screeplot(p,
     components = getComponents(p, 1:20),
     vline = c(horn$n, elbow)) +
-    geom_text(aes(horn$n + 1, 50, label = "Horn's", vjust = -1)) +
-    geom_text(aes(elbow + 1, 50, label = "Elbow", vjust = -1))
+    geom_label(aes(x = horn$n + 1, y = 50, label = "Horn's", vjust = -1, size = 8)) +
+    geom_label(aes(x = elbow + 1, y = 50, label = "Elbow", vjust = -1, size = 8))
 
 ```
 
@@ -230,7 +286,7 @@ In a bi-plot, we can shade the points by different groups and add many more feat
 ```{r ex7, fig.height = 6, fig.width = 8, fig.cap = 'Figure 7: adding lines and a legend to a bi-plot'}
 
   biplot(p,
-    lab = paste0(p$metadata$Age, 'yo'),
+    lab = paste0(p$metadata$Age, ' años'),
     colby = 'ER',
     hline = 0, vline = 0,
     legendPosition = 'right')
@@ -250,23 +306,23 @@ In a bi-plot, we can shade the points by different groups and add many more feat
 
 ### Change shape based on tumour grade, remove connectors, and add titles
 
-```{r ex9, message = FALSE, fig.height = 7, fig.width = 7, fig.cap = 'Figure 9: supplying custom colours and shapes to a bi-plot, removing connectors, and modifying titles'}
+```{r ex9, message = FALSE, eval = FALSE}
 
   biplot(p,
     colby = 'ER', colkey = c('ER+'='forestgreen', 'ER-'='purple'),
     hline = 0, vline = c(-25, 0, 25),
-    legendPosition = 'top', legendLabSize = 16, legendIconSize = 8.0,
+    legendPosition = 'top', legendLabSize = 13, legendIconSize = 8.0,
     shape = 'Grade', shapekey = c('Grade 1'=15, 'Grade 2'=17, 'Grade 3'=8),
     drawConnectors = FALSE,
     title = 'PCA bi-plot',
     subtitle = 'PC1 versus PC2',
-    caption = '27 PCs == 80%')
+    caption = '27 PCs ≈ 80%')
 
 ```
 
 ### Remove labels, modify line types, remove gridlines, and increase point size
 
-```{r ex10, message = FALSE, fig.height = 6, fig.width = 8, fig.cap = 'Figure 10: removing labels, modifying line types, removing gridlines, and increasing point size in a bi-plot'}
+```{r ex10a, message = FALSE, fig.height = 5.5, fig.width = 7, fig.cap = 'Figure 10a: removing labels, modifying line types, removing gridlines, and increasing point size in a bi-plot'}
 
   biplot(p,
     lab = NULL,
@@ -275,18 +331,67 @@ In a bi-plot, we can shade the points by different groups and add many more feat
     vlineType = c('dotdash', 'solid', 'dashed'),
     gridlines.major = FALSE, gridlines.minor = FALSE,
     pointSize = 5,
-    legendPosition = 'left', legendLabSize = 16, legendIconSize = 8.0,
+    legendPosition = 'left', legendLabSize = 14, legendIconSize = 8.0,
     shape = 'Grade', shapekey = c('Grade 1'=15, 'Grade 2'=17, 'Grade 3'=8),
     drawConnectors = FALSE,
     title = 'PCA bi-plot',
     subtitle = 'PC1 versus PC2',
-    caption = '27 PCs == 80%')
+    caption = '27 PCs ≈ 80%')
 
 ```
 
-### Colour by a continuous variable (colour controlled by ggplot2 engine); plot other PCs
+Let's plot the same as above but with loadings:
 
-```{r ex11, fig.height = 6, fig.width = 8, fig.cap = 'Figure 11: colouring by a continuous variable and plotting other PCs in a bi-plot'}
+```{r ex10b, message = FALSE, fig.height = 5.5, fig.width = 10, fig.cap = 'Figure 10b: removing labels, modifying line types, removing gridlines, and increasing point size in a bi-plot'}
+
+  biplot(p,
+    # loadings parameters
+      showLoadings = TRUE,
+      lengthLoadingsArrowsFactor = 1.5,
+      sizeLoadingsNames = 4,
+      colLoadingsNames = 'red4',
+    # other parameters
+      lab = NULL,
+      colby = 'ER', colkey = c('ER+'='royalblue', 'ER-'='red3'),
+      hline = 0, vline = c(-25, 0, 25),
+      vlineType = c('dotdash', 'solid', 'dashed'),
+      gridlines.major = FALSE, gridlines.minor = FALSE,
+      pointSize = 5,
+      legendPosition = 'left', legendLabSize = 14, legendIconSize = 8.0,
+      shape = 'Grade', shapekey = c('Grade 1'=15, 'Grade 2'=17, 'Grade 3'=8),
+      drawConnectors = FALSE,
+      title = 'PCA bi-plot',
+      subtitle = 'PC1 versus PC2',
+      caption = '27 PCs ≈ 80%')
+
+```
+
+### Colour by a continuous variable and plot other PCs
+
+There are two ways to colour by a continuous variable. In the first way, we simply
+'add on' a continuous colour scale via *scale_colour_gradient*:
+
+```{r ex11a, fig.height = 5.5, fig.width = 7, fig.cap = 'Figure 11a: colouring by a continuous variable and plotting other PCs in a bi-plot'}
+
+  # add ESR1 gene expression to the metadata
+  p$metadata$ESR1 <- x["205225_at",]
+
+  biplot(p,
+    x = 'PC2', y = 'PC3',
+    lab = NULL,
+    colby = 'ESR1',
+    shape = 'ER',
+    hline = 0, vline = 0,
+    legendPosition = 'right') +
+
+  scale_colour_gradient(low = 'gold', high = 'red2')
+
+```
+
+We can also just permit that the internal *ggplot2* engine picks the colour
+scheme - here, we also plot PC10 versus PC50:
+
+```{r ex11b, eval = FALSE}
 
   biplot(p, x = 'PC10', y = 'PC50',
     lab = NULL,
@@ -300,7 +405,7 @@ In a bi-plot, we can shade the points by different groups and add many more feat
     drawConnectors = FALSE,
     title = 'PCA bi-plot',
     subtitle = 'PC10 versus PC50',
-    caption = '27 PCs == 80%')
+    caption = '27 PCs ≈ 80%')
 
 ```
 
@@ -335,7 +440,7 @@ setting 'triangle = FALSE'. In this case, we can further control the layout
 with the 'ncol' and 'nrow' parameters, although, the function will
 automatically determine these based on your input data.
 
-```{r ex13, fig.height = 6, fig.width = 8, fig.cap = 'Figure 13: arranging a pairs plot horizontally'}
+```{r ex13, fig.height = 5.5, fig.width = 6, fig.cap = 'Figure 13: arranging a pairs plot horizontally'}
 
   pairsplot(p,
     components = getComponents(p, c(4,33,11,1)),
@@ -344,7 +449,8 @@ automatically determine these based on your input data.
     pointSize = 0.8,
     gridlines.major = FALSE, gridlines.minor = FALSE,
     colby = 'ER',
-    title = 'Pairs plot', plotaxes = TRUE,
+    title = 'Pairs plot', titleLabSize = 22,
+    axisLabSize = 14, plotaxes = TRUE,
     margingaps = unit(c(0.1, 0.1, 0.1, 0.1), 'cm'))
 
 ```
@@ -364,11 +470,11 @@ cut-off for inclusion / exclusion of variables, we use 'rangeRetain', where
 0.01 equates to the top/bottom 1% of the loadings range per PC. We can also
 add a title, subtitle, and caption, and alter the shape and colour scheme.
 
-```{r ex14, fig.height = 6, fig.width = 9, fig.cap = 'Figure 14: modifying cut-off for labeling in a loadings plot'}
+```{r ex14, fig.height = 5.5, fig.width = 7, fig.cap = 'Figure 14: modifying cut-off for labeling in a loadings plot'}
 
   plotloadings(p,
     rangeRetain = 0.01,
-    labSize = 3.0,
+    labSize = 4.0,
     title = 'Loadings plot',
     subtitle = 'PC1, PC2, PC3, PC4, PC5',
     caption = 'Top 1% variables',
@@ -378,43 +484,22 @@ add a title, subtitle, and caption, and alter the shape and colour scheme.
 
 ```
 
-We can check the genes to which these relate by using biomaRt:
-
-*not run*
-
-```{r eval = FALSE}
-
-  library(biomaRt)
-
-  mart <- useMart('ENSEMBL_MART_ENSEMBL', host = 'useast.ensembl.org')
-  mart <- useDataset('hsapiens_gene_ensembl', mart)
-
-  getBM(mart = mart,
-    attributes = c('affy_hg_u133a', 'ensembl_gene_id',
-      'gene_biotype', 'external_gene_name'),
-    filter = 'affy_hg_u133a',
-    values = c('215281_x_at', '214464_at', '211122_s_at', '205225_at',
-      '202037_s_at', '204540_at', '215176_x_at', '205044_at', '208650_s_at',
-      '205380_at'),
-    uniqueRows = TRUE)
-
-```
-
-At least one interesting finding is 205225_at (ESR1), which is by far the gene
+At least one interesting finding is *205225_at* / *ESR1*, which is by far the gene
 most responsible for variation along PC2. The previous bi-plots showed that
 this PC also segregated ER+ from ER- patients. The other results could be
-explored.
+explored. Also, from the biplots with loadings that we have already generated,
+this results is also verified in these.
 
 With the loadings plot, in addition, we can instead plot absolute values and
 modify the point sizes to be proportional to the loadings. We can also switch
 off the line connectors and plot the loadings for any PCs
 
-```{r ex15, fig.height = 9, fig.width = 11, fig.cap = 'Figure 15: plotting absolute component loadings'}
+```{r ex15, fig.height = 7, fig.width = 9, fig.cap = 'Figure 15: plotting absolute component loadings'}
 
   plotloadings(p,
     components = getComponents(p, c(4,33,11,1)),
     rangeRetain = 0.1,
-    labSize = 3.0,
+    labSize = 4.0,
     absolute = FALSE,
     title = 'Loadings plot',
     subtitle = 'Misc PCs',
@@ -497,35 +582,45 @@ just a bi-plot used to identify outliers!
 ```{r ex18, message = FALSE, warning = FALSE, fig.height = 10, fig.width = 15, fig.cap = 'Figure 18: a merged panel of all PCAtools plots'}
 
   pscree <- screeplot(p, components = getComponents(p, 1:30),
-    hline = 80, vline = 27, axisLabSize = 10, returnPlot = FALSE) +
-    geom_text(aes(20, 80, label = '80% explained variation', vjust = -1))
+    hline = 80, vline = 27, axisLabSize = 14, titleLabSize = 20,
+    returnPlot = FALSE) +
+    geom_label(aes(20, 80, label = '80% explained variation', vjust = -1, size = 8))
 
   ppairs <- pairsplot(p, components = getComponents(p, c(1:3)),
     triangle = TRUE, trianglelabSize = 12,
     hline = 0, vline = 0,
     pointSize = 0.8, gridlines.major = FALSE, gridlines.minor = FALSE,
     colby = 'Grade',
-    title = '', titleLabSize = 16, plotaxes = FALSE,
+    title = '', plotaxes = FALSE,
     margingaps = unit(c(0.01, 0.01, 0.01, 0.01), 'cm'),
     returnPlot = FALSE)
 
-  pbiplot <- biplot(p, lab = NULL,
-    colby = 'ER', colkey = c('ER+'='royalblue', 'ER-'='red3'),
-    hline = 0, vline = c(-25, 0, 25), vlineType = c('dotdash', 'solid', 'dashed'),
-    gridlines.major = FALSE, gridlines.minor = FALSE,
-    pointSize = 2, axisLabSize = 12,
-    legendPosition = 'left', legendLabSize = 10, legendIconSize = 3.0,
-    shape = 'Grade', shapekey = c('Grade 1'=15, 'Grade 2'=17, 'Grade 3'=8),
-    drawConnectors = FALSE,
-    title = 'PCA bi-plot', subtitle = 'PC1 versus PC2',
-      caption = '27 PCs == 80%',
-    returnPlot = FALSE)
+  pbiplot <- biplot(p,
+    # loadings parameters
+      showLoadings = TRUE,
+      lengthLoadingsArrowsFactor = 1.5,
+      sizeLoadingsNames = 4,
+      colLoadingsNames = 'red4',
+    # other parameters
+      lab = NULL,
+      colby = 'ER', colkey = c('ER+'='royalblue', 'ER-'='red3'),
+      hline = 0, vline = c(-25, 0, 25),
+      vlineType = c('dotdash', 'solid', 'dashed'),
+      gridlines.major = FALSE, gridlines.minor = FALSE,
+      pointSize = 5,
+      legendPosition = 'none', legendLabSize = 16, legendIconSize = 8.0,
+      shape = 'Grade', shapekey = c('Grade 1'=15, 'Grade 2'=17, 'Grade 3'=8),
+      drawConnectors = FALSE,
+      title = 'PCA bi-plot',
+      subtitle = 'PC1 versus PC2',
+      caption = '27 PCs ≈ 80%',
+      returnPlot = FALSE)
 
-  ploadings <- plotloadings(p, rangeRetain = 0.01, labSize = 2.5,
+  ploadings <- plotloadings(p, rangeRetain = 0.01, labSize = 4,
     title = 'Loadings plot', axisLabSize = 12,
     subtitle = 'PC1, PC2, PC3, PC4, PC5',
     caption = 'Top 1% variables',
-    shape = 24, shapeSizeRange = c(4, 4),
+    shape = 24, shapeSizeRange = c(4, 8),
     col = c('limegreen', 'black', 'red3'),
     legendPosition = 'none',
     drawConnectors = FALSE,
@@ -535,7 +630,7 @@ just a bi-plot used to identify outliers!
     components = getComponents(p, 1:10),
     metavars = c('Age','Distant.RFS','ER','GGI','Grade','Size','Time.RFS'),
     #col = c('royalblue', '', 'gold', 'forestgreen', 'darkgreen'),
-    cexCorval = 0.6,
+    cexCorval = 1.0,
     fontCorval = 2,
     posLab = 'all', 
     rotLabX = 45,
@@ -559,7 +654,7 @@ just a bi-plot used to identify outliers!
       label_fontface = 'bold',
       label_size = 22,
       align = 'h',
-      rel_widths = c(1.05, 0.9, 1.05))
+      rel_widths = c(1.10, 0.80, 1.10))
 
     bottom_row <- plot_grid(ploadings,
       as.grob(peigencor),
@@ -569,9 +664,10 @@ just a bi-plot used to identify outliers!
       label_fontface = 'bold',
       label_size = 22,
       align = 'h',
-      rel_widths = c(1.5, 1.5))
+      rel_widths = c(0.8, 1.2))
 
-    plot_grid(top_row, bottom_row, ncol = 1, rel_heights = c(1.0, 1.0))
+    plot_grid(top_row, bottom_row, ncol = 1,
+      rel_heights = c(1.1, 0.9))
 
 ```
 
@@ -584,6 +680,8 @@ and suggestions from:
 * Jinsheng
 * Myles Lewis
 * Anna-Leigh Brown
+* Vincent Carey
+* Vince Vu
 
 # Session info
 
@@ -604,4 +702,6 @@ sessionInfo()
 @Buja
 
 @Lun
+
+@Gabriel
 

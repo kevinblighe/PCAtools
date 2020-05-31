@@ -28,18 +28,22 @@ test_that('datatypes', {
 
   # biplot
   expect_is(biplot(pcaobj), class = 'pca')
-  expect_type(biplot(x, y, colby, colkey, singlecol, legendPosition,
+  expect_type(biplot(x, y, colLoadingsNames, colConnectorsLoadings,
+    colLoadingsArrows, colby, colkey, singlecol, legendPosition,
     lab, selectLab, colConnectors, xlab, ylab, title, subtitle,
     caption, hlineType, hlineCol, vlineType, vlineCol, borderColour),
     c('language', 'character'))
-  expect_type(biplot(drawConnectors, gridlines.major, gridlines.minor,
-    returnPlot),
+  expect_type(biplot(showLoadings, showLoadingsNames, boxedLoadingsNames,
+    drawConnectorsLoadings, boxedLabels, drawConnectors, gridlines.major,
+    gridlines.minor, returnPlot),
     c('logical'))
-  expect_type(biplot(shape, shapekey, pointSize, legendLabSize, legendIconSize,
-    xlim, ylim, labSize, labhjust, labvjust, widthConnectors, xlabAngle,
-    xlabhjust, xlabvjust, ylabAngle, ylabhjust, ylabvjust, axisLabSize,
-    titleLabSize, subtitleLabSize, captionLabSize, hline, hlineWidth,
-    vline, vlineWidth, borderWidth),
+  expect_type(biplot(ntopLoadings, sizeLoadingsNames, widthConnectorsLoadings,
+    lengthLoadingsArrowsFactor, widthLoadingsArrows, alphaLoadingsArrow, shape,
+    shapekey, pointSize, legendLabSize, legendIconSize, xlim, ylim, labSize,
+    labhjust, labvjust, widthConnectors, xlabAngle, xlabhjust, xlabvjust,
+    ylabAngle, ylabhjust, ylabvjust, axisLabSize, titleLabSize,
+    subtitleLabSize, captionLabSize, hline, hlineWidth, vline, vlineWidth,
+    borderWidth),
     c('double'))
 
   # getComponents

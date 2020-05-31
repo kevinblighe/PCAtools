@@ -84,7 +84,6 @@ eigencorplot <- function(
       # select only the names that are true 
       chararcter_columns = names(which(chararcter_columns))
       for (c in chararcter_columns) {
-        print(c)
         yvals[, eval(quote(c))] = as.numeric(as.factor(yvals[, eval(quote(c))]))
       }
   ### END

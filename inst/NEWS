@@ -10,3 +10,8 @@ CHANGES IN VERSION 2.0.0
  - fixed bug with singlecol parameter for biplot colouring everything black
  - added p-value adjustment for eigencorplot (aleighbrown)
  - eigencorplot now automatically converts non-numeric columns to numeric (aleighbrown)
+
+CHANGES IN VERSION 2.2.0
+------------------------
+ - added support to overlay variable loadings arrows on biplot
+ - better positioning of PC labels in triangular pairs plot

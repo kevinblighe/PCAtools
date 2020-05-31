@@ -10,6 +10,19 @@
   biplot(pcaobj,
   x = 'PC1',
   y = 'PC2',
+  showLoadings = FALSE,
+  ntopLoadings = 5,
+  showLoadingsNames = if (showLoadings) TRUE else FALSE,
+  colLoadingsNames = 'black',
+  sizeLoadingsNames = 3,
+  boxedLoadingsNames = TRUE,
+  drawConnectorsLoadings = TRUE,
+  widthConnectorsLoadings = 0.5,
+  colConnectorsLoadings = 'grey50',
+  lengthLoadingsArrowsFactor = 1.5,
+  colLoadingsArrows = 'black',
+  widthLoadingsArrows = 0.5,
+  alphaLoadingsArrow = 1.0,
   colby = NULL,
   colkey = NULL,
   singlecol = NULL,
@@ -19,12 +32,13 @@
   legendPosition = 'none',
   legendLabSize = 12,
   legendIconSize = 5.0,
-  xlim = NULL,
-  ylim = NULL,
+  xlim = c(min(pcaobj$rotated[,x]) - 5, max(pcaobj$rotated[,x]) + 5),
+  ylim = c(min(pcaobj$rotated[,y]) - 5, max(pcaobj$rotated[,y]) + 5),
   lab = rownames(pcaobj$metadata),
   labSize = 3.0,
   labhjust = 1.5,
   labvjust = 0,
+  boxedLabels = FALSE,
   selectLab = NULL,
   drawConnectors = TRUE,
   widthConnectors = 0.5,
@@ -69,52 +83,86 @@
   names are stored in pcaobj$label. DEFAULT = 'PC1'. REQUIRED.}
   \item{y}{A principal component to plot on y-axis. All principal component
   names are stored in pcaobj$label. DEFAULT = 'PC2'. REQUIRED.}
+  \item{showLoadings}{Logical, indicating whether or not to overlay
+    variable loadings. DEFAULT = FALSE. OPTIONAL.}
+  \item{ntopLoadings}{If showLoadings == TRUE, select this many variables
+    based on absolute ordered variable loading for each PC in the biplot.
+    As a result of looking across 2 PCs, it can occur whereby greater than
+    this number are actually displayed. DEFAULT = 5. OPTIONAL.}
+  \item{showLoadingsNames}{Logical, indicating to show variable loadings names
+    or not. DEFAULT = if (showLoadings) TRUE else FALSE. OPTIONAL.}
+  \item{colLoadingsNames}{If showLoadings == TRUE, colour of text labels.
+    DEFAULT = 'black'. OPTIONAL.}
+  \item{sizeLoadingsNames}{If showLoadings == TRUE, size of text labels.
+    DEFAULT = 3. OPTIONAL.}
+  \item{boxedLoadingsNames}{Logical, if showLoadings == TRUE, draw text
+    labels in boxes. DEFAULT = TRUE. OPTIONAL.}
+  \item{drawConnectorsLoadings}{If showLoadings == TRUE, draw line connectors
+    to the variable loadings arrows in order to fit more labels in the plot space.
+    DEFAULT = TRUE. OPTIONAL.}
+  \item{widthConnectorsLoadings}{If showLoadings == TRUE, width of the line
+    connectors drawn to the variable loadings arrows. DEFAULT = 0.5. OPTIONAL.}
+  \item{colConnectorsLoadings}{If showLoadings == TRUE, colour of the line
+    connectors drawn to the variable loadings arrows. DEFAULT = 'grey50'.
+    OPTIONAL.}
+  \item{lengthLoadingsArrowsFactor}{If showLoadings == TRUE, multiply the
+    internally-determined length of the variable loadings arrows by this factor.
+    DEFAULT = 1.5. OPTIONAL.}
+  \item{colLoadingsArrows}{If showLoadings == TRUE, colour of the variable
+    loadings arrows. DEFAULT = 'black'. OPTIONAL.}
+  \item{widthLoadingsArrows}{If showLoadings == TRUE, width of the variable
+    loadings arrows. DEFAULT = 0.5. OPTIONAL.}
+  \item{alphaLoadingsArrow}{If showLoadings == TRUE, colour transparency of
+    the variable loadings arrows. DEFAULT = 1.0. OPTIONAL.}
   \item{colby}{If NULL, all points will be coloured differently. If not NULL,
-  value is assumed to be a column name in pcaobj$metadata relating to some
-  grouping/categorical variable. DEFAULT = NULL. OPTIONAL.}
+    value is assumed to be a column name in pcaobj$metadata relating to some
+    grouping/categorical variable. DEFAULT = NULL. OPTIONAL.}
   \item{colkey}{Vector of name-value pairs relating to value passed to 'col',
-  e.g., c(A='forestgreen', B='gold'). DEFAULT = NULL. OPTIONAL.}
+    e.g., c(A='forestgreen', B='gold'). DEFAULT = NULL. OPTIONAL.}
   \item{singlecol}{If specified, all points will be shaded by this colour.
-  Overrides 'col'. DEFAULT = NULL. OPTIONAL.}
+    Overrides 'col'. DEFAULT = NULL. OPTIONAL.}
   \item{shape}{If NULL, all points will be have the same shape. If not NULL,
-  value is assumed to be a column name in pcaobj$metadata relating to some
-  grouping/categorical variable. DEFAULT = NULL. OPTIONAL.}
+    value is assumed to be a column name in pcaobj$metadata relating to some
+    grouping/categorical variable. DEFAULT = NULL. OPTIONAL.}
   \item{shapekey}{Vector of name-value pairs relating to value passed to
-  'shape', e.g., c(A=10, B=21). DEFAULT = NULL. OPTIONAL.}
+    'shape', e.g., c(A=10, B=21). DEFAULT = NULL. OPTIONAL.}
   \item{pointSize}{Size of plotted points. DEFAULT = 3.0. OPTIONAL.}
   \item{legendPosition}{Position of legend ('top', 'bottom', 'left', 'right',
-  'none'). DEFAULT = 'none'. OPTIONAL.}
+    'none'). DEFAULT = 'none'. OPTIONAL.}
   \item{legendLabSize}{Size of plot legend text. DEFAULT = 10. OPTIONAL.}
   \item{legendIconSize}{Size of plot legend icons / symbols. DEFAULT = 3.0.
-  OPTIONAL.}
-  \item{xlim}{Limits of the x-axis. DEFAULT = NULL. OPTIONAL.}
-  \item{ylim}{Limits of the y-axis. DEFAULT = NULL. OPTIONAL.}
+    OPTIONAL.}
+  \item{xlim}{Limits of the x-axis.
+    DEFAULT = c(min(pcaobj$rotated[,x]) - 5, max(pcaobj$rotated[,x]) + 5). OPTIONAL.}
+  \item{ylim}{Limits of the y-axis.
+    DEFAULT = c(min(pcaobj$rotated[,y]) - 5, max(pcaobj$rotated[,y]) + 5). OPTIONAL.}
   \item{lab}{A vector containing labels to add to the plot. 
-  DEFAULT = rownames(pcaobj$metadata). OPTIONAL.}
+    DEFAULT = rownames(pcaobj$metadata). OPTIONAL.}
   \item{labSize}{Size of labels. DEFAULT = 3.0. OPTIONAL.}
   \item{labhjust}{Horizontal adjustment of label. DEFAULT = 1.5. OPTIONAL.}
   \item{labvjust}{Vertical adjustment of label. DEFAULT = 0. OPTIONAL.}
+  \item{boxedLabels}{Logical, draw text labels in boxes. DEFAULT = TRUE. OPTIONAL.}
   \item{selectLab}{A vector containing a subset of lab to plot. DEFAULT =
-  NULL. OPTIONAL.}
+    NULL. OPTIONAL.}
   \item{drawConnectors}{Logical, indicating whether or not to connect plot
-  labels to their corresponding points by line connectors. DEFAULT = TRUE.
-  OPTIONAL.}
+    labels to their corresponding points by line connectors. DEFAULT = TRUE.
+    OPTIONAL.}
   \item{widthConnectors}{Line width of connectors. DEFAULT = 0.5. OPTIONAL.}
   \item{colConnectors}{Line colour of connectors. DEFAULT = 'grey50'. OPTIONAL.}
   \item{xlab}{Label for x-axis. DEFAULT =
-  paste0(x, ', ', round(pcaobj$variance[x], digits=2), '\% variation').
-  OPTIONAL.}
+    paste0(x, ', ', round(pcaobj$variance[x], digits=2), '\% variation').
+    OPTIONAL.}
   \item{xlabAngle}{Rotation angle of x-axis labels. DEFAULT = 0. OPTIONAL.}
   \item{xlabhjust}{Horizontal adjustment of x-axis labels. DEFAULT = 0.5. OPTIONAL.}
   \item{xlabvjust}{Vertical adjustment of x-axis labels. DEFAULT = 0.5.
-  OPTIONAL.}
+    OPTIONAL.}
   \item{ylab}{Label for y-axis. DEFAULT = paste0(y, ', ',
-  round(pcaobj$variance[y], digits=2), '\% variation'). OPTIONAL.}
+    round(pcaobj$variance[y], digits=2), '\% variation'). OPTIONAL.}
   \item{ylabAngle}{Rotation angle of y-axis labels. DEFAULT = 0. OPTIONAL.}
   \item{ylabhjust}{Horizontal adjustment of y-axis labels. DEFAULT = 0.5.
-  OPTIONAL.}
+    OPTIONAL.}
   \item{ylabvjust}{Vertical adjustment of y-axis labels. DEFAULT = 0.5.
-  OPTIONAL.}
+    OPTIONAL.}
   \item{axisLabSize}{Size of x- and y-axis labels. DEFAULT = 16. OPTIONAL.}
   \item{title}{Plot title. DEFAULT = ''. OPTIONAL.}
   \item{subtitle}{Plot subtitle. DEFAULT = ''. OPTIONAL.}
@@ -123,40 +171,36 @@
   \item{subtitleLabSize}{Size of plot subtitle. DEFAULT = 12. OPTIONAL.}
   \item{captionLabSize}{Size of plot caption. DEFAULT = 12. OPTIONAL.}
   \item{hline}{Draw one or more horizontal lines passing through this/these
-  values on y-axis. For single values, only a single numerical value is
-  necessary. For multiple lines, pass these as a vector, e.g., c(60,90).
-  DEFAULT = NULL. OPTIONAL.}
+    values on y-axis. For single values, only a single numerical value is
+    necessary. For multiple lines, pass these as a vector, e.g., c(60,90).
+    DEFAULT = NULL. OPTIONAL.}
   \item{hlineType}{Line type for hline ('blank', 'solid', 'dashed', 'dotted',
-  'dotdash', 'longdash', 'twodash'). DEFAULT = 'longdash'. OPTIONAL.}
+    'dotdash', 'longdash', 'twodash'). DEFAULT = 'longdash'. OPTIONAL.}
   \item{hlineCol}{Colour of hline. DEFAULT = 'black'. OPTIONAL.}
   \item{hlineWidth}{Width of hline. DEFAULT = 0.4. OPTIONAL.}
   \item{vline}{Draw one or more vertical lines passing through this/these
-  values on x-axis. For single values, only a single numerical value is
-  necessary. For multiple lines, pass these as a vector, e.g., c(60,90).
-  DEFAULT = NULL. OPTIONAL.}
+    values on x-axis. For single values, only a single numerical value is
+    necessary. For multiple lines, pass these as a vector, e.g., c(60,90).
+    DEFAULT = NULL. OPTIONAL.}
   \item{vlineType}{Line type for vline ('blank', 'solid', 'dashed', 'dotted',
-  'dotdash', 'longdash', 'twodash'). DEFAULT = 'longdash'. OPTIONAL.}
+    'dotdash', 'longdash', 'twodash'). DEFAULT = 'longdash'. OPTIONAL.}
   \item{vlineCol}{Colour of vline. DEFAULT = 'black'. OPTIONAL.}
   \item{vlineWidth}{Width of vline. DEFAULT = 0.4. OPTIONAL.}
   \item{gridlines.major}{Logical, indicating whether or not to draw major
-  gridlines. DEFAULT = TRUE. OPTIONAL.}
+    gridlines. DEFAULT = TRUE. OPTIONAL.}
   \item{gridlines.minor}{Logical, indicating whether or not to draw minor
-  gridlines. DEFAULT = TRUE. OPTIONAL.}
+    gridlines. DEFAULT = TRUE. OPTIONAL.}
   \item{borderWidth}{Width of the border on the x and y axes. DEFAULT = 0.8.
-  OPTIONAL.}
+    OPTIONAL.}
   \item{borderColour}{Colour of the border on the x and y axes. DEFAULT =
-  'black'. OPTIONAL.}
+    'black'. OPTIONAL.}
   \item{returnPlot}{Logical, indicating whether or not to return the plot
-  object. DEFAULT = TRUE. OPTIONAL.}
+    object. DEFAULT = TRUE. OPTIONAL.}
 }
 
-\value{
-A \code{\link{ggplot2}} object.
-}
+\value{A \code{\link{ggplot2}} object.}
 
-\author{
-Kevin Blighe <kevin@clinicalbioinformatics.co.uk>, Aaron Lun
-}
+\author{Kevin Blighe <kevin@clinicalbioinformatics.co.uk>}
 
 \examples{
   options(scipen=10)
@@ -196,5 +240,4 @@ Kevin Blighe <kevin@clinicalbioinformatics.co.uk>, Aaron Lun
 
   biplot(p, colby = 'Group', colkey = c(A='forestgreen', B='gold'),
     shape = 'Group', shapekey = c(A=10, B=21), legendPosition = 'bottom')
-
 }

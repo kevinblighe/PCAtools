@@ -1,46 +1,33 @@
 PCAtools: everything Principal Component Analysis
 ================
 Kevin Blighe, Aaron Lun
-2020-04-02
+2020-05-31
 
--   [Introduction](#introduction)
--   [Installation](#installation)
-    -   [1. Download the package from Bioconductor](#download-the-package-from-bioconductor)
-    -   [2. Load the package into R session](#load-the-package-into-r-session)
--   [Quick start](#quick-start)
-    -   [A scree plot](#a-scree-plot)
-    -   [A bi-plot](#a-bi-plot)
-    -   [A pairs plot](#a-pairs-plot)
-    -   [A loadings plot](#a-loadings-plot)
-    -   [An eigencor plot](#an-eigencor-plot)
--   [Advanced features](#advanced-features)
-    -   [Determine optimum number of PCs to retain](#determine-optimum-number-of-pcs-to-retain)
-    -   [Modify bi-plots](#modify-bi-plots)
-        -   [Colour by a factor from the metadata, use a custom label, add lines through center, and add legend](#colour-by-a-factor-from-the-metadata-use-a-custom-label-add-lines-through-center-and-add-legend)
-        -   [Supply custom colours, add more lines, and increase legend size](#supply-custom-colours-add-more-lines-and-increase-legend-size)
-        -   [Change shape based on tumour grade, remove connectors, and add titles](#change-shape-based-on-tumour-grade-remove-connectors-and-add-titles)
-        -   [Remove labels, modify line types, remove gridlines, and increase point size](#remove-labels-modify-line-types-remove-gridlines-and-increase-point-size)
-        -   [Colour by a continuous variable (colour controlled by ggplot2 engine); plot other PCs](#colour-by-a-continuous-variable-colour-controlled-by-ggplot2-engine-plot-other-pcs)
-    -   [Quickly explore potentially informative PCs via a pairs plot](#quickly-explore-potentially-informative-pcs-via-a-pairs-plot)
-    -   [Determine the variables that drive variation among each PC](#determine-the-variables-that-drive-variation-among-each-pc)
-    -   [Correlate the principal components back to the clinical data](#correlate-the-principal-components-back-to-the-clinical-data)
-    -   [Plot the entire project on a single panel](#plot-the-entire-project-on-a-single-panel)
--   [Acknowledgments](#acknowledgments)
--   [Session info](#session-info)
--   [References](#references)
+# Introduction
 
-Introduction
-============
+Principal Component Analysis (PCA) is a very powerful technique that has
+wide applicability in data science, bioinformatics, and further afield.
+It was initially developed to analyse large volumes of data in order to
+tease out the differences/relationships between the logical entities
+being analysed. It extracts the fundamental structure of the data
+without the need to build any model to represent it. This ‘summary’ of
+the data is arrived at through a process of reduction that can transform
+the large number of variables into a lesser number that are uncorrelated
+(i.e. the ‘principal components’), while at the same time being capable
+of easy interpretation on the original data (Blighe and Lun 2019)
+(Blighe 2013).
 
-Principal Component Analysis (PCA) is a very powerful technique that has wide applicability in data science, bioinformatics, and further afield. It was initially developed to analyse large volumes of data in order to tease out the differences/relationships between the logical entities being analysed. It extracts the fundamental structure of the data without the need to build any model to represent it. This 'summary' of the data is arrived at through a process of reduction that can transform the large number of variables into a lesser number that are uncorrelated (i.e. the ‘principal components'), while at the same time being capable of easy interpretation on the original data (Blighe and Lun 2019) (Blighe 2013).
+*PCAtools* provides functions for data exploration via PCA, and allows
+the user to generate publication-ready figures. PCA is performed via
+*BiocSingular* (Lun 2019) - users can also identify optimal number of
+principal components via different metrics, such as elbow method and
+Horn’s parallel analysis (Horn 1965) (Buja and Eyuboglu 1992), which has
+relevance for data reduction in single-cell RNA-seq (scRNA-seq) and high
+dimensional mass cytometry data.
 
-*PCAtools* provides functions for data exploration via PCA, and allows the user to generate publication-ready figures. PCA is performed via *BiocSingular* (Lun 2019) - users can also identify optimal number of principal components via different metrics, such as elbow method and Horn's parallel analysis (Horn 1965) (Buja and Eyuboglu 1992), which has relevance for data reduction in single-cell RNA-seq (scRNA-seq) and high dimensional mass cytometry data.
+# Installation
 
-Installation
-============
-
-1. Download the package from Bioconductor
------------------------------------------
+## 1\. Download the package from Bioconductor
 
 ``` r
     if (!requireNamespace('BiocManager', quietly = TRUE))
@@ -55,19 +42,20 @@ Note: to install development version:
     devtools::install_github('kevinblighe/PCAtools')
 ```
 
-2. Load the package into R session
-----------------------------------
+## 2\. Load the package into R session
 
 ``` r
     library(PCAtools)
 ```
 
-Quick start
-===========
+# Quick start
 
-For this vignette, we will load breast cancer gene expression data with recurrence free survival (RFS) from [Gene Expression Profiling in Breast Cancer: Understanding the Molecular Basis of Histologic Grade To Improve Prognosis](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE2990).
+For this vignette, we will load breast cancer gene expression data with
+recurrence free survival (RFS) from [Gene Expression Profiling in Breast
+Cancer: Understanding the Molecular Basis of Histologic Grade To Improve
+Prognosis](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE2990).
 
-First, let's read in and prepare the data:
+First, let’s read in and prepare the data:
 
 ``` r
   library(Biobase)
@@ -128,71 +116,148 @@ Conduct principal component analysis (PCA)
 
     ## -- removing the lower 10% of variables based on variance
 
-A scree plot
-------------
+## A scree plot
 
 ``` r
-  screeplot(p)
+  screeplot(p, axisLabSize = 20, titleLabSize = 22)
 ```
 
-![Figure 1: A scree plot to show the proportion of explained variance by PC](README_files/figure-markdown_github/ex1-1.png)
+![Figure 1: A scree plot to show the proportion of explained variance by
+PC](README_files/figure-gfm/ex1-1.png)
 
-A bi-plot
----------
+## A bi-plot
+
+Different interpretations of the biplot exist. In the OMICs era, for
+most general users, a biplot is a simple representation of samples in a
+2-dimensional space:
 
 ``` r
   biplot(p)
 ```
 
-![Figure 2: A bi-plot of PC1 versus PC2](README_files/figure-markdown_github/ex2-1.png)
+![Figure 2a: A bi-plot of PC1 versus
+PC2](README_files/figure-gfm/ex2a-1.png)
 
-A pairs plot
-------------
+However, the original definition of a biplot by Gabriel KR (Gabriel
+1971) is a plot that plots both variables and observatinos (samples) in
+the same space. The variables are indicated by arrows drawn from the
+origin, which indicate their ‘weight’ in different directions. We touch
+on this later via the *plotLoadings* function.
+
+``` r
+  biplot(p, showLoadings = TRUE, lab = NULL)
+```
+
+![Figure 2b: A bi-plot of PC1 versus
+PC2](README_files/figure-gfm/ex2b-1.png)
+
+One of the probes pointing downward is *205225\_at*, which targets the
+*ESR1* gene. This is already a useful validation, as the oestrogen
+receptor, which is in part encoded by *ESR1*, is strongly represented by
+PC2 (y-axis), with negative-to-positive receptor status going from
+top-to-bottom. More on this later in this vignette.
+
+## A pairs plot
 
 ``` r
   pairsplot(p)
 ```
 
-![Figure 3: A pairs plot, comparing PC1 - PC5 on a pairwise basis](README_files/figure-markdown_github/ex3-1.png)
+![Figure 3: A pairs plot, comparing PC1 - PC5 on a pairwise
+basis](README_files/figure-gfm/ex3-1.png)
 
-A loadings plot
----------------
+## A loadings plot
+
+If the biplot was previously generated with *showLoadings = TRUE*, check
+how this loadings plot corresponds to the biplot loadings - they should
+match up for the top
+    hits.
 
 ``` r
-  plotloadings(p)
+  plotloadings(p, labSize = 3)
 ```
 
     ## -- variables retained:
 
     ## 215281_x_at, 214464_at, 211122_s_at, 210163_at, 204533_at, 205225_at, 209351_at, 205044_at, 202037_s_at, 204540_at, 215176_x_at, 214768_x_at, 212671_s_at, 219415_at, 37892_at, 208650_s_at, 206754_s_at, 205358_at, 205380_at, 205825_at
 
-![Figure 4: Plot the component loadings and label genes most responsible for variation](README_files/figure-markdown_github/ex4-1.png)
+![Figure 4: Plot the component loadings and label genes most responsible
+for variation](README_files/figure-gfm/ex4-1.png)
 
-An eigencor plot
-----------------
+## An eigencor plot
 
 ``` r
   eigencorplot(p,
     metavars = c('Age','Distant.RFS','ER','GGI','Grade','Size','Time.RFS'))
 ```
 
-    ## [1] "Distant.RFS"
-    ## [1] "ER"
-    ## [1] "Grade"
+![Figure 5: Correlate PCs to metadata
+variables](README_files/figure-gfm/ex5-1.png)
 
-![Figure 5: Correlate PCs to metadata variables](README_files/figure-markdown_github/ex5-1.png)
+## Access the internal data
 
-Advanced features
-=================
+The rotated data that represents the observatinos / samples is stored in
+*rotated*, while the variable loadings are stored in *loadings*
 
-All plots in PCAtools are highly configurable and should cover virtually all general usage requirements. The following sections take a look at some of these advanced features, and form a somewhat practical example of how one can use PCAtools to make a clinical interpretation of data.
+``` r
+  p$rotated[1:5,1:5]
+```
 
-Determine optimum number of PCs to retain
------------------------------------------
+    ##                PC1        PC2        PC3        PC4       PC5
+    ## GSM65752 -30.24272  43.826310   3.781677 -39.536149 18.612835
+    ## GSM65753 -37.73436 -15.464421  -4.913100  -5.877623  9.060108
+    ## GSM65755 -29.95155   7.788280 -22.980076 -15.222649 23.123766
+    ## GSM65757 -33.73509   1.261410 -22.834375   2.494554 13.629207
+    ## GSM65758 -40.95958  -8.588458   4.995440  14.340150  0.417101
 
-A scree plot on its own just shows the accumulative proportion of explained variation, but how can we determine the optimum number of PCs to retain? *PCAtools* provides two metrics for this purpose: elbow method and Horn's parallel analysis (Horn 1965) (Buja and Eyuboglu 1992).
+``` r
+  p$loadings[1:5,1:5]
+```
 
-Let's perform Horn's parallel analysis first:
+    ##                     PC1         PC2          PC3        PC4           PC5
+    ## 206378_at -0.0024336244 -0.05312797 -0.004809456 0.04045087  0.0096616577
+    ## 205916_at -0.0051057533  0.00122765 -0.010593760 0.04023264  0.0285972617
+    ## 206799_at  0.0005723191 -0.05048096 -0.009992964 0.02568142  0.0024626261
+    ## 205242_at  0.0129147329  0.02867789  0.007220832 0.04424070 -0.0006138609
+    ## 206509_at  0.0019058729 -0.05447596 -0.004979062 0.01510060 -0.0026213610
+
+# Advanced features
+
+All plots in PCAtools are highly configurable and should cover virtually
+all general usage requirements. The following sections take a look at
+some of these advanced features, and form a somewhat practical example
+of how one can use PCAtools to make a clinical interpretation of data.
+
+First, let’s sort out the gene annotation by mapping the probe IDs to
+gene symbols. The array used for this study was the Affymetrix U133a, so
+let’s use the *hgu133a.db* Bioconductor package:
+
+``` r
+  suppressMessages(require(hgu133a.db))
+  newnames <- mapIds(hgu133a.db,
+    keys = rownames(p$loadings),
+    column = c('SYMBOL'),
+    keytype = 'PROBEID')
+```
+
+    ## 'select()' returned 1:many mapping between keys and columns
+
+``` r
+  # tidy up for NULL mappings and duplicated gene symbols
+  newnames <- ifelse(is.na(newnames) | duplicated(newnames),
+    names(newnames), newnames)
+  rownames(p$loadings) <- newnames
+```
+
+## Determine optimum number of PCs to retain
+
+A scree plot on its own just shows the accumulative proportion of
+explained variation, but how can we determine the optimum number of PCs
+to retain? *PCAtools* provides two metrics for this purpose: elbow
+method and Horn’s parallel analysis (Horn 1965) (Buja and Eyuboglu
+1992).
+
+Let’s perform Horn’s parallel analysis first:
 
 ``` r
   horn <- parallelPCA(x)
@@ -211,9 +276,13 @@ Now the elbow method:
     ## PC8 
     ##   8
 
-In most cases, the identified values will disagree. This is because finding the correct number of PCs is a difficult task and is akin to finding the 'correct' number of clusters in a dataset - there is no correct answer.
+In most cases, the identified values will disagree. This is because
+finding the correct number of PCs is a difficult task and is akin to
+finding the ‘correct’ number of clusters in a dataset - there is no
+correct answer.
 
-Taking the value from Horn's parallel analyis, we can produce a new scree plot:
+Taking the value from Horn’s parallel analyis, we can produce a new
+scree plot:
 
 ``` r
   library(ggplot2)
@@ -221,32 +290,40 @@ Taking the value from Horn's parallel analyis, we can produce a new scree plot:
   screeplot(p,
     components = getComponents(p, 1:20),
     vline = c(horn$n, elbow)) +
-    geom_text(aes(horn$n + 1, 50, label = "Horn's", vjust = -1)) +
-    geom_text(aes(elbow + 1, 50, label = "Elbow", vjust = -1))
+    geom_label(aes(x = horn$n + 1, y = 50, label = "Horn's", vjust = -1, size = 8)) +
+    geom_label(aes(x = elbow + 1, y = 50, label = "Elbow", vjust = -1, size = 8))
 ```
 
-![Figure 6: Advanced scree plot illustrating optimum number of PCs](README_files/figure-markdown_github/ex6-1.png)
+![Figure 6: Advanced scree plot illustrating optimum number of
+PCs](README_files/figure-gfm/ex6-1.png)
 
-If all else fails, one can simply take the number of PCs that contributes to a pre-selected total of explained variation, e.g., in this case, 27 PCs account for &gt;80% explained variation.
+If all else fails, one can simply take the number of PCs that
+contributes to a pre-selected total of explained variation, e.g., in
+this case, 27 PCs account for \>80% explained variation.
 
-Modify bi-plots
----------------
+## Modify bi-plots
 
-The bi-plot comparing PC1 versus PC2 is the most characteristic plot of PCA. However, PCA is much more than the bi-plot and much more than PC1 and PC2. This said, PC1 and PC2, by the very nature of PCA, are indeed usually the most important parts of PCA.
+The bi-plot comparing PC1 versus PC2 is the most characteristic plot of
+PCA. However, PCA is much more than the bi-plot and much more than PC1
+and PC2. This said, PC1 and PC2, by the very nature of PCA, are indeed
+usually the most important parts of PCA.
 
-In a bi-plot, we can shade the points by different groups and add many more features.
+In a bi-plot, we can shade the points by different groups and add many
+more
+features.
 
 ### Colour by a factor from the metadata, use a custom label, add lines through center, and add legend
 
 ``` r
   biplot(p,
-    lab = paste0(p$metadata$Age, 'yo'),
+    lab = paste0(p$metadata$Age, ' años'),
     colby = 'ER',
     hline = 0, vline = 0,
     legendPosition = 'right')
 ```
 
-![Figure 7: adding lines and a legend to a bi-plot](README_files/figure-markdown_github/ex7-1.png)
+![Figure 7: adding lines and a legend to a
+bi-plot](README_files/figure-gfm/ex7-1.png)
 
 ### Supply custom colours, add more lines, and increase legend size
 
@@ -257,7 +334,8 @@ In a bi-plot, we can shade the points by different groups and add many more feat
     legendPosition = 'top', legendLabSize = 16, legendIconSize = 8.0)
 ```
 
-![Figure 8: supplying custom colours to a bi-plot](README_files/figure-markdown_github/ex8-1.png)
+![Figure 8: supplying custom colours to a
+bi-plot](README_files/figure-gfm/ex8-1.png)
 
 ### Change shape based on tumour grade, remove connectors, and add titles
 
@@ -265,15 +343,13 @@ In a bi-plot, we can shade the points by different groups and add many more feat
   biplot(p,
     colby = 'ER', colkey = c('ER+'='forestgreen', 'ER-'='purple'),
     hline = 0, vline = c(-25, 0, 25),
-    legendPosition = 'top', legendLabSize = 16, legendIconSize = 8.0,
+    legendPosition = 'top', legendLabSize = 13, legendIconSize = 8.0,
     shape = 'Grade', shapekey = c('Grade 1'=15, 'Grade 2'=17, 'Grade 3'=8),
     drawConnectors = FALSE,
     title = 'PCA bi-plot',
     subtitle = 'PC1 versus PC2',
-    caption = '27 PCs == 80%')
+    caption = '27 PCs ≈ 80%')
 ```
-
-![Figure 9: supplying custom colours and shapes to a bi-plot, removing connectors, and modifying titles](README_files/figure-markdown_github/ex9-1.png)
 
 ### Remove labels, modify line types, remove gridlines, and increase point size
 
@@ -285,17 +361,72 @@ In a bi-plot, we can shade the points by different groups and add many more feat
     vlineType = c('dotdash', 'solid', 'dashed'),
     gridlines.major = FALSE, gridlines.minor = FALSE,
     pointSize = 5,
-    legendPosition = 'left', legendLabSize = 16, legendIconSize = 8.0,
+    legendPosition = 'left', legendLabSize = 14, legendIconSize = 8.0,
     shape = 'Grade', shapekey = c('Grade 1'=15, 'Grade 2'=17, 'Grade 3'=8),
     drawConnectors = FALSE,
     title = 'PCA bi-plot',
     subtitle = 'PC1 versus PC2',
-    caption = '27 PCs == 80%')
+    caption = '27 PCs ≈ 80%')
 ```
 
-![Figure 10: removing labels, modifying line types, removing gridlines, and increasing point size in a bi-plot](README_files/figure-markdown_github/ex10-1.png)
+![Figure 10a: removing labels, modifying line types, removing gridlines,
+and increasing point size in a
+bi-plot](README_files/figure-gfm/ex10a-1.png)
 
-### Colour by a continuous variable (colour controlled by ggplot2 engine); plot other PCs
+Let’s plot the same as above but with loadings:
+
+``` r
+  biplot(p,
+    # loadings parameters
+      showLoadings = TRUE,
+      lengthLoadingsArrowsFactor = 1.5,
+      sizeLoadingsNames = 4,
+      colLoadingsNames = 'red4',
+    # other parameters
+      lab = NULL,
+      colby = 'ER', colkey = c('ER+'='royalblue', 'ER-'='red3'),
+      hline = 0, vline = c(-25, 0, 25),
+      vlineType = c('dotdash', 'solid', 'dashed'),
+      gridlines.major = FALSE, gridlines.minor = FALSE,
+      pointSize = 5,
+      legendPosition = 'left', legendLabSize = 14, legendIconSize = 8.0,
+      shape = 'Grade', shapekey = c('Grade 1'=15, 'Grade 2'=17, 'Grade 3'=8),
+      drawConnectors = FALSE,
+      title = 'PCA bi-plot',
+      subtitle = 'PC1 versus PC2',
+      caption = '27 PCs ≈ 80%')
+```
+
+![Figure 10b: removing labels, modifying line types, removing gridlines,
+and increasing point size in a
+bi-plot](README_files/figure-gfm/ex10b-1.png)
+
+### Colour by a continuous variable and plot other PCs
+
+There are two ways to colour by a continuous variable. In the first way,
+we simply ‘add on’ a continuous colour scale via
+*scale\_colour\_gradient*:
+
+``` r
+  # add ESR1 gene expression to the metadata
+  p$metadata$ESR1 <- x["205225_at",]
+
+  biplot(p,
+    x = 'PC2', y = 'PC3',
+    lab = NULL,
+    colby = 'ESR1',
+    shape = 'ER',
+    hline = 0, vline = 0,
+    legendPosition = 'right') +
+
+  scale_colour_gradient(low = 'gold', high = 'red2')
+```
+
+![Figure 11a: colouring by a continuous variable and plotting other PCs
+in a bi-plot](README_files/figure-gfm/ex11a-1.png)
+
+We can also just permit that the internal *ggplot2* engine picks the
+colour scheme - here, we also plot PC10 versus PC50:
 
 ``` r
   biplot(p, x = 'PC10', y = 'PC50',
@@ -310,17 +441,20 @@ In a bi-plot, we can shade the points by different groups and add many more feat
     drawConnectors = FALSE,
     title = 'PCA bi-plot',
     subtitle = 'PC10 versus PC50',
-    caption = '27 PCs == 80%')
+    caption = '27 PCs ≈ 80%')
 ```
 
-![Figure 11: colouring by a continuous variable and plotting other PCs in a bi-plot](README_files/figure-markdown_github/ex11-1.png)
+## Quickly explore potentially informative PCs via a pairs plot
 
-Quickly explore potentially informative PCs via a pairs plot
-------------------------------------------------------------
+The pairs plot in PCA unfortunately suffers from a lack of use; however,
+for those who love exploring data and squeezing every last ounce of
+information out of data, a pairs plot provides for a relatively quick
+way to explore useful leads for other downstream analyses.
 
-The pairs plot in PCA unfortunately suffers from a lack of use; however, for those who love exploring data and squeezing every last ounce of information out of data, a pairs plot provides for a relatively quick way to explore useful leads for other downstream analyses.
-
-As the number of pairwise plots increases, however, space becomes limited. We can shut off titles and axis labeling to save space. Reducing point size and colouring by a variable of interest can additionally help us to rapidly skim over the data.
+As the number of pairwise plots increases, however, space becomes
+limited. We can shut off titles and axis labeling to save space.
+Reducing point size and colouring by a variable of interest can
+additionally help us to rapidly skim over the data.
 
 ``` r
   pairsplot(p,
@@ -334,9 +468,13 @@ As the number of pairwise plots increases, however, space becomes limited. We ca
     margingaps = unit(c(-0.01, -0.01, -0.01, -0.01), 'cm'))
 ```
 
-![Figure 12: maximising available space in a pairs plot](README_files/figure-markdown_github/ex12-1.png)
+![Figure 12: maximising available space in a pairs
+plot](README_files/figure-gfm/ex12-1.png)
 
-We can arrange these in a way that makes better use of the screen space by setting 'triangle = FALSE'. In this case, we can further control the layout with the 'ncol' and 'nrow' parameters, although, the function will automatically determine these based on your input data.
+We can arrange these in a way that makes better use of the screen space
+by setting ‘triangle = FALSE’. In this case, we can further control the
+layout with the ‘ncol’ and ‘nrow’ parameters, although, the function
+will automatically determine these based on your input data.
 
 ``` r
   pairsplot(p,
@@ -346,25 +484,34 @@ We can arrange these in a way that makes better use of the screen space by setti
     pointSize = 0.8,
     gridlines.major = FALSE, gridlines.minor = FALSE,
     colby = 'ER',
-    title = 'Pairs plot', plotaxes = TRUE,
+    title = 'Pairs plot', titleLabSize = 22,
+    axisLabSize = 14, plotaxes = TRUE,
     margingaps = unit(c(0.1, 0.1, 0.1, 0.1), 'cm'))
 ```
 
-![Figure 13: arranging a pairs plot horizontally](README_files/figure-markdown_github/ex13-1.png)
+![Figure 13: arranging a pairs plot
+horizontally](README_files/figure-gfm/ex13-1.png)
 
-Determine the variables that drive variation among each PC
-----------------------------------------------------------
+## Determine the variables that drive variation among each PC
 
-If, on the bi-plot or pairs plot, we encounter evidence that 1 or more PCs are segregating a factor of interest, we can explore further the genes that are driving these differences along each PC.
+If, on the bi-plot or pairs plot, we encounter evidence that 1 or more
+PCs are segregating a factor of interest, we can explore further the
+genes that are driving these differences along each PC.
 
-For each PC of interest, 'plotloadings' determines the variables falling within the top/bottom 5% of the loadings range, and then creates a final consensus list of these. These variables are then plotted.
+For each PC of interest, ‘plotloadings’ determines the variables falling
+within the top/bottom 5% of the loadings range, and then creates a final
+consensus list of these. These variables are then plotted.
 
-The loadings plot, like all others, is highly configurable. To modify the cut-off for inclusion / exclusion of variables, we use 'rangeRetain', where 0.01 equates to the top/bottom 1% of the loadings range per PC. We can also add a title, subtitle, and caption, and alter the shape and colour scheme.
+The loadings plot, like all others, is highly configurable. To modify
+the cut-off for inclusion / exclusion of variables, we use
+‘rangeRetain’, where 0.01 equates to the top/bottom 1% of the
+loadings range per PC. We can also add a title, subtitle, and caption,
+and alter the shape and colour scheme.
 
 ``` r
   plotloadings(p,
     rangeRetain = 0.01,
-    labSize = 3.0,
+    labSize = 4.0,
     title = 'Loadings plot',
     subtitle = 'PC1, PC2, PC3, PC4, PC5',
     caption = 'Top 1% variables',
@@ -375,37 +522,26 @@ The loadings plot, like all others, is highly configurable. To modify the cut-of
 
     ## -- variables retained:
 
-    ## 215281_x_at, 214464_at, 211122_s_at, 205225_at, 202037_s_at, 204540_at, 215176_x_at, 205044_at, 208650_s_at, 205380_at
+    ## POGZ, CDC42BPA, CXCL11, ESR1, SFRP1, EEF1A2, IGKC, GABRP, CD24, PDZK1
 
-![Figure 14: modifying cut-off for labeling in a loadings plot](README_files/figure-markdown_github/ex14-1.png)
+![Figure 14: modifying cut-off for labeling in a loadings
+plot](README_files/figure-gfm/ex14-1.png)
 
-We can check the genes to which these relate by using biomaRt:
+At least one interesting finding is *205225\_at* / *ESR1*, which is by
+far the gene most responsible for variation along PC2. The previous
+bi-plots showed that this PC also segregated ER+ from ER- patients. The
+other results could be explored. Also, from the biplots with loadings
+that we have already generated, this results is also verified in these.
 
-*not run*
-
-``` r
-  mart <- useMart('ENSEMBL_MART_ENSEMBL', host = 'useast.ensembl.org')
-  mart <- useDataset('hsapiens_gene_ensembl', mart)
-
-  getBM(mart = mart,
-    attributes = c('affy_hg_u133a', 'ensembl_gene_id',
-      'gene_biotype', 'external_gene_name'),
-    filter = 'affy_hg_u133a',
-    values = c('215281_x_at', '214464_at', '211122_s_at', '205225_at',
-      '202037_s_at', '204540_at', '215176_x_at', '205044_at', '208650_s_at',
-      '205380_at'),
-    uniqueRows = TRUE)
-```
-
-At least one interesting finding is 205225\_at (ESR1), which is by far the gene most responsible for variation along PC2. The previous bi-plots showed that this PC also segregated ER+ from ER- patients. The other results could be explored.
-
-With the loadings plot, in addition, we can instead plot absolute values and modify the point sizes to be proportional to the loadings. We can also switch off the line connectors and plot the loadings for any PCs
+With the loadings plot, in addition, we can instead plot absolute values
+and modify the point sizes to be proportional to the loadings. We can
+also switch off the line connectors and plot the loadings for any PCs
 
 ``` r
   plotloadings(p,
     components = getComponents(p, c(4,33,11,1)),
     rangeRetain = 0.1,
-    labSize = 3.0,
+    labSize = 4.0,
     absolute = FALSE,
     title = 'Loadings plot',
     subtitle = 'Misc PCs',
@@ -417,18 +553,26 @@ With the loadings plot, in addition, we can instead plot absolute values and mod
 
     ## -- variables retained:
 
-    ## 211122_s_at, 215176_x_at, 203915_at, 210163_at, 214768_x_at, 211645_x_at, 211644_x_at, 216510_x_at, 216491_x_at, 214777_at, 216576_x_at, 212671_s_at, 211796_s_at, 204070_at, 212588_at, 212998_x_at, 209351_at, 205044_at, 209842_at, 206157_at, 219415_at, 205509_at, 204734_at, 214087_s_at, 204455_at, 203917_at, 203397_s_at, 203256_at, 218541_s_at, 214079_at, 204475_at, 205350_at, 206224_at, 209942_x_at, 205364_at, 203680_at, 213222_at, 209524_at, 206754_s_at, 205041_s_at, 205040_at, 221667_s_at, 206378_at, 212592_at, 215281_x_at, 213872_at, 203763_at, 214464_at
+    ## CXCL11, IGKC, CXCL9, 210163_at, 214768_x_at, 211645_x_at, 211644_x_at, IGHA1, 216491_x_at, 214777_at, 216576_x_at, 212671_s_at, IL23A, PLAAT4, 212588_at, 212998_x_at, KRT14, GABRP, SOX10, PTX3, TTYH1, CPB1, KRT15, MYBPC1, DST, CXADR, GALNT3, CDH3, TCIM, DHRS2, MMP1, CRABP1, CST1, MAGEA3, ACOX2, PRKAR2B, PLCB1, HDGFL3, CYP2B6, ORM1, 205040_at, HSPB8, SCGB2A2, JCHAIN, POGZ, 213872_at, DYNC2LI1, CDC42BPA
 
-![Figure 15: plotting absolute component loadings](README_files/figure-markdown_github/ex15-1.png)
+![Figure 15: plotting absolute component
+loadings](README_files/figure-gfm/ex15-1.png)
 
-Correlate the principal components back to the clinical data
-------------------------------------------------------------
+## Correlate the principal components back to the clinical data
 
-Further exploration of the PCs can come through correlations with clinical data. This is also a mostly untapped resource in the era of 'big data' and can help to guide an analysis down a particular path (or not!).
+Further exploration of the PCs can come through correlations with
+clinical data. This is also a mostly untapped resource in the era of
+‘big data’ and can help to guide an analysis down a particular path
+(or not\!).
 
-We may wish, for example, to correlate all PCs that account for 80% variation in our dataset and then explore further the PCs that have statistically significant correlations.
+We may wish, for example, to correlate all PCs that account for 80%
+variation in our dataset and then explore further the PCs that have
+statistically significant correlations.
 
-'eigencorplot' is built upon another function by the *PCAtools* developers, namely [CorLevelPlot](https://github.com/kevinblighe/CorLevelPlot). Further examples can be found there.
+‘eigencorplot’ is built upon another function by the *PCAtools*
+developers, namely
+[CorLevelPlot](https://github.com/kevinblighe/CorLevelPlot). Further
+examples can be found there.
 
 ``` r
   eigencorplot(p,
@@ -448,13 +592,12 @@ We may wish, for example, to correlate all PCs that account for 80% variation in
     plotRsquared = FALSE)
 ```
 
-    ## [1] "Distant.RFS"
-    ## [1] "ER"
-    ## [1] "Grade"
+![Figure 16: correlating PCs that account for at least 80% variation to
+clinical variables](README_files/figure-gfm/ex16-1.png)
 
-![Figure 16: correlating PCs that account for at least 80% variation to clinical variables](README_files/figure-markdown_github/ex16-1.png)
-
-We can also supply different cut-offs for statistical significance, apply p-value adjustment, plot R-squared values, and specify correlation method:
+We can also supply different cut-offs for statistical significance,
+apply p-value adjustment, plot R-squared values, and specify correlation
+method:
 
 ``` r
   eigencorplot(p,
@@ -475,50 +618,61 @@ We can also supply different cut-offs for statistical significance, apply p-valu
     signifCutpoints = c(0, 0.0001, 0.001, 0.01, 0.05, 1))
 ```
 
-    ## [1] "Distant.RFS"
-    ## [1] "ER"
-    ## [1] "Grade"
+![Figure 17: modifying cut-offs and symbols for statistical significance
+in eigencorplot](README_files/figure-gfm/ex17-1.png)
 
-![Figure 17: modifying cut-offs and symbols for statistical significance in eigencorplot](README_files/figure-markdown_github/ex17-1.png)
+Clearly, PC2 is coming across as the most interesting PC in this
+experiment, with highly statistically significant correlation
+(p\<0.0001) to ER status, tumour grade, and GGI (genomic Grade Index),
+an indicator of response. It comes as no surprise that the gene driving
+most variationn along PC2 is *ESR1*, identified from our loadings plot.
 
-Clearly, PC2 is coming across as the most interesting PC in this experiment, with highly statistically significant correlation (p&lt;0.0001) to ER status, tumour grade, and GGI (genomic Grade Index), an indicator of response. It comes as no surprise that the gene driving most variationn along PC2 is *ESR1*, identified from our loadings plot.
+This information is, of course, not new, but shows how PCA is much more
+than just a bi-plot used to identify outliers\!
 
-This information is, of course, not new, but shows how PCA is much more than just a bi-plot used to identify outliers!
-
-Plot the entire project on a single panel
------------------------------------------
+## Plot the entire project on a single panel
 
 ``` r
   pscree <- screeplot(p, components = getComponents(p, 1:30),
-    hline = 80, vline = 27, axisLabSize = 10, returnPlot = FALSE) +
-    geom_text(aes(20, 80, label = '80% explained variation', vjust = -1))
+    hline = 80, vline = 27, axisLabSize = 14, titleLabSize = 20,
+    returnPlot = FALSE) +
+    geom_label(aes(20, 80, label = '80% explained variation', vjust = -1, size = 8))
 
   ppairs <- pairsplot(p, components = getComponents(p, c(1:3)),
     triangle = TRUE, trianglelabSize = 12,
     hline = 0, vline = 0,
     pointSize = 0.8, gridlines.major = FALSE, gridlines.minor = FALSE,
     colby = 'Grade',
-    title = '', titleLabSize = 16, plotaxes = FALSE,
+    title = '', plotaxes = FALSE,
     margingaps = unit(c(0.01, 0.01, 0.01, 0.01), 'cm'),
     returnPlot = FALSE)
 
-  pbiplot <- biplot(p, lab = NULL,
-    colby = 'ER', colkey = c('ER+'='royalblue', 'ER-'='red3'),
-    hline = 0, vline = c(-25, 0, 25), vlineType = c('dotdash', 'solid', 'dashed'),
-    gridlines.major = FALSE, gridlines.minor = FALSE,
-    pointSize = 2, axisLabSize = 12,
-    legendPosition = 'left', legendLabSize = 10, legendIconSize = 3.0,
-    shape = 'Grade', shapekey = c('Grade 1'=15, 'Grade 2'=17, 'Grade 3'=8),
-    drawConnectors = FALSE,
-    title = 'PCA bi-plot', subtitle = 'PC1 versus PC2',
-      caption = '27 PCs == 80%',
-    returnPlot = FALSE)
+  pbiplot <- biplot(p,
+    # loadings parameters
+      showLoadings = TRUE,
+      lengthLoadingsArrowsFactor = 1.5,
+      sizeLoadingsNames = 4,
+      colLoadingsNames = 'red4',
+    # other parameters
+      lab = NULL,
+      colby = 'ER', colkey = c('ER+'='royalblue', 'ER-'='red3'),
+      hline = 0, vline = c(-25, 0, 25),
+      vlineType = c('dotdash', 'solid', 'dashed'),
+      gridlines.major = FALSE, gridlines.minor = FALSE,
+      pointSize = 5,
+      legendPosition = 'none', legendLabSize = 16, legendIconSize = 8.0,
+      shape = 'Grade', shapekey = c('Grade 1'=15, 'Grade 2'=17, 'Grade 3'=8),
+      drawConnectors = FALSE,
+      title = 'PCA bi-plot',
+      subtitle = 'PC1 versus PC2',
+      caption = '27 PCs ≈ 80%',
+      returnPlot = FALSE)
 
-  ploadings <- plotloadings(p, rangeRetain = 0.01, labSize = 2.5,
+  ploadings <- plotloadings(p, rangeRetain = 0.01, labSize = 4,
     title = 'Loadings plot', axisLabSize = 12,
     subtitle = 'PC1, PC2, PC3, PC4, PC5',
     caption = 'Top 1% variables',
-    shape = 24, shapeSizeRange = c(4, 4),
+    shape = 24, shapeSizeRange = c(4, 8),
     col = c('limegreen', 'black', 'red3'),
     legendPosition = 'none',
     drawConnectors = FALSE,
@@ -528,7 +682,7 @@ Plot the entire project on a single panel
     components = getComponents(p, 1:10),
     metavars = c('Age','Distant.RFS','ER','GGI','Grade','Size','Time.RFS'),
     #col = c('royalblue', '', 'gold', 'forestgreen', 'darkgreen'),
-    cexCorval = 0.6,
+    cexCorval = 1.0,
     fontCorval = 2,
     posLab = 'all', 
     rotLabX = 45,
@@ -541,13 +695,7 @@ Plot the entire project on a single panel
     signifSymbols = c('****', '***', '**', '*', ''),
     signifCutpoints = c(0, 0.0001, 0.001, 0.01, 0.05, 1),
     returnPlot = FALSE)
-```
 
-    ## [1] "Distant.RFS"
-    ## [1] "ER"
-    ## [1] "Grade"
-
-``` r
     library(cowplot)
     library(ggplotify)
 
@@ -558,7 +706,7 @@ Plot the entire project on a single panel
       label_fontface = 'bold',
       label_size = 22,
       align = 'h',
-      rel_widths = c(1.05, 0.9, 1.05))
+      rel_widths = c(1.10, 0.80, 1.10))
 
     bottom_row <- plot_grid(ploadings,
       as.grob(peigencor),
@@ -568,25 +716,28 @@ Plot the entire project on a single panel
       label_fontface = 'bold',
       label_size = 22,
       align = 'h',
-      rel_widths = c(1.5, 1.5))
+      rel_widths = c(0.8, 1.2))
 
-    plot_grid(top_row, bottom_row, ncol = 1, rel_heights = c(1.0, 1.0))
+    plot_grid(top_row, bottom_row, ncol = 1,
+      rel_heights = c(1.1, 0.9))
 ```
 
-![Figure 18: a merged panel of all PCAtools plots](README_files/figure-markdown_github/ex18-1.png)
+![Figure 18: a merged panel of all PCAtools
+plots](README_files/figure-gfm/ex18-1.png)
 
-Acknowledgments
-===============
+# Acknowledgments
 
-The development of *PCAtools* has benefited from contributions and suggestions from:
+The development of *PCAtools* has benefited from contributions and
+suggestions from:
 
--   Krushna Chandra Murmu
--   Jinsheng
--   Myles Lewis
--   Anna-Leigh Brown
+  - Krushna Chandra Murmu
+  - Jinsheng
+  - Myles Lewis
+  - Anna-Leigh Brown
+  - Vincent Carey
+  - Vince Vu
 
-Session info
-============
+# Session info
 
 ``` r
 sessionInfo()
@@ -609,39 +760,40 @@ sessionInfo()
     ## [11] LC_MEASUREMENT=en_GB.UTF-8 LC_IDENTIFICATION=C       
     ## 
     ## attached base packages:
-    ## [1] parallel  stats     graphics  grDevices utils     datasets  methods  
-    ## [8] base     
+    ## [1] stats4    parallel  stats     graphics  grDevices utils     datasets 
+    ## [8] methods   base     
     ## 
     ## other attached packages:
-    ##  [1] ggplotify_0.0.4     GEOquery_2.54.0     Biobase_2.46.0     
-    ##  [4] BiocGenerics_0.32.0 PCAtools_1.99.6     cowplot_1.0.0      
-    ##  [7] lattice_0.20-40     reshape2_1.4.3      ggrepel_0.8.1      
-    ## [10] ggplot2_3.2.1      
+    ##  [1] ggplotify_0.0.5      hgu133a.db_3.2.3     org.Hs.eg.db_3.10.0 
+    ##  [4] AnnotationDbi_1.48.0 IRanges_2.20.2       S4Vectors_0.24.4    
+    ##  [7] GEOquery_2.54.1      Biobase_2.46.0       BiocGenerics_0.32.0 
+    ## [10] PCAtools_2.1.4       cowplot_1.0.0        lattice_0.20-41     
+    ## [13] reshape2_1.4.4       ggrepel_0.8.2        ggplot2_3.3.0       
     ## 
     ## loaded via a namespace (and not attached):
-    ##  [1] Rcpp_1.0.3               rsvd_1.0.2               tidyr_1.0.0             
-    ##  [4] assertthat_0.2.1         zeallot_0.1.0            digest_0.6.22           
-    ##  [7] R6_2.4.1                 plyr_1.8.4               backports_1.1.5         
-    ## [10] stats4_3.6.3             evaluate_0.14            highr_0.8               
-    ## [13] pillar_1.4.2             rlang_0.4.1              lazyeval_0.2.2          
-    ## [16] curl_4.2                 irlba_2.3.3              S4Vectors_0.24.0        
-    ## [19] Matrix_1.2-17            rmarkdown_1.17           labeling_0.3            
-    ## [22] BiocParallel_1.20.0      readr_1.3.1              stringr_1.4.0           
-    ## [25] munsell_0.5.0            DelayedArray_0.12.0      compiler_3.6.3          
-    ## [28] BiocSingular_1.2.0       xfun_0.11                pkgconfig_2.0.3         
-    ## [31] gridGraphics_0.4-1       htmltools_0.4.0          tidyselect_0.2.5        
-    ## [34] tibble_2.1.3             IRanges_2.20.0           matrixStats_0.55.0      
-    ## [37] crayon_1.3.4             dplyr_0.8.3              withr_2.1.2             
-    ## [40] grid_3.6.3               gtable_0.3.0             lifecycle_0.1.0         
-    ## [43] magrittr_1.5             scales_1.0.0             dqrng_0.2.1             
-    ## [46] stringi_1.4.3            limma_3.42.0             xml2_1.2.2              
-    ## [49] rvcheck_0.1.6            DelayedMatrixStats_1.8.0 ellipsis_0.3.0          
-    ## [52] vctrs_0.2.0              tools_3.6.3              glue_1.3.1              
-    ## [55] purrr_0.3.3              hms_0.5.2                yaml_2.2.0              
-    ## [58] colorspace_1.4-1         BiocManager_1.30.9       knitr_1.26
+    ##  [1] BiocSingular_1.2.2       tidyr_1.0.2              bit64_0.9-7             
+    ##  [4] DelayedMatrixStats_1.8.0 assertthat_0.2.1         BiocManager_1.30.10     
+    ##  [7] rvcheck_0.1.8            highr_0.8                dqrng_0.2.1             
+    ## [10] blob_1.2.1               yaml_2.2.1               pillar_1.4.3            
+    ## [13] RSQLite_2.2.0            glue_1.4.0               limma_3.42.2            
+    ## [16] digest_0.6.25            colorspace_1.4-1         htmltools_0.4.0         
+    ## [19] Matrix_1.2-18            plyr_1.8.6               pkgconfig_2.0.3         
+    ## [22] purrr_0.3.3              scales_1.1.0             BiocParallel_1.20.1     
+    ## [25] tibble_3.0.0             farver_2.0.3             ellipsis_0.3.0          
+    ## [28] withr_2.1.2              cli_2.0.2                magrittr_1.5            
+    ## [31] crayon_1.3.4             memoise_1.1.0            evaluate_0.14           
+    ## [34] fansi_0.4.1              xml2_1.3.1               tools_3.6.3             
+    ## [37] hms_0.5.3                lifecycle_0.2.0          matrixStats_0.56.0      
+    ## [40] stringr_1.4.0            munsell_0.5.0            DelayedArray_0.12.3     
+    ## [43] irlba_2.3.3              compiler_3.6.3           rsvd_1.0.3              
+    ## [46] gridGraphics_0.5-0       rlang_0.4.5              grid_3.6.3              
+    ## [49] labeling_0.3             rmarkdown_2.1            gtable_0.3.0            
+    ## [52] DBI_1.1.0                curl_4.3                 R6_2.4.1                
+    ## [55] knitr_1.28               dplyr_0.8.5              bit_1.1-15.2            
+    ## [58] readr_1.3.1              stringi_1.4.6            Rcpp_1.0.4.6            
+    ## [61] vctrs_0.2.4              tidyselect_1.0.0         xfun_0.13
 
-References
-==========
+# References
 
 Blighe and Lun (2019)
 
@@ -653,12 +805,53 @@ Buja and Eyuboglu (1992)
 
 Lun (2019)
 
-Blighe, K. 2013. “Haplotype classification using copy number variation and principal components analysis.” The Open Bioinformatics Journal 7:19-24.
+Gabriel (1971)
 
-Blighe, K, and A Lun. 2019. “PCAtools: everything Principal Components Analysis.” <https://github.com/kevinblighe/PCAtools.>
+<div id="refs" class="references">
 
-Buja, A, and N Eyuboglu. 1992. “Remarks on Parallel Analysis.” Multivariate Behav. Res. 27, 509-40.
+<div id="ref-BligheK">
 
-Horn, JL. 1965. “A rationale and test for the number of factors in factor analysis.” Psychometrika 30(2), 179-185.
+Blighe, K. 2013. “Haplotype classification using copy number variation
+and principal components analysis.” The Open Bioinformatics Journal
+7:19-24.
 
-Lun, A. 2019. “BiocSingular: Singular Value Decomposition for Bioconductor Packages.” R package version 1.0.0, https://github.com/LTLA/BiocSingular.
+</div>
+
+<div id="ref-PCAtools">
+
+Blighe, K, and A Lun. 2019. “PCAtools: everything Principal Components
+Analysis.” <https://github.com/kevinblighe/PCAtools.>
+
+</div>
+
+<div id="ref-Buja">
+
+Buja, A, and N Eyuboglu. 1992. “Remarks on Parallel Analysis.”
+Multivariate Behav. Res. 27, 509-40.
+
+</div>
+
+<div id="ref-Gabriel">
+
+Gabriel, KR. 1971. “The Biplot Graphic Display of Matrices with
+Application to Principal Component Analysis 1.” *Biometrika* 58 (3):
+453–67. <http://biomet.oxfordjournals.org/content/58/3/453.short>.
+
+</div>
+
+<div id="ref-Horn">
+
+Horn, JL. 1965. “A rationale and test for the number of factors in
+factor analysis.” Psychometrika 30(2), 179-185.
+
+</div>
+
+<div id="ref-Lun">
+
+Lun, A. 2019. “BiocSingular: Singular Value Decomposition for
+Bioconductor Packages.” R package version 1.0.0,
+https://github.com/LTLA/BiocSingular.
+
+</div>
+
+</div>

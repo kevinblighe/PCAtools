@@ -71,7 +71,7 @@ pairsplot <- function(
       nplots <- nplots + 1 # increment nplots
 
       biplots[[nplots]] <- ggdraw() +
-        draw_label(x = 0.5, y = 0.5,
+        draw_label(x = 0.65, y = 0.65,
           paste0(components[i],
             ',\n',
             round(pcaobj$variance[components[i]], digits=2), '%'),
@@ -164,7 +164,7 @@ pairsplot <- function(
   # triangular layout?
   # with triangular layout, empty space is filled as empty
   # plots with label = ''
-  if (triangle == TRUE) {
+  if (triangle) {
     ncol <- nrow <- length(components)
 
     # create new list that will store plot objects plus
@@ -200,14 +200,14 @@ pairsplot <- function(
     }
 
     # remove axis labels and ticks?
-    if (plotaxes == FALSE) {
+    if (!plotaxes) {
       margin <- margin + theme(
         axis.text.x = element_blank(),
         axis.text.y = element_blank(),
         axis.ticks.x = element_blank(),
         axis.ticks.y = element_blank(),
         axis.title = element_blank())
-    } else if (plotaxes == TRUE) {
+    } else if (plotaxes) {
       margin <- margin
     }
 
@@ -216,12 +216,12 @@ pairsplot <- function(
     biplots.final <- lapply(biplots.final, '+', coord_flip())
 
     # return plot?
-    if (returnPlot == TRUE) {
+    if (returnPlot) {
       return(plot_grid(title,
         do.call(plot_grid, c(biplots.final, ncol = ncol, nrow = nrow)),
         ncol = 1,
         rel_heights = c(0.1, 1.0)))
-    } else if (returnPlot == FALSE) {
+    } else if (!returnPlot) {
       plot_grid(title,
         do.call(plot_grid, c(biplots.final, ncol = ncol, nrow = nrow)),
         ncol = 1,
@@ -229,7 +229,7 @@ pairsplot <- function(
     }
 
   # triangular layout?
-  } else if (triangle == FALSE) {
+  } else if (!triangle) {
     if (is.null(ncol)) {
       ncol <- length(components) - 1
     } else {
@@ -243,14 +243,14 @@ pairsplot <- function(
     }
 
     # remove axis labels and ticks?
-    if (plotaxes == FALSE) {
+    if (!plotaxes) {
       margin <- margin + theme(
         axis.text.x = element_blank(),
         axis.text.y = element_blank(),
         axis.ticks.x = element_blank(),
         axis.ticks.y = element_blank(),
         axis.title = element_blank())
-    } else if (plotaxes == TRUE) {
+    } else if (plotaxes) {
       margin <- margin
     }
 
@@ -258,12 +258,12 @@ pairsplot <- function(
     biplots <- lapply(biplots, '+', margin)
 
     # return plot?
-    if (returnPlot == TRUE) {
+    if (returnPlot) {
       return(plot_grid(title,
         do.call(plot_grid, c(biplots, ncol = ncol, nrow = nrow)),
         ncol = 1,
         rel_heights = c(0.1, 1.0)))
-    } else if (returnPlot == FALSE) {
+    } else if (!returnPlot) {
       plot_grid(title,
         do.call(plot_grid, c(biplots, ncol = ncol, nrow = nrow)),
         ncol = 1,
