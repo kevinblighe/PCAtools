@@ -38,7 +38,8 @@ Suggests:
   biomaRt,
   hgu133a.db,
   ggplotify,
-  beachmat
+  beachmat,
+  RMTstat
 LinkingTo:
   Rcpp,
   beachmat,
