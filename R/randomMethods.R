@@ -65,6 +65,10 @@ chooseMarchenkoPastur <- function(x, .dim=dim(x), var.explained, noise) {
 #' This provides a mathematical definition of the \dQuote{optimal} choice of the number of PCs for a given matrix,
 #' though it depends on both the i.i.d. assumption and an estimate for \code{noise}.
 #'
+#' @return
+#' An integer scalar specifying the number of PCs to retain.
+#' The effective limit on the variance explained is returned in the attributes.
+#'
 #' @author Aaron Lun
 #'
 #' @examples
@@ -90,7 +94,12 @@ chooseGavishDonoho <- function(x, .dim=dim(x), var.explained, noise) {
     # Equation 11 of the Gavish-Donoho paper.
     lambda <- sqrt( 2 * (beta + 1) + (8 * beta) / ( beta + 1 + sqrt(beta^2 + 14 * beta + 1) ) )
 
-    limit <- lambda^2 * noise
+    # Equation 3, slightly reorganized to have the variance explained on the LHS
+    # instead of the singular values 'D', where D = [ var.explained * (.dim[2] - 1) ].
+    limit <- lambda^2 * noise * n/(.dim[2] - 1)
     gv <- sum(var.explained > limit)
-    max(1L, gv)
+
+    output <- max(1L, gv)
+    attr(output, "limit") <- limit
+    output
 }
