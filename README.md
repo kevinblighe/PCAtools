@@ -1,7 +1,7 @@
 PCAtools: everything Principal Component Analysis
 ================
 Kevin Blighe, Aaron Lun
-2020-05-31
+2020-06-02
 
 # Introduction
 

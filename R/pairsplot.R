@@ -71,7 +71,7 @@ pairsplot <- function(
       nplots <- nplots + 1 # increment nplots
 
       biplots[[nplots]] <- ggdraw() +
-        draw_label(x = 0.65, y = 0.65,
+        draw_label(x = 0.6, y = 0.6,
           paste0(components[i],
             ',\n',
             round(pcaobj$variance[components[i]], digits=2), '%'),
