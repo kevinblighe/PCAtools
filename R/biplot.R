@@ -24,6 +24,15 @@ biplot <- function(
   legendPosition = 'none',
   legendLabSize = 12,
   legendIconSize = 5.0,
+  encircleByGroup = FALSE,
+  encircleFill = TRUE,
+  encircleAlpha = 1/4,
+  encircleLineSize = 0.25,
+  ellipse = FALSE,
+  ellipseConf = 0.95,
+  ellipseFill = TRUE,
+  ellipseAlpha = 1/4,
+  ellipseLineSize = 0.25,
   xlim = c(min(pcaobj$rotated[,x]) - 5, max(pcaobj$rotated[,x]) + 5),
   ylim = c(min(pcaobj$rotated[,y]) - 5, max(pcaobj$rotated[,y]) + 5),
   lab = rownames(pcaobj$metadata),
@@ -126,7 +135,7 @@ biplot <- function(
     if (!is.null(lab)) {
       plotobj$col <- lab
     } else {
-      plotobj$col <- seq_along(1:length(pcaobj$yvars))
+      plotobj$col <- seq_len(length(pcaobj$yvars))
     }
   } else {
     plotobj$col <- pcaobj$metadata[,colby]
@@ -178,8 +187,8 @@ biplot <- function(
     xidx <- order(abs(pcaobj$loadings[,x]), decreasing = TRUE)
     yidx <- order(abs(pcaobj$loadings[,y]), decreasing = TRUE)
     vars <- unique(c(
-      rownames(pcaobj$loadings)[xidx][seq_along(1:ntopLoadings)],
-      rownames(pcaobj$loadings)[yidx][seq_along(1:ntopLoadings)]))
+      rownames(pcaobj$loadings)[xidx][seq_len(1:ntopLoadings)],
+      rownames(pcaobj$loadings)[yidx][seq_len(1:ntopLoadings)]))
 
     # get scaling parameter to match between variable loadings and rotated loadings
     r <- min(
@@ -367,6 +376,58 @@ biplot <- function(
             hjust = labhjust,
             vjust = labvjust)
       }
+    }
+  }
+
+  # encircle
+  if (encircleByGroup) {
+    if (encircleFill) {
+      plot <- plot +
+        geom_encircle(
+          aes(group = col,
+            fill = col,
+            colour = col),
+          alpha = encircleAlpha,
+          size = encircleLineSize,
+          show.legend = FALSE,
+          na.rm = TRUE)
+    } else {
+      plot <- plot +
+        geom_encircle(
+          aes(group = col,
+            colour = col),
+          alpha = encircleAlpha,
+          size = encircleLineSize,
+          show.legend = FALSE,
+          na.rm = TRUE)
+    }
+  }
+
+  # ellipse
+  if (ellipse) {
+    if (ellipseFill) {
+      plot <- plot +
+        stat_ellipse(
+          aes(group = col,
+            fill = col),
+          colour = 'black',
+          geom = 'polygon',
+          level = ellipseConf,
+          alpha = ellipseAlpha,
+          size = ellipseLineSize,
+          show.legend = FALSE,
+          na.rm = TRUE)
+    } else {
+      plot <- plot +
+        stat_ellipse(
+          aes(group = col),
+          colour = 'black',
+          geom = 'polygon',
+          level = ellipseConf,
+          alpha = ellipseAlpha,
+          size = ellipseLineSize,
+          show.legend = FALSE,
+          na.rm = TRUE)
     }
   }
 

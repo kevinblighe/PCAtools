@@ -32,6 +32,15 @@
   legendPosition = 'none',
   legendLabSize = 12,
   legendIconSize = 5.0,
+  encircleByGroup = FALSE,
+  encircleFill = TRUE,
+  encircleAlpha = 1/4,
+  encircleLineSize = 0.25,
+  ellipse = FALSE,
+  ellipseConf = 0.95,
+  ellipseFill = TRUE,
+  ellipseAlpha = 1/4,
+  ellipseLineSize = 0.25,
   xlim = c(min(pcaobj$rotated[,x]) - 5, max(pcaobj$rotated[,x]) + 5),
   ylim = c(min(pcaobj$rotated[,y]) - 5, max(pcaobj$rotated[,y]) + 5),
   lab = rownames(pcaobj$metadata),
@@ -44,13 +53,13 @@
   widthConnectors = 0.5,
   colConnectors = 'grey50',
   xlab = paste0(x, ', ',
-    round(pcaobj$variance[x], digits=2),
+    round(pcaobj$variance[x], digits = 2),
     '\% variation'),
   xlabAngle = 0,
   xlabhjust = 0.5,
   xlabvjust = 0.5,
   ylab = paste0(y, ', ',
-    round(pcaobj$variance[y], digits=2),
+    round(pcaobj$variance[y], digits = 2),
     '\% variation'),
   ylabAngle = 0,
   ylabhjust = 0.5,
@@ -132,6 +141,32 @@
   \item{legendLabSize}{Size of plot legend text. DEFAULT = 10. OPTIONAL.}
   \item{legendIconSize}{Size of plot legend icons / symbols. DEFAULT = 3.0.
     OPTIONAL.}
+  \item{encircleByGroup}{Logical, indicating whether to draw a polygon around
+    the groups specified by 'colby'. If activated, colour / fill is dictated
+    by colkey or those automatically chosen by the ggplot2 internal engine.
+    Fill transparency is controlled by 'encircleAlpha'. DEFAULT = FALSE.
+    OPTIONAL.}
+  \item{encircleFill}{Logical, if encircleByGroup == TRUE, this determines
+    whether to fill the encircled region or not. DEFAULT = TRUE. OPTIONAL.}
+  \item{encircleAlpha}{Alpha for purposes of controlling colour transparency of
+    the encircled region. Used when encircleByGroup == TRUE. DEFAULT = 1/4.
+    OPTIONAL.}
+  \item{encircleLineSize}{Line width of the encircled line when
+    encircleByGroup == TRUE. DEFAULT = 2.5. OPTIONAL.}
+  \item{ellipse}{Logical, indicating whether to draw a stat ellipse around
+    the groups specified by 'colby'. If activated, colour / fill is dictated
+    by colkey or those automatically chosen by the ggplot2 internal engine.
+    Fill transparency is controlled by 'encircleAlpha'. Confidence intervals
+    are controlled by 'ellipseConf'. DEFAULT = FALSE.}
+    OPTIONAL.,
+  \item{ellipseConf}{Confidence intervals of the stat ellipses when
+    ellipse == TRUE. DEFAULT = 0.95. OPTIONAL.}
+  \item{ellipseFill}{Logical, if ellipse == TRUE, this determines
+    whether to fill the region or not. DEFAULT = TRUE. OPTIONAL.}
+  \item{ellipseAlpha}{Alpha for purposes of controlling colour transparency of
+    the ellipse region. Used when ellipse == TRUE. DEFAULT = 1/4. OPTIONAL.}
+  \item{ellipseLineSize}{Line width of the ellipse line when ellipse == TRUE.
+    DEFAULT = 2.5. OPTIONAL.}
   \item{xlim}{Limits of the x-axis.
     DEFAULT = c(min(pcaobj$rotated[,x]) - 5, max(pcaobj$rotated[,x]) + 5). OPTIONAL.}
   \item{ylim}{Limits of the y-axis.

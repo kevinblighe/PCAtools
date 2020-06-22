@@ -1,7 +1,7 @@
 PCAtools: everything Principal Component Analysis
 ================
 Kevin Blighe, Aaron Lun
-2020-06-02
+2020-06-21
 
 # Introduction
 
@@ -36,9 +36,12 @@ dimensional mass cytometry data.
     BiocManager::install('PCAtools')
 ```
 
-Note: to install development version:
+Note: to install development version direct from GitHub:
 
 ``` r
+    if (!requireNamespace('devtools', quietly = TRUE))
+        install.packages('devtools')
+
     devtools::install_github('kevinblighe/PCAtools')
 ```
 
@@ -62,56 +65,58 @@ First, let’s read in and prepare the data:
   library(GEOquery)
 
   # load series and platform data from GEO
-  gset <- getGEO('GSE2990', GSEMatrix = TRUE, getGPL = FALSE)
-
-  x <- exprs(gset[[1]])
+    gset <- getGEO('GSE2990', GSEMatrix = TRUE, getGPL = FALSE)
+    mat <- exprs(gset[[1]])
 
   # remove Affymetrix control probes
-  x <- x[-grep('^AFFX', rownames(x)),]
+    mat <- mat[-grep('^AFFX', rownames(mat)),]
 
   # extract information of interest from the phenotype data (pdata)
-  idx <- which(colnames(pData(gset[[1]])) %in%
-    c('age:ch1', 'distant rfs:ch1', 'er:ch1',
-      'ggi:ch1', 'grade:ch1', 'size:ch1',
-      'time rfs:ch1'))
-
-  metadata <- data.frame(pData(gset[[1]])[,idx],
-    row.names = rownames(pData(gset[[1]])))
+   idx <- which(colnames(pData(gset[[1]])) %in%
+      c('relation', 'age:ch1', 'distant rfs:ch1', 'er:ch1',
+        'ggi:ch1', 'grade:ch1', 'size:ch1',
+        'time rfs:ch1'))
+    metadata <- data.frame(pData(gset[[1]])[,idx],
+      row.names = rownames(pData(gset[[1]])))
 
   # tidy column names
-  colnames(metadata) <- c('Age', 'Distant.RFS', 'ER', 'GGI', 'Grade',
-    'Size', 'Time.RFS')
+    colnames(metadata) <- c('Study', 'Age', 'Distant.RFS', 'ER', 'GGI', 'Grade',
+      'Size', 'Time.RFS')
 
-  # prepare certain phenotypes
-  metadata$Age <- as.numeric(gsub('^KJ', NA, metadata$Age))
-  metadata$Distant.RFS <- factor(metadata$Distant.RFS, levels=c(0,1))
-  metadata$ER <- factor(gsub('\\?', NA, metadata$ER), levels=c(0,1))
-  metadata$ER <- factor(ifelse(metadata$ER == 1, 'ER+', 'ER-'), levels = c('ER-', 'ER+'))
-  metadata$GGI <- as.numeric(metadata$GGI)
-  metadata$Grade <- factor(gsub('\\?', NA, metadata$Grade), levels=c(1,2,3))
-  metadata$Grade <- gsub(1, 'Grade 1', gsub(2, 'Grade 2', gsub(3, 'Grade 3', metadata$Grade)))
-  metadata$Grade <- factor(metadata$Grade, levels = c('Grade 1', 'Grade 2', 'Grade 3'))
-  metadata$Size <- as.numeric(metadata$Size)
-  metadata$Time.RFS <- as.numeric(gsub('^KJX|^KJ', NA, metadata$Time.RFS))
+  # prepare certain phenotypes of interest
+    metadata$Study <- gsub('Reanalyzed by: ', '', as.character(metadata$Study))
+    metadata$Age <- as.numeric(gsub('^KJ', NA, as.character(metadata$Age)))
+    metadata$Distant.RFS <- factor(metadata$Distant.RFS,
+      levels = c(0,1))
+    metadata$ER <- factor(gsub('\\?', NA, as.character(metadata$ER)),
+      levels = c(0,1))
+    metadata$ER <- factor(ifelse(metadata$ER == 1, 'ER+', 'ER-'),
+      levels = c('ER-', 'ER+'))
+    metadata$GGI <- as.numeric(as.character(metadata$GGI))
+    metadata$Grade <- factor(gsub('\\?', NA, as.character(metadata$Grade)),
+      levels = c(1,2,3))
+    metadata$Grade <- gsub(1, 'Grade 1', gsub(2, 'Grade 2', gsub(3, 'Grade 3', metadata$Grade)))
+    metadata$Grade <- factor(metadata$Grade, levels = c('Grade 1', 'Grade 2', 'Grade 3'))
+    metadata$Size <- as.numeric(as.character(metadata$Size))
+    metadata$Time.RFS <- as.numeric(gsub('^KJX|^KJ', NA, metadata$Time.RFS))
 
   # remove samples from the pdata that have any NA value
-  discard <- apply(metadata, 1, function(x) any(is.na(x)))
-
-  metadata <- metadata[!discard,]
+    discard <- apply(metadata, 1, function(x) any(is.na(x)))
+    metadata <- metadata[!discard,]
 
   # filter the expression data to match the samples in our pdata
-  x <- x[,which(colnames(x) %in% rownames(metadata))]
+    mat <- mat[,which(colnames(mat) %in% rownames(metadata))]
 
   # check that sample names match exactly between pdata and expression data 
-  all(colnames(x) == rownames(metadata))
+    all(colnames(mat) == rownames(metadata))
 ```
 
     ## [1] TRUE
 
-Conduct principal component analysis (PCA)
+Conduct principal component analysis (PCA):
 
 ``` r
-  p <- pca(x, metadata = metadata, removeVar = 0.1)
+  p <- pca(mat, metadata = metadata, removeVar = 0.1)
 ```
 
     ## -- removing the lower 10% of variables based on variance
@@ -119,24 +124,20 @@ Conduct principal component analysis (PCA)
 ## A scree plot
 
 ``` r
-  screeplot(p, axisLabSize = 20, titleLabSize = 22)
+  screeplot(p, axisLabSize = 18, titleLabSize = 22)
 ```
 
-![Figure 1: A scree plot to show the proportion of explained variance by
-PC](README_files/figure-gfm/ex1-1.png)
+![Figure 1: A scree plot](README_files/figure-gfm/ex1-1.png)
 
 ## A bi-plot
 
 Different interpretations of the biplot exist. In the OMICs era, for
 most general users, a biplot is a simple representation of samples in a
-2-dimensional space:
+2-dimensional space, usually focusing on just the first two PCs:
 
 ``` r
   biplot(p)
 ```
-
-![Figure 2a: A bi-plot of PC1 versus
-PC2](README_files/figure-gfm/ex2a-1.png)
 
 However, the original definition of a biplot by Gabriel KR (Gabriel
 1971) is a plot that plots both variables and observatinos (samples) in
@@ -148,14 +149,15 @@ on this later via the *plotLoadings* function.
   biplot(p, showLoadings = TRUE, lab = NULL)
 ```
 
-![Figure 2b: A bi-plot of PC1 versus
-PC2](README_files/figure-gfm/ex2b-1.png)
+![Figure 2b: A bi-plot](README_files/figure-gfm/ex2b-1.png)
 
 One of the probes pointing downward is *205225\_at*, which targets the
 *ESR1* gene. This is already a useful validation, as the oestrogen
 receptor, which is in part encoded by *ESR1*, is strongly represented by
 PC2 (y-axis), with negative-to-positive receptor status going from
-top-to-bottom. More on this later in this vignette.
+top-to-bottom.
+
+More on this later in this vignette.
 
 ## A pairs plot
 
@@ -163,8 +165,7 @@ top-to-bottom. More on this later in this vignette.
   pairsplot(p)
 ```
 
-![Figure 3: A pairs plot, comparing PC1 - PC5 on a pairwise
-basis](README_files/figure-gfm/ex3-1.png)
+![Figure 3: A pairs plot](README_files/figure-gfm/ex3-1.png)
 
 ## A loadings plot
 
@@ -181,18 +182,17 @@ match up for the top
 
     ## 215281_x_at, 214464_at, 211122_s_at, 210163_at, 204533_at, 205225_at, 209351_at, 205044_at, 202037_s_at, 204540_at, 215176_x_at, 214768_x_at, 212671_s_at, 219415_at, 37892_at, 208650_s_at, 206754_s_at, 205358_at, 205380_at, 205825_at
 
-![Figure 4: Plot the component loadings and label genes most responsible
-for variation](README_files/figure-gfm/ex4-1.png)
+![Figure 4: A loadings plot](README_files/figure-gfm/ex4-1.png)
 
 ## An eigencor plot
 
 ``` r
   eigencorplot(p,
-    metavars = c('Age','Distant.RFS','ER','GGI','Grade','Size','Time.RFS'))
+    metavars = c('Study','Age','Distant.RFS','ER',
+      'GGI','Grade','Size','Time.RFS'))
 ```
 
-![Figure 5: Correlate PCs to metadata
-variables](README_files/figure-gfm/ex5-1.png)
+![Figure 5: An eigencor plot](README_files/figure-gfm/ex5-1.png)
 
 ## Access the internal data
 
@@ -223,10 +223,11 @@ The rotated data that represents the observatinos / samples is stored in
 
 # Advanced features
 
-All plots in PCAtools are highly configurable and should cover virtually
-all general usage requirements. The following sections take a look at
-some of these advanced features, and form a somewhat practical example
-of how one can use PCAtools to make a clinical interpretation of data.
+All functions in *PCAtools* are highly configurable and should cover
+virtually all basic and advanced user requirements. The following
+sections take a look at some of these advanced features, and form a
+somewhat practical example of how one can use *PCAtools* to make a
+clinical interpretation of data.
 
 First, let’s sort out the gene annotation by mapping the probe IDs to
 gene symbols. The array used for this study was the Affymetrix U133a, so
@@ -253,14 +254,19 @@ let’s use the *hgu133a.db* Bioconductor package:
 
 A scree plot on its own just shows the accumulative proportion of
 explained variation, but how can we determine the optimum number of PCs
-to retain? *PCAtools* provides two metrics for this purpose: elbow
-method and Horn’s parallel analysis (Horn 1965) (Buja and Eyuboglu
-1992).
+to retain?
+
+*PCAtools* provides four metrics for this purpose:
+
+  - Elbow method
+  - Horn’s parallel analysis (Horn 1965) (Buja and Eyuboglu 1992).
+  - Marchenko-Pastur limit
+  - Gavish-Donoho method
 
 Let’s perform Horn’s parallel analysis first:
 
 ``` r
-  horn <- parallelPCA(x)
+  horn <- parallelPCA(mat)
   horn$n
 ```
 
@@ -281,8 +287,7 @@ finding the correct number of PCs is a difficult task and is akin to
 finding the ‘correct’ number of clusters in a dataset - there is no
 correct answer.
 
-Taking the value from Horn’s parallel analyis, we can produce a new
-scree plot:
+Taking these values, we can produce a new scree plot and mark these:
 
 ``` r
   library(ggplot2)
@@ -290,8 +295,11 @@ scree plot:
   screeplot(p,
     components = getComponents(p, 1:20),
     vline = c(horn$n, elbow)) +
-    geom_label(aes(x = horn$n + 1, y = 50, label = "Horn's", vjust = -1, size = 8)) +
-    geom_label(aes(x = elbow + 1, y = 50, label = "Elbow", vjust = -1, size = 8))
+
+    geom_label(aes(x = horn$n + 1, y = 50,
+      label = 'Horn\'s', vjust = -1, size = 8)) +
+    geom_label(aes(x = elbow + 1, y = 50,
+      label = 'Elbow method', vjust = -1, size = 8))
 ```
 
 ![Figure 6: Advanced scree plot illustrating optimum number of
@@ -301,18 +309,25 @@ If all else fails, one can simply take the number of PCs that
 contributes to a pre-selected total of explained variation, e.g., in
 this case, 27 PCs account for \>80% explained variation.
 
+``` r
+  which(cumsum(p$variance) > 80)[1]
+```
+
+    ## PC27 
+    ##   27
+
 ## Modify bi-plots
 
 The bi-plot comparing PC1 versus PC2 is the most characteristic plot of
 PCA. However, PCA is much more than the bi-plot and much more than PC1
 and PC2. This said, PC1 and PC2, by the very nature of PCA, are indeed
-usually the most important parts of PCA.
+usually the most important parts of a PCA analysis.
 
 In a bi-plot, we can shade the points by different groups and add many
 more
 features.
 
-### Colour by a factor from the metadata, use a custom label, add lines through center, and add legend
+### Colour by a metadata factor, use a custom label, add lines through origin, and add legend
 
 ``` r
   biplot(p,
@@ -322,42 +337,85 @@ features.
     legendPosition = 'right')
 ```
 
-![Figure 7: adding lines and a legend to a
-bi-plot](README_files/figure-gfm/ex7-1.png)
+![Figure 7: Colour by a metadata factor, use a custom label, add lines
+through origin, and add legend](README_files/figure-gfm/ex7-1.png)
 
-### Supply custom colours, add more lines, and increase legend size
+### Supply custom colours and encircle variables by group
+
+The encircle functionality literally draws a polygon around each group
+specified by *colby*. It says nothing about any statistic pertaining to
+each group.
 
 ``` r
   biplot(p,
-    colby = 'ER', colkey = c('ER+'='forestgreen', 'ER-'='purple'),
+    colby = 'ER', colkey = c('ER+' = 'forestgreen', 'ER-' = 'purple'),
+    # encircle config
+      encircleByGroup = TRUE,
+      encircleFill = TRUE,
     hline = 0, vline = c(-25, 0, 25),
     legendPosition = 'top', legendLabSize = 16, legendIconSize = 8.0)
 ```
 
-![Figure 8: supplying custom colours to a
-bi-plot](README_files/figure-gfm/ex8-1.png)
+![Figure 8: Supply custom colours and encircle variables by
+group](README_files/figure-gfm/ex8-1.png)
+
+``` r
+  biplot(p,
+    colby = 'ER', colkey = c('ER+' = 'forestgreen', 'ER-' = 'purple'),
+    encircleByGroup = TRUE, encircleFill = FALSE,
+    encircleAlpha = 1, encircleLineSize = 5,
+    hline = 0, vline = c(-25, 0, 25),
+    legendPosition = 'top', legendLabSize = 16, legendIconSize = 8.0)
+```
+
+![Figure 8: Supply custom colours and encircle variables by
+group](README_files/figure-gfm/ex8-2.png)
+
+### Stat ellipses
+
+Stat ellipses are also drawn around each group but have a greater
+statistical meaning and can be used, for example, as a strict
+determination of outlier samples. Here, we draw ellipses around each
+group at the 95% confidence level:
+
+``` r
+  biplot(p,
+    colby = 'ER', colkey = c('ER+' = 'forestgreen', 'ER-' = 'purple'),
+    # ellipse config
+      ellipse = TRUE,
+      ellipseConf = 0.95,
+      ellipseFill = TRUE,
+      ellipseAlpha = 1/4,
+      ellipseLineSize = 1.0,
+    xlim = c(-125,125), ylim = c(-50, 80),
+    hline = 0, vline = c(-25, 0, 25),
+    legendPosition = 'top', legendLabSize = 16, legendIconSize = 8.0)
+```
+
+![Figure 9: Stat
+ellipses](README_files/figure-gfm/ex9-1.png)
 
 ### Change shape based on tumour grade, remove connectors, and add titles
 
 ``` r
   biplot(p,
-    colby = 'ER', colkey = c('ER+'='forestgreen', 'ER-'='purple'),
-    hline = 0, vline = c(-25, 0, 25),
+    colby = 'ER', colkey = c('ER+' = 'forestgreen', 'ER-' = 'purple'),
+    hline = c(-25, 0, 25), vline = c(-25, 0, 25),
     legendPosition = 'top', legendLabSize = 13, legendIconSize = 8.0,
-    shape = 'Grade', shapekey = c('Grade 1'=15, 'Grade 2'=17, 'Grade 3'=8),
+    shape = 'Grade', shapekey = c('Grade 1' = 15, 'Grade 2' = 17, 'Grade 3' = 8),
     drawConnectors = FALSE,
     title = 'PCA bi-plot',
     subtitle = 'PC1 versus PC2',
     caption = '27 PCs ≈ 80%')
 ```
 
-### Remove labels, modify line types, remove gridlines, and increase point size
+### Modify line types, remove gridlines, and increase point size
 
 ``` r
   biplot(p,
     lab = NULL,
     colby = 'ER', colkey = c('ER+'='royalblue', 'ER-'='red3'),
-    hline = 0, vline = c(-25, 0, 25),
+    hline = c(-25, 0, 25), vline = c(-25, 0, 25),
     vlineType = c('dotdash', 'solid', 'dashed'),
     gridlines.major = FALSE, gridlines.minor = FALSE,
     pointSize = 5,
@@ -368,10 +426,6 @@ bi-plot](README_files/figure-gfm/ex8-1.png)
     subtitle = 'PC1 versus PC2',
     caption = '27 PCs ≈ 80%')
 ```
-
-![Figure 10a: removing labels, modifying line types, removing gridlines,
-and increasing point size in a
-bi-plot](README_files/figure-gfm/ex10a-1.png)
 
 Let’s plot the same as above but with loadings:
 
@@ -397,9 +451,8 @@ Let’s plot the same as above but with loadings:
       caption = '27 PCs ≈ 80%')
 ```
 
-![Figure 10b: removing labels, modifying line types, removing gridlines,
-and increasing point size in a
-bi-plot](README_files/figure-gfm/ex10b-1.png)
+![Figure 11b: Modify line types, remove gridlines, and increase point
+size](README_files/figure-gfm/ex11b-1.png)
 
 ### Colour by a continuous variable and plot other PCs
 
@@ -409,7 +462,7 @@ we simply ‘add on’ a continuous colour scale via
 
 ``` r
   # add ESR1 gene expression to the metadata
-  p$metadata$ESR1 <- x["205225_at",]
+  p$metadata$ESR1 <- mat['205225_at',]
 
   biplot(p,
     x = 'PC2', y = 'PC3',
@@ -422,8 +475,8 @@ we simply ‘add on’ a continuous colour scale via
   scale_colour_gradient(low = 'gold', high = 'red2')
 ```
 
-![Figure 11a: colouring by a continuous variable and plotting other PCs
-in a bi-plot](README_files/figure-gfm/ex11a-1.png)
+![Figure 12a: Colour by a continuous variable and plot other
+PCs](README_files/figure-gfm/ex12a-1.png)
 
 We can also just permit that the internal *ggplot2* engine picks the
 colour scheme - here, we also plot PC10 versus PC50:
@@ -468,8 +521,8 @@ additionally help us to rapidly skim over the data.
     margingaps = unit(c(-0.01, -0.01, -0.01, -0.01), 'cm'))
 ```
 
-![Figure 12: maximising available space in a pairs
-plot](README_files/figure-gfm/ex12-1.png)
+![Figure 13: Quickly explore potentially informative PCs via a pairs
+plot](README_files/figure-gfm/ex13-1.png)
 
 We can arrange these in a way that makes better use of the screen space
 by setting ‘triangle = FALSE’. In this case, we can further control the
@@ -489,8 +542,8 @@ will automatically determine these based on your input data.
     margingaps = unit(c(0.1, 0.1, 0.1, 0.1), 'cm'))
 ```
 
-![Figure 13: arranging a pairs plot
-horizontally](README_files/figure-gfm/ex13-1.png)
+![Figure 14: arranging a pairs plot
+horizontally](README_files/figure-gfm/ex14-1.png)
 
 ## Determine the variables that drive variation among each PC
 
@@ -504,9 +557,8 @@ consensus list of these. These variables are then plotted.
 
 The loadings plot, like all others, is highly configurable. To modify
 the cut-off for inclusion / exclusion of variables, we use
-‘rangeRetain’, where 0.01 equates to the top/bottom 1% of the
-loadings range per PC. We can also add a title, subtitle, and caption,
-and alter the shape and colour scheme.
+*rangeRetain*, where 0.01 equates to the top/bottom 1% of the loadings
+range per PC.
 
 ``` r
   plotloadings(p,
@@ -524,14 +576,14 @@ and alter the shape and colour scheme.
 
     ## POGZ, CDC42BPA, CXCL11, ESR1, SFRP1, EEF1A2, IGKC, GABRP, CD24, PDZK1
 
-![Figure 14: modifying cut-off for labeling in a loadings
-plot](README_files/figure-gfm/ex14-1.png)
+![Figure 15: Determine the variables that drive variation among each
+PC](README_files/figure-gfm/ex15-1.png)
 
 At least one interesting finding is *205225\_at* / *ESR1*, which is by
 far the gene most responsible for variation along PC2. The previous
 bi-plots showed that this PC also segregated ER+ from ER- patients. The
 other results could be explored. Also, from the biplots with loadings
-that we have already generated, this results is also verified in these.
+that we have already generated, this result is also verified in these.
 
 With the loadings plot, in addition, we can instead plot absolute values
 and modify the point sizes to be proportional to the loadings. We can
@@ -555,15 +607,14 @@ also switch off the line connectors and plot the loadings for any PCs
 
     ## CXCL11, IGKC, CXCL9, 210163_at, 214768_x_at, 211645_x_at, 211644_x_at, IGHA1, 216491_x_at, 214777_at, 216576_x_at, 212671_s_at, IL23A, PLAAT4, 212588_at, 212998_x_at, KRT14, GABRP, SOX10, PTX3, TTYH1, CPB1, KRT15, MYBPC1, DST, CXADR, GALNT3, CDH3, TCIM, DHRS2, MMP1, CRABP1, CST1, MAGEA3, ACOX2, PRKAR2B, PLCB1, HDGFL3, CYP2B6, ORM1, 205040_at, HSPB8, SCGB2A2, JCHAIN, POGZ, 213872_at, DYNC2LI1, CDC42BPA
 
-![Figure 15: plotting absolute component
-loadings](README_files/figure-gfm/ex15-1.png)
+![Figure 16: plotting absolute component
+loadings](README_files/figure-gfm/ex16-1.png)
 
 ## Correlate the principal components back to the clinical data
 
 Further exploration of the PCs can come through correlations with
 clinical data. This is also a mostly untapped resource in the era of
-‘big data’ and can help to guide an analysis down a particular path
-(or not\!).
+‘big data’ and can help to guide an analysis down a particular path.
 
 We may wish, for example, to correlate all PCs that account for 80%
 variation in our dataset and then explore further the PCs that have
@@ -577,7 +628,8 @@ examples can be found there.
 ``` r
   eigencorplot(p,
     components = getComponents(p, 1:27),
-    metavars = c('Age','Distant.RFS','ER','GGI','Grade','Size','Time.RFS'),
+    metavars = c('Study','Age','Distant.RFS','ER',
+      'GGI','Grade','Size','Time.RFS'),
     col = c('darkblue', 'blue2', 'black', 'red2', 'darkred'),
     cexCorval = 0.7,
     colCorval = 'white',
@@ -592,8 +644,8 @@ examples can be found there.
     plotRsquared = FALSE)
 ```
 
-![Figure 16: correlating PCs that account for at least 80% variation to
-clinical variables](README_files/figure-gfm/ex16-1.png)
+![Figure 17a: Correlate the principal components back to the clinical
+data](README_files/figure-gfm/ex17a-1.png)
 
 We can also supply different cut-offs for statistical significance,
 apply p-value adjustment, plot R-squared values, and specify correlation
@@ -602,7 +654,8 @@ method:
 ``` r
   eigencorplot(p,
     components = getComponents(p, 1:horn$n),
-    metavars = c('Age','Distant.RFS','ER','GGI','Grade','Size','Time.RFS'),
+    metavars = c('Study','Age','Distant.RFS','ER','GGI',
+      'Grade','Size','Time.RFS'),
     col = c('white', 'cornsilk1', 'gold', 'forestgreen', 'darkgreen'),
     cexCorval = 1.2,
     fontCorval = 2,
@@ -618,8 +671,8 @@ method:
     signifCutpoints = c(0, 0.0001, 0.001, 0.01, 0.05, 1))
 ```
 
-![Figure 17: modifying cut-offs and symbols for statistical significance
-in eigencorplot](README_files/figure-gfm/ex17-1.png)
+![Figure 17b: Correlate the principal components back to the clinical
+data](README_files/figure-gfm/ex17b-1.png)
 
 Clearly, PC2 is coming across as the most interesting PC in this
 experiment, with highly statistically significant correlation
@@ -680,8 +733,8 @@ than just a bi-plot used to identify outliers\!
 
   peigencor <- eigencorplot(p,
     components = getComponents(p, 1:10),
-    metavars = c('Age','Distant.RFS','ER','GGI','Grade','Size','Time.RFS'),
-    #col = c('royalblue', '', 'gold', 'forestgreen', 'darkgreen'),
+    metavars = c('Study','Age','Distant.RFS','ER',
+      'GGI','Grade','Size','Time.RFS'),
     cexCorval = 1.0,
     fontCorval = 2,
     posLab = 'all', 
@@ -725,6 +778,61 @@ than just a bi-plot used to identify outliers\!
 ![Figure 18: a merged panel of all PCAtools
 plots](README_files/figure-gfm/ex18-1.png)
 
+## Make predictions on new data
+
+It is possible to use the variable loadings as part of a matrix
+calculation to ‘predict’ principal component eigenvectors in new data.
+This is elaborated in a posting by Pandula Priyadarshana: [How to use
+Principal Component Analysis (PCA) to make
+Predictions](https://rpubs.com/PandulaP/PCA_for_Predictions).
+
+The *pca* class, which is created by *PCAtools*, is not configured to
+work with *stats::predict*; however, trusty *prcomp* class **is**
+configured. We can manually create a *prcomp* object and then use that
+in model prediction, as elaborated in the following code chunk:
+
+``` r
+  p <- pca(mat, metadata = metadata, removeVar = 0.1)
+```
+
+    ## -- removing the lower 10% of variables based on variance
+
+``` r
+  p.prcomp <- list(sdev = p$sdev,
+    rotation = data.matrix(p$loadings),
+    x = data.matrix(p$rotated),
+    center = TRUE, scale = TRUE)
+
+  class(p.prcomp) <- 'prcomp'
+
+  # for this simple example, just use a chunk of
+  # the original data for the prediction
+  newdata <- t(mat[,seq(1,20)])
+  predict(p.prcomp, newdata = newdata)[,1:5]
+```
+
+    ##                 PC1         PC2        PC3          PC4         PC5
+    ## GSM65752  11.683293  71.0152986  10.677205 -75.97644152  29.7537169
+    ## GSM65753 -10.542633 -31.9953531  -2.753783 -19.59178967  14.9924713
+    ## GSM65755   6.585509  13.4975310 -40.370389 -29.38990525  47.7142845
+    ## GSM65757   1.498398  -0.1294115 -37.336278   0.08078156  22.3448232
+    ## GSM65758 -18.049833 -14.9445805  14.890320  16.57567005   3.4010033
+    ## GSM65760   8.073473  47.5491189 -18.016340  -9.73629569 -51.7330414
+    ## GSM65761  -3.689814   7.7199606 -35.476666 -35.31465087 -40.1455143
+    ## GSM65762   3.949911 -24.9428080   4.710631   2.71721065  43.2182093
+    ## GSM65763 -20.757238 -33.3085383  22.639443   7.41053224  -9.9339918
+    ## GSM65764 -12.287305 -12.7566718  13.813429  33.75583684  17.7938583
+    ## GSM65767  -4.209505 -13.9349129 -17.814569 -14.87200276 -82.4754172
+    ## GSM65768   3.547044  39.6095431 -28.424912  40.26444836  45.6591355
+    ## GSM65769   3.754370  30.0201461  12.415498  45.74502641  37.9905308
+    ## GSM65770   2.538593 -36.6517740  54.887990   5.94021104  -0.9545218
+    ## GSM65771  -7.382089  -8.5963702  27.749060 -21.50981794 -71.4524526
+    ## GSM65772   3.735223  43.2576570  26.995375  21.01817312 -68.8193200
+    ## GSM65773  15.775812 -19.4523339   4.419158  -6.47899302 -25.2479186
+    ## GSM65774  17.589719 -28.5666333 -52.875007 -16.82207768  37.8455365
+    ## GSM65775  -3.375783  -5.2950960  27.071957  49.10111537  55.0410908
+    ## GSM65776   1.562855 -22.0947718  12.797877   7.08296875  -4.9924828
+
 # Acknowledgments
 
 The development of *PCAtools* has benefited from contributions and
@@ -736,6 +844,9 @@ suggestions from:
   - Anna-Leigh Brown
   - Vincent Carey
   - Vince Vu
+  - Guido Hooiveld
+  - pwwang
+  - Pandula Priyadarshana
 
 # Session info
 
@@ -767,31 +878,35 @@ sessionInfo()
     ##  [1] ggplotify_0.0.5      hgu133a.db_3.2.3     org.Hs.eg.db_3.10.0 
     ##  [4] AnnotationDbi_1.48.0 IRanges_2.20.2       S4Vectors_0.24.4    
     ##  [7] GEOquery_2.54.1      Biobase_2.46.0       BiocGenerics_0.32.0 
-    ## [10] PCAtools_2.1.4       cowplot_1.0.0        lattice_0.20-41     
+    ## [10] PCAtools_2.1.8       cowplot_1.0.0        lattice_0.20-41     
     ## [13] reshape2_1.4.4       ggrepel_0.8.2        ggplot2_3.3.0       
     ## 
     ## loaded via a namespace (and not attached):
-    ##  [1] BiocSingular_1.2.2       tidyr_1.0.2              bit64_0.9-7             
-    ##  [4] DelayedMatrixStats_1.8.0 assertthat_0.2.1         BiocManager_1.30.10     
-    ##  [7] rvcheck_0.1.8            highr_0.8                dqrng_0.2.1             
-    ## [10] blob_1.2.1               yaml_2.2.1               pillar_1.4.3            
-    ## [13] RSQLite_2.2.0            glue_1.4.0               limma_3.42.2            
-    ## [16] digest_0.6.25            colorspace_1.4-1         htmltools_0.4.0         
-    ## [19] Matrix_1.2-18            plyr_1.8.6               pkgconfig_2.0.3         
-    ## [22] purrr_0.3.3              scales_1.1.0             BiocParallel_1.20.1     
-    ## [25] tibble_3.0.0             farver_2.0.3             ellipsis_0.3.0          
-    ## [28] withr_2.1.2              cli_2.0.2                magrittr_1.5            
-    ## [31] crayon_1.3.4             memoise_1.1.0            evaluate_0.14           
-    ## [34] fansi_0.4.1              xml2_1.3.1               tools_3.6.3             
-    ## [37] hms_0.5.3                lifecycle_0.2.0          matrixStats_0.56.0      
-    ## [40] stringr_1.4.0            munsell_0.5.0            DelayedArray_0.12.3     
-    ## [43] irlba_2.3.3              compiler_3.6.3           rsvd_1.0.3              
-    ## [46] gridGraphics_0.5-0       rlang_0.4.5              grid_3.6.3              
-    ## [49] labeling_0.3             rmarkdown_2.1            gtable_0.3.0            
-    ## [52] DBI_1.1.0                curl_4.3                 R6_2.4.1                
-    ## [55] knitr_1.28               dplyr_0.8.5              bit_1.1-15.2            
-    ## [58] readr_1.3.1              stringi_1.4.6            Rcpp_1.0.4.6            
-    ## [61] vctrs_0.2.4              tidyselect_1.0.0         xfun_0.13
+    ##  [1] maps_3.3.0               BiocSingular_1.2.2       tidyr_1.0.2             
+    ##  [4] bit64_0.9-7              DelayedMatrixStats_1.8.0 assertthat_0.2.1        
+    ##  [7] BiocManager_1.30.10      rvcheck_0.1.8            highr_0.8               
+    ## [10] dqrng_0.2.1              blob_1.2.1               yaml_2.2.1              
+    ## [13] Rttf2pt1_1.3.8           pillar_1.4.3             RSQLite_2.2.0           
+    ## [16] glue_1.4.0               limma_3.42.2             extrafontdb_1.0         
+    ## [19] digest_0.6.25            RColorBrewer_1.1-2       colorspace_1.4-1        
+    ## [22] htmltools_0.4.0          Matrix_1.2-18            plyr_1.8.6              
+    ## [25] pkgconfig_2.0.3          purrr_0.3.3              scales_1.1.0            
+    ## [28] BiocParallel_1.20.1      tibble_3.0.0             farver_2.0.3            
+    ## [31] ellipsis_0.3.0           withr_2.1.2              cli_2.0.2               
+    ## [34] magrittr_1.5             crayon_1.3.4             memoise_1.1.0           
+    ## [37] evaluate_0.14            ash_1.0-15               fansi_0.4.1             
+    ## [40] MASS_7.3-51.5            xml2_1.3.1               tools_3.6.3             
+    ## [43] hms_0.5.3                lifecycle_0.2.0          matrixStats_0.56.0      
+    ## [46] stringr_1.4.0            munsell_0.5.0            DelayedArray_0.12.3     
+    ## [49] irlba_2.3.3              compiler_3.6.3           ggalt_0.4.0             
+    ## [52] rsvd_1.0.3               gridGraphics_0.5-0       rlang_0.4.5             
+    ## [55] grid_3.6.3               labeling_0.3             rmarkdown_2.1           
+    ## [58] proj4_1.0-10             gtable_0.3.0             DBI_1.1.0               
+    ## [61] curl_4.3                 R6_2.4.1                 knitr_1.28              
+    ## [64] dplyr_0.8.5              bit_1.1-15.2             extrafont_0.17          
+    ## [67] KernSmooth_2.23-16       readr_1.3.1              stringi_1.4.6           
+    ## [70] Rcpp_1.0.4.6             vctrs_0.2.4              tidyselect_1.0.0        
+    ## [73] xfun_0.13
 
 # References
 

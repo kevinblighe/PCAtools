@@ -34,14 +34,16 @@ test_that('datatypes', {
     caption, hlineType, hlineCol, vlineType, vlineCol, borderColour),
     c('language', 'character'))
   expect_type(biplot(showLoadings, showLoadingsNames, boxedLoadingsNames,
-    drawConnectorsLoadings, boxedLabels, drawConnectors, gridlines.major,
-    gridlines.minor, returnPlot),
+    encircleByGroup, encircleFill, ellipse, ellipseFill,
+    drawConnectorsLoadings, boxedLabels, drawConnectors,
+    gridlines.major, gridlines.minor, returnPlot),
     c('logical'))
   expect_type(biplot(ntopLoadings, sizeLoadingsNames, widthConnectorsLoadings,
     lengthLoadingsArrowsFactor, widthLoadingsArrows, alphaLoadingsArrow, shape,
-    shapekey, pointSize, legendLabSize, legendIconSize, xlim, ylim, labSize,
-    labhjust, labvjust, widthConnectors, xlabAngle, xlabhjust, xlabvjust,
-    ylabAngle, ylabhjust, ylabvjust, axisLabSize, titleLabSize,
+    shapekey, pointSize, legendLabSize, legendIconSize, encircleAlpha,
+    encircleLineSize, ellipseConf, ellipseAlpha, ellipseLineSize, xlim, ylim,
+    labSize, labhjust, labvjust, widthConnectors, xlabAngle, xlabhjust,
+    xlabvjust, ylabAngle, ylabhjust, ylabvjust, axisLabSize, titleLabSize,
     subtitleLabSize, captionLabSize, hline, hlineWidth, vline, vlineWidth,
     borderWidth),
     c('double'))
