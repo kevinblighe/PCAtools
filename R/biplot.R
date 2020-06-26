@@ -33,8 +33,10 @@ biplot <- function(
   ellipseFill = TRUE,
   ellipseAlpha = 1/4,
   ellipseLineSize = 0.25,
-  xlim = c(min(pcaobj$rotated[,x]) - 2, max(pcaobj$rotated[,x]) + 2),
-  ylim = c(min(pcaobj$rotated[,y]) - 2, max(pcaobj$rotated[,y]) + 2),
+  xlim = if(showLoadings) c(min(pcaobj$rotated[,x]) - 5, max(pcaobj$rotated[,x]) + 5)
+    else c(min(pcaobj$rotated[,x]) - 1, max(pcaobj$rotated[,x]) + 1),
+  ylim = if(showLoadings) c(min(pcaobj$rotated[,y]) - 5, max(pcaobj$rotated[,y]) + 5)
+    else c(min(pcaobj$rotated[,y]) - 1, max(pcaobj$rotated[,y]) + 1),
   lab = rownames(pcaobj$metadata),
   labSize = 3.0,
   labhjust = 1.5,
@@ -187,8 +189,8 @@ biplot <- function(
     xidx <- order(abs(pcaobj$loadings[,x]), decreasing = TRUE)
     yidx <- order(abs(pcaobj$loadings[,y]), decreasing = TRUE)
     vars <- unique(c(
-      rownames(pcaobj$loadings)[xidx][seq_len(1:ntopLoadings)],
-      rownames(pcaobj$loadings)[yidx][seq_len(1:ntopLoadings)]))
+      rownames(pcaobj$loadings)[xidx][seq_len(ntopLoadings)],
+      rownames(pcaobj$loadings)[yidx][seq_len(ntopLoadings)]))
 
     # get scaling parameter to match between variable loadings and rotated loadings
     r <- min(

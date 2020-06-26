@@ -1,7 +1,7 @@
 Package: PCAtools
 Type: Package
 Title: PCAtools: Everything Principal Components Analysis
-Version: 2.1.10
+Version: 2.1.12
 Authors@R: c(
     person("Kevin", "Blighe", role = c("aut", "cre"), email = "kevin@clinicalbioinformatics.co.uk"),
     person("Anna-Leigh", "Brown", role = c("ctb")),
@@ -49,4 +49,5 @@ biocViews: RNASeq, GeneExpression, Transcription, SingleCell, PrincipalComponent
 VignetteBuilder:
   knitr
 SystemRequirements: C++11
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.0
+Encoding: UTF-8
