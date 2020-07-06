@@ -1,7 +1,7 @@
 PCAtools: everything Principal Component Analysis
 ================
 Kevin Blighe, Aaron Lun
-2020-07-05
+2020-07-06
 
 # Introduction
 
@@ -899,7 +899,7 @@ sessionInfo()
     ##  [1] ggplotify_0.0.5      hgu133a.db_3.2.3     org.Hs.eg.db_3.11.4 
     ##  [4] AnnotationDbi_1.50.0 IRanges_2.22.2       S4Vectors_0.26.1    
     ##  [7] GEOquery_2.56.0      Biobase_2.48.0       BiocGenerics_0.34.0 
-    ## [10] PCAtools_2.1.12      cowplot_1.0.0        lattice_0.20-41     
+    ## [10] PCAtools_2.1.14      cowplot_1.0.0        lattice_0.20-41     
     ## [13] reshape2_1.4.4       ggrepel_0.8.2        ggplot2_3.3.2       
     ## 
     ## loaded via a namespace (and not attached):

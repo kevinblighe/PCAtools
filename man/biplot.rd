@@ -60,11 +60,11 @@
   drawConnectors = TRUE,
   widthConnectors = 0.5,
   colConnectors = 'grey50',
-  xlab = paste0(x, ', ', round(pcaobj$variance[x], digits = 2), '% variation'),
+  xlab = paste0(x, ', ', round(pcaobj$variance[x], digits=2), '% variation'),
   xlabAngle = 0,
   xlabhjust = 0.5,
   xlabvjust = 0.5,
-  ylab = paste0(y, ', ', round(pcaobj$variance[y], digits = 2), '% variation'),
+  ylab = paste0(y, ', ', round(pcaobj$variance[y], digits=2), '% variation'),
   ylabAngle = 0,
   ylabhjust = 0.5,
   ylabvjust = 0.5,
@@ -208,15 +208,13 @@
   \item{widthConnectors}{Line width of connectors. DEFAULT = 0.5. OPTIONAL.}
   \item{colConnectors}{Line colour of connectors. DEFAULT = 'grey50'.
     OPTIONAL.}
-  \item{xlab}{Label for x-axis. DEFAULT = paste0(x, ', ',
-    round(pcaobj$variance[x], digits = 2), '% variation'). OPTIONAL.}
+  \item{xlab}{Label for x-axis. OPTIONAL.}
   \item{xlabAngle}{Rotation angle of x-axis labels. DEFAULT = 0. OPTIONAL.}
   \item{xlabhjust}{Horizontal adjustment of x-axis labels. DEFAULT = 0.5.
     OPTIONAL.}
   \item{xlabvjust}{Vertical adjustment of x-axis labels. DEFAULT = 0.5.
     OPTIONAL.}
-  \item{ylab}{Label for y-axis. DEFAULT = paste0(y, ', ',
-    round(pcaobj$variance[y], digits = 2), '% variation'). OPTIONAL.}
+  \item{ylab}{Label for y-axis. OPTIONAL.}
   \item{ylabAngle}{Rotation angle of y-axis labels. DEFAULT = 0. OPTIONAL.}
   \item{ylabhjust}{Horizontal adjustment of y-axis labels. DEFAULT = 0.5.
     OPTIONAL.}
