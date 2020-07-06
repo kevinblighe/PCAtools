@@ -6,8 +6,8 @@
 
 \description{Draw a bi-plot, comparing 2 selected principal components / eigenvectors.}
 
-\usage{
-  biplot(pcaobj,
+\usage{biplot(
+  pcaobj,
   x = 'PC1',
   y = 'PC2',
   showLoadings = FALSE,
@@ -16,6 +16,7 @@
   colLoadingsNames = 'black',
   sizeLoadingsNames = 3,
   boxedLoadingsNames = TRUE,
+  fillBoxedLoadings = alpha('white', 1/4),
   drawConnectorsLoadings = TRUE,
   widthConnectorsLoadings = 0.5,
   colConnectorsLoadings = 'grey50',
@@ -25,24 +26,31 @@
   alphaLoadingsArrow = 1.0,
   colby = NULL,
   colkey = NULL,
+  colLegendTitle = if (!is.null(colby)) colby else NULL,
   singlecol = NULL,
   shape = NULL,
   shapekey = NULL,
+  shapeLegendTitle = if (!is.null(shape)) shape else NULL,
   pointSize = 3.0,
   legendPosition = 'none',
   legendLabSize = 12,
+  legendTitleSize = 14,
   legendIconSize = 5.0,
-  encircleByGroup = FALSE,
+  encircle = FALSE,
   encircleFill = TRUE,
+  encircleFillKey = NULL,
   encircleAlpha = 1/4,
   encircleLineSize = 0.25,
+  encircleLineCol = NULL,
   ellipse = FALSE,
   ellipseConf = 0.95,
   ellipseFill = TRUE,
+  ellipseFillKey = NULL,
   ellipseAlpha = 1/4,
   ellipseLineSize = 0.25,
-  xlim = c(min(pcaobj$rotated[,x]) - 5, max(pcaobj$rotated[,x]) + 5),
-  ylim = c(min(pcaobj$rotated[,y]) - 5, max(pcaobj$rotated[,y]) + 5),
+  ellipseLineCol = NULL,
+  xlim = if(showLoadings) c(min(pcaobj$rotated[,x]) - 5, max(pcaobj$rotated[,x]) + 5) else c(min(pcaobj$rotated[,x]) - 1, max(pcaobj$rotated[,x]) + 1),
+  ylim = if(showLoadings) c(min(pcaobj$rotated[,y]) - 5, max(pcaobj$rotated[,y]) + 5) else c(min(pcaobj$rotated[,y]) - 1, max(pcaobj$rotated[,y]) + 1),
   lab = rownames(pcaobj$metadata),
   labSize = 3.0,
   labhjust = 1.5,
@@ -52,15 +60,11 @@
   drawConnectors = TRUE,
   widthConnectors = 0.5,
   colConnectors = 'grey50',
-  xlab = paste0(x, ', ',
-    round(pcaobj$variance[x], digits = 2),
-    '\% variation'),
+  xlab = paste0(x, ', ', round(pcaobj$variance[x], digits = 2), '% variation'),
   xlabAngle = 0,
   xlabhjust = 0.5,
   xlabvjust = 0.5,
-  ylab = paste0(y, ', ',
-    round(pcaobj$variance[y], digits = 2),
-    '\% variation'),
+  ylab = paste0(y, ', ', round(pcaobj$variance[y], digits = 2), '% variation'),
   ylabAngle = 0,
   ylabhjust = 0.5,
   ylabvjust = 0.5,
@@ -100,23 +104,27 @@
     this number are actually displayed. DEFAULT = 5. OPTIONAL.}
   \item{showLoadingsNames}{Logical, indicating to show variable loadings names
     or not. DEFAULT = if (showLoadings) TRUE else FALSE. OPTIONAL.}
-  \item{colLoadingsNames}{If showLoadings == TRUE, colour of text labels.
+  \item{colLoadingsNames}{If 'showLoadings == TRUE', colour of text labels.
     DEFAULT = 'black'. OPTIONAL.}
-  \item{sizeLoadingsNames}{If showLoadings == TRUE, size of text labels.
+  \item{sizeLoadingsNames}{If 'showLoadings == TRUE', size of text labels.
     DEFAULT = 3. OPTIONAL.}
-  \item{boxedLoadingsNames}{Logical, if showLoadings == TRUE, draw text
+  \item{boxedLoadingsNames}{Logical, if 'showLoadings == TRUE', draw text
     labels in boxes. DEFAULT = TRUE. OPTIONAL.}
-  \item{drawConnectorsLoadings}{If showLoadings == TRUE, draw line connectors
-    to the variable loadings arrows in order to fit more labels in the plot space.
-    DEFAULT = TRUE. OPTIONAL.}
-  \item{widthConnectorsLoadings}{If showLoadings == TRUE, width of the line
+  \item{fillBoxedLoadings}{When 'boxedLoadingsNames == TRUE', this controls
+    the background fill of the boxes. To control both the fill and
+    transparency, user can specify a value of the form
+    'alpha(<colour>, <alpha>)'. DEFAULT = alpha('white', 1/4). OPTIONAL.}
+  \item{drawConnectorsLoadings}{If 'showLoadings == TRUE', draw line connectors
+    to the variable loadings arrows in order to fit more labels in the plot
+    space. DEFAULT = TRUE. OPTIONAL.}
+  \item{widthConnectorsLoadings}{If 'showLoadings == TRUE', width of the line
     connectors drawn to the variable loadings arrows. DEFAULT = 0.5. OPTIONAL.}
-  \item{colConnectorsLoadings}{If showLoadings == TRUE, colour of the line
+  \item{colConnectorsLoadings}{If 'showLoadings == TRUE', colour of the line
     connectors drawn to the variable loadings arrows. DEFAULT = 'grey50'.
     OPTIONAL.}
-  \item{lengthLoadingsArrowsFactor}{If showLoadings == TRUE, multiply the
-    internally-determined length of the variable loadings arrows by this factor.
-    DEFAULT = 1.5. OPTIONAL.}
+  \item{lengthLoadingsArrowsFactor}{If 'showLoadings == TRUE', multiply the
+    internally-determined length of the variable loadings arrows by this
+    factor. DEFAULT = 1.5. OPTIONAL.}
   \item{colLoadingsArrows}{If showLoadings == TRUE, colour of the variable
     loadings arrows. DEFAULT = 'black'. OPTIONAL.}
   \item{widthLoadingsArrows}{If showLoadings == TRUE, width of the variable
@@ -128,6 +136,8 @@
     grouping/categorical variable. DEFAULT = NULL. OPTIONAL.}
   \item{colkey}{Vector of name-value pairs relating to value passed to 'col',
     e.g., c(A='forestgreen', B='gold'). DEFAULT = NULL. OPTIONAL.}
+  \item{colLegendTitle}{Title of the legend for the variable specified
+    by 'colby'. DEFAULT = if (!is.null(colby)) colby else NULL. OPTIONAL.}
   \item{singlecol}{If specified, all points will be shaded by this colour.
     Overrides 'col'. DEFAULT = NULL. OPTIONAL.}
   \item{shape}{If NULL, all points will be have the same shape. If not NULL,
@@ -135,64 +145,78 @@
     grouping/categorical variable. DEFAULT = NULL. OPTIONAL.}
   \item{shapekey}{Vector of name-value pairs relating to value passed to
     'shape', e.g., c(A=10, B=21). DEFAULT = NULL. OPTIONAL.}
+  \item{shapeLegendTitle}{Title of the legend for the variable specified
+    by 'shape'. DEFAULT = if (!is.null(shape)) shape else NULL. OPTIONAL.}
   \item{pointSize}{Size of plotted points. DEFAULT = 3.0. OPTIONAL.}
   \item{legendPosition}{Position of legend ('top', 'bottom', 'left', 'right',
     'none'). DEFAULT = 'none'. OPTIONAL.}
-  \item{legendLabSize}{Size of plot legend text. DEFAULT = 10. OPTIONAL.}
-  \item{legendIconSize}{Size of plot legend icons / symbols. DEFAULT = 3.0.
+  \item{legendLabSize}{Size of plot legend text. DEFAULT = 12. OPTIONAL.}
+  \item{legendTitleSize}{Size of plot legend title text. DEFAULT = 14. OPTIONAL.}
+  \item{legendIconSize}{Size of plot legend icons / symbols. DEFAULT = 5.0.
     OPTIONAL.}
-  \item{encircleByGroup}{Logical, indicating whether to draw a polygon around
-    the groups specified by 'colby'. If activated, colour / fill is dictated
-    by colkey or those automatically chosen by the ggplot2 internal engine.
-    Fill transparency is controlled by 'encircleAlpha'. DEFAULT = FALSE.
-    OPTIONAL.}
-  \item{encircleFill}{Logical, if encircleByGroup == TRUE, this determines
+  \item{encircle}{Logical, indicating whether to draw a polygon around
+    the groups specified by 'colby'. DEFAULT = FALSE. OPTIONAL.}
+  \item{encircleFill}{Logical, if 'encircle == TRUE', this determines
     whether to fill the encircled region or not. DEFAULT = TRUE. OPTIONAL.}
+  \item{encircleFillKey}{Vector of name-value pairs relating to value passed to
+    'encircleFill', e.g., c(A='forestgreen', B='gold'). If NULL, the fill
+    is controlled by whatever has already been used for 'colby' / 'colkey'.
+    DEFAULT = NULL. OPTIONAL.}
   \item{encircleAlpha}{Alpha for purposes of controlling colour transparency of
-    the encircled region. Used when encircleByGroup == TRUE. DEFAULT = 1/4.
+    the encircled region. Used when 'encircle == TRUE'. DEFAULT = 1/4.
     OPTIONAL.}
   \item{encircleLineSize}{Line width of the encircled line when
-    encircleByGroup == TRUE. DEFAULT = 2.5. OPTIONAL.}
+    'encircle == TRUE'. DEFAULT = 0.25. OPTIONAL.}
+  \item{encircleLineCol}{Colour of the encircled line when
+    'encircle == TRUE'. DEFAULT = NULL. OPTIONAL.}
   \item{ellipse}{Logical, indicating whether to draw a stat ellipse around
-    the groups specified by 'colby'. If activated, colour / fill is dictated
-    by colkey or those automatically chosen by the ggplot2 internal engine.
-    Fill transparency is controlled by 'encircleAlpha'. Confidence intervals
-    are controlled by 'ellipseConf'. DEFAULT = FALSE.}
-    OPTIONAL.,
+    the groups specified by 'colby'. DEFAULT = FALSE. OPTIONAL.}
   \item{ellipseConf}{Confidence intervals of the stat ellipses when
     ellipse == TRUE. DEFAULT = 0.95. OPTIONAL.}
-  \item{ellipseFill}{Logical, if ellipse == TRUE, this determines
+  \item{ellipseFill}{Logical, if 'ellipse == TRUE', this determines
     whether to fill the region or not. DEFAULT = TRUE. OPTIONAL.}
+  \item{ellipseFillKey}{Vector of name-value pairs relating to value passed to
+    'ellipseFill', e.g., c(A='forestgreen', B='gold'). If NULL, the fill
+    is controlled by whatever has already been used for 'colby' / 'colkey'.
+    DEFAULT = NULL. OPTIONAL.}
   \item{ellipseAlpha}{Alpha for purposes of controlling colour transparency of
-    the ellipse region. Used when ellipse == TRUE. DEFAULT = 1/4. OPTIONAL.}
-  \item{ellipseLineSize}{Line width of the ellipse line when ellipse == TRUE.
-    DEFAULT = 2.5. OPTIONAL.}
-  \item{xlim}{Limits of the x-axis.
-    DEFAULT = c(min(pcaobj$rotated[,x]) - 5, max(pcaobj$rotated[,x]) + 5). OPTIONAL.}
-  \item{ylim}{Limits of the y-axis.
-    DEFAULT = c(min(pcaobj$rotated[,y]) - 5, max(pcaobj$rotated[,y]) + 5). OPTIONAL.}
+    the ellipse region. Used when 'ellipse == TRUE'. DEFAULT = 1/4. OPTIONAL.}
+  \item{ellipseLineSize}{Line width of the ellipse line when 'ellipse == TRUE'.
+    DEFAULT = 0.25. OPTIONAL.}
+  \item{ellipseLineCol}{Colour of the ellipse line when 'ellipse == TRUE'.
+    DEFAULT = NULL. OPTIONAL.}
+  \item{xlim}{Limits of the x-axis. DEFAULT = if(showLoadings)
+    c(min(pcaobj$rotated[,x]) - 5, max(pcaobj$rotated[,x]) + 5)
+    else c(min(pcaobj$rotated[,x]) - 1, max(pcaobj$rotated[,x]) + 1).
+    OPTIONAL.}
+  \item{ylim}{Limits of the y-axis. DEFAULT = if(showLoadings)
+    c(min(pcaobj$rotated[,y]) - 5, max(pcaobj$rotated[,y]) + 5)
+    else c(min(pcaobj$rotated[,y]) - 1, max(pcaobj$rotated[,y]) + 1).
+    OPTIONAL.}
   \item{lab}{A vector containing labels to add to the plot. 
     DEFAULT = rownames(pcaobj$metadata). OPTIONAL.}
   \item{labSize}{Size of labels. DEFAULT = 3.0. OPTIONAL.}
   \item{labhjust}{Horizontal adjustment of label. DEFAULT = 1.5. OPTIONAL.}
   \item{labvjust}{Vertical adjustment of label. DEFAULT = 0. OPTIONAL.}
-  \item{boxedLabels}{Logical, draw text labels in boxes. DEFAULT = TRUE. OPTIONAL.}
+  \item{boxedLabels}{Logical, draw text labels in boxes. DEFAULT = FALSE.
+    OPTIONAL.}
   \item{selectLab}{A vector containing a subset of lab to plot. DEFAULT =
     NULL. OPTIONAL.}
   \item{drawConnectors}{Logical, indicating whether or not to connect plot
     labels to their corresponding points by line connectors. DEFAULT = TRUE.
     OPTIONAL.}
   \item{widthConnectors}{Line width of connectors. DEFAULT = 0.5. OPTIONAL.}
-  \item{colConnectors}{Line colour of connectors. DEFAULT = 'grey50'. OPTIONAL.}
-  \item{xlab}{Label for x-axis. DEFAULT =
-    paste0(x, ', ', round(pcaobj$variance[x], digits=2), '\% variation').
+  \item{colConnectors}{Line colour of connectors. DEFAULT = 'grey50'.
     OPTIONAL.}
+  \item{xlab}{Label for x-axis. DEFAULT = paste0(x, ', ',
+    round(pcaobj$variance[x], digits = 2), '% variation'). OPTIONAL.}
   \item{xlabAngle}{Rotation angle of x-axis labels. DEFAULT = 0. OPTIONAL.}
-  \item{xlabhjust}{Horizontal adjustment of x-axis labels. DEFAULT = 0.5. OPTIONAL.}
+  \item{xlabhjust}{Horizontal adjustment of x-axis labels. DEFAULT = 0.5.
+    OPTIONAL.}
   \item{xlabvjust}{Vertical adjustment of x-axis labels. DEFAULT = 0.5.
     OPTIONAL.}
   \item{ylab}{Label for y-axis. DEFAULT = paste0(y, ', ',
-    round(pcaobj$variance[y], digits=2), '\% variation'). OPTIONAL.}
+    round(pcaobj$variance[y], digits = 2), '% variation'). OPTIONAL.}
   \item{ylabAngle}{Rotation angle of y-axis labels. DEFAULT = 0. OPTIONAL.}
   \item{ylabhjust}{Horizontal adjustment of y-axis labels. DEFAULT = 0.5.
     OPTIONAL.}

@@ -333,16 +333,19 @@ pertaining to each group.
 
   biplot(p,
     colby = 'ER', colkey = c('ER+' = 'forestgreen', 'ER-' = 'purple'),
+    colLegendTitle = 'ER-\nstatus',
     # encircle config
-      encircleByGroup = TRUE,
+      encircle = TRUE,
       encircleFill = TRUE,
     hline = 0, vline = c(-25, 0, 25),
     legendPosition = 'top', legendLabSize = 16, legendIconSize = 8.0)
 
   biplot(p,
     colby = 'ER', colkey = c('ER+' = 'forestgreen', 'ER-' = 'purple'),
-    encircleByGroup = TRUE, encircleFill = FALSE,
-    encircleAlpha = 1, encircleLineSize = 5,
+    colLegendTitle = 'ER-\nstatus',
+    # encircle config
+      encircle = TRUE, encircleFill = FALSE,
+      encircleAlpha = 1, encircleLineSize = 5,
     hline = 0, vline = c(-25, 0, 25),
     legendPosition = 'top', legendLabSize = 16, legendIconSize = 8.0)
 
@@ -365,6 +368,19 @@ samples. Here, we draw ellipses around each group at the 95% confidence level:
       ellipseFill = TRUE,
       ellipseAlpha = 1/4,
       ellipseLineSize = 1.0,
+    xlim = c(-125,125), ylim = c(-50, 80),
+    hline = 0, vline = c(-25, 0, 25),
+    legendPosition = 'top', legendLabSize = 16, legendIconSize = 8.0)
+
+  biplot(p,
+    colby = 'ER', colkey = c('ER+' = 'forestgreen', 'ER-' = 'purple'),
+    # ellipse config
+      ellipse = TRUE,
+      ellipseConf = 0.95,
+      ellipseFill = TRUE,
+      ellipseAlpha = 1/4,
+      ellipseLineSize = 0,
+      ellipseFillKey = c('ER+' = 'yellow', 'ER-' = 'pink'),
     xlim = c(-125,125), ylim = c(-50, 80),
     hline = 0, vline = c(-25, 0, 25),
     legendPosition = 'top', legendLabSize = 16, legendIconSize = 8.0)
@@ -410,7 +426,7 @@ samples. Here, we draw ellipses around each group at the 95% confidence level:
 
 Let's plot the same as above but with loadings:
 
-```{r ex11b, message = FALSE, fig.height = 5.5, fig.width = 10, fig.cap = 'Figure 11b: Modify line types, remove gridlines, and increase point size'}
+```{r ex11b, message = FALSE, fig.height = 5.5, fig.width = 11, fig.cap = 'Figure 11b: Modify line types, remove gridlines, and increase point size'}
 
   biplot(p,
     # loadings parameters
@@ -784,6 +800,7 @@ and suggestions from:
 * Guido Hooiveld
 * pwwang
 * Pandula Priyadarshana
+* Barley Rose Collier Harris
 
 # Session info
 

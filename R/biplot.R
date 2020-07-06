@@ -8,6 +8,7 @@ biplot <- function(
   colLoadingsNames = 'black',
   sizeLoadingsNames = 3,
   boxedLoadingsNames = TRUE,
+  fillBoxedLoadings = alpha('white', 1/4),
   drawConnectorsLoadings = TRUE,
   widthConnectorsLoadings = 0.5,
   colConnectorsLoadings = 'grey50',
@@ -17,22 +18,29 @@ biplot <- function(
   alphaLoadingsArrow = 1.0,
   colby = NULL,
   colkey = NULL,
+  colLegendTitle = if (!is.null(colby)) colby else NULL,
   singlecol = NULL,
   shape = NULL,
   shapekey = NULL,
+  shapeLegendTitle = if (!is.null(shape)) shape else NULL,
   pointSize = 3.0,
   legendPosition = 'none',
   legendLabSize = 12,
+  legendTitleSize = 14,
   legendIconSize = 5.0,
-  encircleByGroup = FALSE,
+  encircle = FALSE,
   encircleFill = TRUE,
+  encircleFillKey = NULL,
   encircleAlpha = 1/4,
   encircleLineSize = 0.25,
+  encircleLineCol = NULL,
   ellipse = FALSE,
   ellipseConf = 0.95,
   ellipseFill = TRUE,
+  ellipseFillKey = NULL,
   ellipseAlpha = 1/4,
   ellipseLineSize = 0.25,
+  ellipseLineCol = NULL,
   xlim = if(showLoadings) c(min(pcaobj$rotated[,x]) - 5, max(pcaobj$rotated[,x]) + 5)
     else c(min(pcaobj$rotated[,x]) - 1, max(pcaobj$rotated[,x]) + 1),
   ylim = if(showLoadings) c(min(pcaobj$rotated[,y]) - 5, max(pcaobj$rotated[,y]) + 5)
@@ -107,7 +115,7 @@ biplot <- function(
       legend.text = element_text(size = legendLabSize),
 
       title = element_text(size = legendLabSize),
-      legend.title = element_blank())
+      legend.title = element_text(size = legendTitleSize))
 
   # set plot data labels (e.g. sample names)
   plotobj <- NULL
@@ -221,6 +229,7 @@ biplot <- function(
               hjust = 0),
               color = colLoadingsNames,
               size = sizeLoadingsNames,
+              fill = fillBoxedLoadings,
               segment.color = colConnectorsLoadings,
               segment.size = widthConnectorsLoadings)
         } else {
@@ -244,7 +253,8 @@ biplot <- function(
                 y = pcaobj$loadings[vars,y] * r * lengthLoadingsArrowsFactor,
               hjust = 0),
               color = colLoadingsNames,
-              size = sizeLoadingsNames)
+              size = sizeLoadingsNames,
+              fill = NA)
         } else {
           plot <- plot + coord_equal() +
             geom_text(data = pcaobj$loadings[vars,], 
@@ -269,9 +279,10 @@ biplot <- function(
     plot <- plot + ylim(ylim[1], ylim[2])
   }
 
-  # add elements to the plot for title, subtitle, caption
+  # add elements to the plot for title, subtitle, caption, and legend titles
   plot <- plot + labs(title = title, 
-    subtitle = subtitle, caption = caption)
+    subtitle = subtitle, caption = caption,
+    fill = '', colour = colLegendTitle, shape = shapeLegendTitle)
 
   # add elements to the plot for vlines and hlines
   if (!is.null(vline)) {
@@ -382,54 +393,128 @@ biplot <- function(
   }
 
   # encircle
-  if (encircleByGroup) {
+  if (encircle) {
     if (encircleFill) {
-      plot <- plot +
-        geom_encircle(
-          aes(group = col,
-            fill = col,
-            colour = col),
-          alpha = encircleAlpha,
-          size = encircleLineSize,
-          show.legend = FALSE,
-          na.rm = TRUE)
+      if (is.null(encircleLineCol)) {
+        plot <- plot +
+          geom_encircle(
+            aes(group = col,
+              fill = col,
+              colour = col),
+            alpha = encircleAlpha,
+            size = encircleLineSize,
+            show.legend = FALSE,
+            na.rm = TRUE)
+      } else {
+        plot <- plot +
+          geom_encircle(
+            aes(group = col,
+              fill = col),
+            colour = encircleLineCol,
+            alpha = encircleAlpha,
+            size = encircleLineSize,
+            show.legend = FALSE,
+            na.rm = TRUE)
+      }
     } else {
-      plot <- plot +
-        geom_encircle(
-          aes(group = col,
-            colour = col),
-          alpha = encircleAlpha,
-          size = encircleLineSize,
-          show.legend = FALSE,
-          na.rm = TRUE)
+      if (is.null(encircleLineCol)) {
+        plot <- plot +
+          geom_encircle(
+            aes(group = col,
+              colour = col),
+            fill = NA,
+            alpha = encircleAlpha,
+            size = encircleLineSize,
+            show.legend = FALSE,
+            na.rm = TRUE)
+      } else {
+        plot <- plot +
+          geom_encircle(
+            aes(group = col),
+            colour = encircleLineCol,
+            fill = NA,
+            alpha = encircleAlpha,
+            size = encircleLineSize,
+            show.legend = FALSE,
+            na.rm = TRUE)
+      }
+    }
+
+    if (encircleFill) {
+      if (is.null(encircleFillKey)) {
+        if (!is.null(colkey)) {
+          plot <- plot + scale_fill_manual(values = colkey)
+        }
+      } else {
+          plot <- plot + scale_fill_manual(values = encircleFillKey)
+      }
     }
   }
 
   # ellipse
   if (ellipse) {
     if (ellipseFill) {
-      plot <- plot +
-        stat_ellipse(
-          aes(group = col,
-            fill = col),
-          colour = 'black',
-          geom = 'polygon',
-          level = ellipseConf,
-          alpha = ellipseAlpha,
-          size = ellipseLineSize,
-          show.legend = FALSE,
-          na.rm = TRUE)
+      if (is.null(ellipseLineCol)) {
+        plot <- plot +
+          stat_ellipse(
+            aes(group = col,
+              fill = col,
+              colour = col),
+            geom = 'polygon',
+            level = ellipseConf,
+            alpha = ellipseAlpha,
+            size = ellipseLineSize,
+            show.legend = FALSE,
+            na.rm = TRUE)
+      } else {
+        plot <- plot +
+          stat_ellipse(
+            aes(group = col,
+              fill = col),
+            colour = ellipseLineCol,
+            geom = 'polygon',
+            level = ellipseConf,
+            alpha = ellipseAlpha,
+            size = ellipseLineSize,
+            show.legend = FALSE,
+            na.rm = TRUE)
+      }
     } else {
-      plot <- plot +
-        stat_ellipse(
-          aes(group = col),
-          colour = 'black',
-          geom = 'polygon',
-          level = ellipseConf,
-          alpha = ellipseAlpha,
-          size = ellipseLineSize,
-          show.legend = FALSE,
-          na.rm = TRUE)
+      if (is.null(ellipseLineCol)) {
+        plot <- plot +
+          stat_ellipse(
+            aes(group = col,
+              colour = col),
+            fill = NA,
+            geom = 'polygon',
+            level = ellipseConf,
+            alpha = ellipseAlpha,
+            size = ellipseLineSize,
+            show.legend = FALSE,
+            na.rm = TRUE)
+      } else {
+        plot <- plot +
+          stat_ellipse(
+            aes(group = col),
+            colour = ellipseLineCol,
+            fill = NA,
+            geom = 'polygon',
+            level = ellipseConf,
+            alpha = ellipseAlpha,
+            size = ellipseLineSize,
+            show.legend = FALSE,
+            na.rm = TRUE)
+      }
+    }
+
+    if (ellipseFill) {
+      if (is.null(ellipseFillKey)) {
+        if (!is.null(colkey)) {
+          plot <- plot + scale_fill_manual(values = colkey)
+        }
+      } else {
+          plot <- plot + scale_fill_manual(values = ellipseFillKey)
+      }
     }
   }
 

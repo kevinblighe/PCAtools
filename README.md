@@ -1,7 +1,7 @@
 PCAtools: everything Principal Component Analysis
 ================
 Kevin Blighe, Aaron Lun
-2020-06-21
+2020-07-05
 
 # Introduction
 
@@ -349,8 +349,9 @@ each group.
 ``` r
   biplot(p,
     colby = 'ER', colkey = c('ER+' = 'forestgreen', 'ER-' = 'purple'),
+    colLegendTitle = 'ER-\nstatus',
     # encircle config
-      encircleByGroup = TRUE,
+      encircle = TRUE,
       encircleFill = TRUE,
     hline = 0, vline = c(-25, 0, 25),
     legendPosition = 'top', legendLabSize = 16, legendIconSize = 8.0)
@@ -362,8 +363,10 @@ group](README_files/figure-gfm/ex8-1.png)
 ``` r
   biplot(p,
     colby = 'ER', colkey = c('ER+' = 'forestgreen', 'ER-' = 'purple'),
-    encircleByGroup = TRUE, encircleFill = FALSE,
-    encircleAlpha = 1, encircleLineSize = 5,
+    colLegendTitle = 'ER-\nstatus',
+    # encircle config
+      encircle = TRUE, encircleFill = FALSE,
+      encircleAlpha = 1, encircleLineSize = 5,
     hline = 0, vline = c(-25, 0, 25),
     legendPosition = 'top', legendLabSize = 16, legendIconSize = 8.0)
 ```
@@ -392,8 +395,25 @@ group at the 95% confidence level:
     legendPosition = 'top', legendLabSize = 16, legendIconSize = 8.0)
 ```
 
+![Figure 9: Stat ellipses](README_files/figure-gfm/ex9-1.png)
+
+``` r
+  biplot(p,
+    colby = 'ER', colkey = c('ER+' = 'forestgreen', 'ER-' = 'purple'),
+    # ellipse config
+      ellipse = TRUE,
+      ellipseConf = 0.95,
+      ellipseFill = TRUE,
+      ellipseAlpha = 1/4,
+      ellipseLineSize = 0,
+      ellipseFillKey = c('ER+' = 'yellow', 'ER-' = 'pink'),
+    xlim = c(-125,125), ylim = c(-50, 80),
+    hline = 0, vline = c(-25, 0, 25),
+    legendPosition = 'top', legendLabSize = 16, legendIconSize = 8.0)
+```
+
 ![Figure 9: Stat
-ellipses](README_files/figure-gfm/ex9-1.png)
+ellipses](README_files/figure-gfm/ex9-2.png)
 
 ### Change shape based on tumour grade, remove connectors, and add titles
 
@@ -847,6 +867,7 @@ suggestions from:
   - Guido Hooiveld
   - pwwang
   - Pandula Priyadarshana
+  - Barley Rose Collier Harris
 
 # Session info
 
@@ -854,7 +875,7 @@ suggestions from:
 sessionInfo()
 ```
 
-    ## R version 3.6.3 (2020-02-29)
+    ## R version 4.0.2 (2020-06-22)
     ## Platform: x86_64-pc-linux-gnu (64-bit)
     ## Running under: Ubuntu 16.04.6 LTS
     ## 
@@ -875,38 +896,49 @@ sessionInfo()
     ## [8] methods   base     
     ## 
     ## other attached packages:
-    ##  [1] ggplotify_0.0.5      hgu133a.db_3.2.3     org.Hs.eg.db_3.10.0 
-    ##  [4] AnnotationDbi_1.48.0 IRanges_2.20.2       S4Vectors_0.24.4    
-    ##  [7] GEOquery_2.54.1      Biobase_2.46.0       BiocGenerics_0.32.0 
-    ## [10] PCAtools_2.1.8       cowplot_1.0.0        lattice_0.20-41     
-    ## [13] reshape2_1.4.4       ggrepel_0.8.2        ggplot2_3.3.0       
+    ##  [1] ggplotify_0.0.5      hgu133a.db_3.2.3     org.Hs.eg.db_3.11.4 
+    ##  [4] AnnotationDbi_1.50.0 IRanges_2.22.2       S4Vectors_0.26.1    
+    ##  [7] GEOquery_2.56.0      Biobase_2.48.0       BiocGenerics_0.34.0 
+    ## [10] PCAtools_2.1.12      cowplot_1.0.0        lattice_0.20-41     
+    ## [13] reshape2_1.4.4       ggrepel_0.8.2        ggplot2_3.3.2       
     ## 
     ## loaded via a namespace (and not attached):
-    ##  [1] maps_3.3.0               BiocSingular_1.2.2       tidyr_1.0.2             
-    ##  [4] bit64_0.9-7              DelayedMatrixStats_1.8.0 assertthat_0.2.1        
-    ##  [7] BiocManager_1.30.10      rvcheck_0.1.8            highr_0.8               
-    ## [10] dqrng_0.2.1              blob_1.2.1               yaml_2.2.1              
-    ## [13] Rttf2pt1_1.3.8           pillar_1.4.3             RSQLite_2.2.0           
-    ## [16] glue_1.4.0               limma_3.42.2             extrafontdb_1.0         
-    ## [19] digest_0.6.25            RColorBrewer_1.1-2       colorspace_1.4-1        
-    ## [22] htmltools_0.4.0          Matrix_1.2-18            plyr_1.8.6              
-    ## [25] pkgconfig_2.0.3          purrr_0.3.3              scales_1.1.0            
-    ## [28] BiocParallel_1.20.1      tibble_3.0.0             farver_2.0.3            
-    ## [31] ellipsis_0.3.0           withr_2.1.2              cli_2.0.2               
-    ## [34] magrittr_1.5             crayon_1.3.4             memoise_1.1.0           
-    ## [37] evaluate_0.14            ash_1.0-15               fansi_0.4.1             
-    ## [40] MASS_7.3-51.5            xml2_1.3.1               tools_3.6.3             
-    ## [43] hms_0.5.3                lifecycle_0.2.0          matrixStats_0.56.0      
-    ## [46] stringr_1.4.0            munsell_0.5.0            DelayedArray_0.12.3     
-    ## [49] irlba_2.3.3              compiler_3.6.3           ggalt_0.4.0             
-    ## [52] rsvd_1.0.3               gridGraphics_0.5-0       rlang_0.4.5             
-    ## [55] grid_3.6.3               labeling_0.3             rmarkdown_2.1           
-    ## [58] proj4_1.0-10             gtable_0.3.0             DBI_1.1.0               
-    ## [61] curl_4.3                 R6_2.4.1                 knitr_1.28              
-    ## [64] dplyr_0.8.5              bit_1.1-15.2             extrafont_0.17          
-    ## [67] KernSmooth_2.23-16       readr_1.3.1              stringi_1.4.6           
-    ## [70] Rcpp_1.0.4.6             vctrs_0.2.4              tidyselect_1.0.0        
-    ## [73] xfun_0.13
+    ##  [1] maps_3.3.0                BiocSingular_1.4.0       
+    ##  [3] tidyr_1.1.0               bit64_0.9-7              
+    ##  [5] DelayedMatrixStats_1.10.0 BiocManager_1.30.10      
+    ##  [7] rvcheck_0.1.8             highr_0.8                
+    ##  [9] dqrng_0.2.1               blob_1.2.1               
+    ## [11] yaml_2.2.1                Rttf2pt1_1.3.8           
+    ## [13] pillar_1.4.4              RSQLite_2.2.0            
+    ## [15] glue_1.4.1                limma_3.44.3             
+    ## [17] extrafontdb_1.0           digest_0.6.25            
+    ## [19] RColorBrewer_1.1-2        colorspace_1.4-1         
+    ## [21] htmltools_0.5.0           Matrix_1.2-18            
+    ## [23] plyr_1.8.6                pkgconfig_2.0.3          
+    ## [25] purrr_0.3.4               scales_1.1.1             
+    ## [27] BiocParallel_1.22.0       tibble_3.0.1             
+    ## [29] generics_0.0.2            farver_2.0.3             
+    ## [31] ellipsis_0.3.1            withr_2.2.0              
+    ## [33] magrittr_1.5              crayon_1.3.4             
+    ## [35] memoise_1.1.0             evaluate_0.14            
+    ## [37] ash_1.0-15                MASS_7.3-51.6            
+    ## [39] xml2_1.3.2                tools_4.0.2              
+    ## [41] hms_0.5.3                 lifecycle_0.2.0          
+    ## [43] matrixStats_0.56.0        stringr_1.4.0            
+    ## [45] munsell_0.5.0             DelayedArray_0.14.0      
+    ## [47] irlba_2.3.3               compiler_4.0.2           
+    ## [49] ggalt_0.4.0               rsvd_1.0.3               
+    ## [51] gridGraphics_0.5-0        rlang_0.4.6              
+    ## [53] grid_4.0.2                labeling_0.3             
+    ## [55] rmarkdown_2.3             proj4_1.0-10             
+    ## [57] gtable_0.3.0              DBI_1.1.0                
+    ## [59] curl_4.3                  R6_2.4.1                 
+    ## [61] knitr_1.29                dplyr_1.0.0              
+    ## [63] bit_1.1-15.2              extrafont_0.17           
+    ## [65] KernSmooth_2.23-17        readr_1.3.1              
+    ## [67] stringi_1.4.6             Rcpp_1.0.4.6             
+    ## [69] vctrs_0.3.1               tidyselect_1.1.0         
+    ## [71] xfun_0.15
 
 # References
 

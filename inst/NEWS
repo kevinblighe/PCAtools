@@ -5,6 +5,7 @@ CHANGES IN VERSION 2.2.0
  - better positioning of PC labels in triangular pairs plot
  - added functionality to encircle groups of samples
  - added functionality to draw stat ellipses with confidence intervals
+ - users can now add legend titles and these will be added by default
 
 CHANGES IN VERSION 2.0.0
 ------------------------

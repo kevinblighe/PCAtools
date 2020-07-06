@@ -29,8 +29,8 @@ test_that('datatypes', {
   # biplot
   expect_is(biplot(pcaobj), class = 'pca')
   expect_type(biplot(x, y, colLoadingsNames, colConnectorsLoadings,
-    colLoadingsArrows, colby, colkey, singlecol, legendPosition,
-    lab, selectLab, colConnectors, xlab, ylab, title, subtitle,
+    colLoadingsArrows, fillBoxedLoadings, colby, colkey, colLegendTitle, singlecol, shapeLegendTitle,
+    legendPosition, encircleFillKey, ellipseFillKey, encircleLineCol, ellipseLineCol, lab, selectLab, colConnectors, xlab, ylab, title, subtitle,
     caption, hlineType, hlineCol, vlineType, vlineCol, borderColour),
     c('language', 'character'))
   expect_type(biplot(showLoadings, showLoadingsNames, boxedLoadingsNames,
@@ -40,7 +40,7 @@ test_that('datatypes', {
     c('logical'))
   expect_type(biplot(ntopLoadings, sizeLoadingsNames, widthConnectorsLoadings,
     lengthLoadingsArrowsFactor, widthLoadingsArrows, alphaLoadingsArrow, shape,
-    shapekey, pointSize, legendLabSize, legendIconSize, encircleAlpha,
+    shapekey, pointSize, legendLabSize, legendTitleSize, legendIconSize, encircleAlpha,
     encircleLineSize, ellipseConf, ellipseAlpha, ellipseLineSize, xlim, ylim,
     labSize, labhjust, labvjust, widthConnectors, xlabAngle, xlabhjust,
     xlabvjust, ylabAngle, ylabhjust, ylabvjust, axisLabSize, titleLabSize,
