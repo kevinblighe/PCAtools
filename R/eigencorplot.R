@@ -1,3 +1,112 @@
+#' Correlate principal components to continuous variable metadata and test significancies of these.
+#'
+#' @param pcaobj Object of class 'pca' created by pca().
+#' @param components The principal components to be included in the plot.
+#' @param metavars A vector of column names in metadata representing continuos
+#'   variables.
+#' @param titleX X-axis title.
+#' @param cexTitleX X-axis title cex.
+#' @param rotTitleX X-axis title rotation in degrees.
+#' @param colTitleX X-axis title colour.
+#' @param fontTitleX X-axis title font style. 1, plain; 2, bold; 3, italic; 4,
+#'   bold-italic.
+#' @param titleY Y-axis title.
+#' @param cexTitleY Y-axis title cex.
+#' @param rotTitleY Y-axis title rotation in degrees.
+#' @param colTitleY Y-axis title colour.
+#' @param fontTitleY Y-axis title font style. 1, plain; 2, bold; 3, italic; 4,
+#'   bold-italic.
+#' @param cexLabX X-axis labels cex.
+#' @param rotLabX X-axis labels rotation in degrees.
+#' @param colLabX X-axis labels colour.
+#' @param fontLabX X-axis labels font style. 1, plain; 2, bold; 3, italic; 4,
+#'   bold-italic.
+#' @param cexLabY Y-axis labels cex.
+#' @param rotLabY Y-axis labels rotation in degrees.
+#' @param colLabY Y-axis labels colour.
+#' @param fontLabY Y-axis labels font style. 1, plain; 2, bold; 3, italic; 4,
+#'   bold-italic.
+#' @param posLab Positioning of the X- and Y-axis labels. 'bottomleft', bottom
+#'   and left; 'topright', top and right; 'all', bottom / top and left /right;
+#'   'none', no labels.
+#' @param col Colour shade gradient for RColorBrewer.
+#' @param posColKey Position of colour key. 'bottom', 'left', 'top', 'right'.
+#' @param cexLabColKey Colour key labels cex.
+#' @param cexCorval Correlation values cex.
+#' @param colCorval Correlation values colour.
+#' @param fontCorval Correlation values font style. 1, plain; 2, bold; 3,
+#'   italic; 4, bold-italic.
+#' @param scale Logical, indicating whether or not to scale the colour range
+#'   to max and min cor values.
+#' @param main Plot title.
+#' @param cexMain Plot title cex.
+#' @param rotMain Plot title rotation in degrees.
+#' @param colMain Plot title colour.
+#' @param fontMain Plot title font style. 1, plain; 2, bold; 3, italic; 4,
+#'   bold-italic.
+#' @param corFUN Correlation method: 'pearson', 'spearman', or 'kendall'.
+#' @param corUSE Method for handling missing values (see documentation for cor
+#'   function via ?cor). 'everything', 'all.obs', 'complete.obs',
+#'   'na.or.complete', or 'pairwise.complete.obs'.
+#' @param corMultipleTestCorrection Multiple testing p-value adjustment method.
+#'   Any method from stats::p.adjust() can be used. Activating this function means that
+#'   signifSymbols and signifCutpoints then relate to adjusted (not nominal) 
+#'   p-values.
+#' @param signifSymbols Statistical significance symbols to display beside
+#'   correlation values.
+#' @param signifCutpoints Cut-points for statistical significance.
+#' @param colFrame Frame colour.
+#' @param plotRsquared Logical, indicating whether or not to plot R-squared
+#'   values.
+#' @param returnPlot Logical, indicating whether or not to return the plot
+#'   object.
+#'
+#' @details Correlate principal components to continuous variable metadata and test significancies of these.
+#'
+#' @return A \code{\link{lattice}} object.
+#'
+#' @author Kevin Blighe <kevin@clinicalbioinformatics.co.uk>
+#'
+#' @examples
+#'   options(scipen=10)
+#'   options(digits=6)
+#'
+#'   col <- 20
+#'   row <- 20000
+#'   mat1 <- matrix(
+#'     rexp(col*row, rate = 0.1),
+#'     ncol = col)
+#'   rownames(mat1) <- paste0('gene', 1:nrow(mat1))
+#'   colnames(mat1) <- paste0('sample', 1:ncol(mat1))
+#'
+#'   mat2 <- matrix(
+#'     rexp(col*row, rate = 0.1),
+#'     ncol = col)
+#'   rownames(mat2) <- paste0('gene', 1:nrow(mat2))
+#'   colnames(mat2) <- paste0('sample', (ncol(mat1)+1):(ncol(mat1)+ncol(mat2)))
+#'
+#'   mat <- cbind(mat1, mat2)
+#'
+#'   metadata <- data.frame(row.names = colnames(mat))
+#'   metadata$Group <- rep(NA, ncol(mat))
+#'   metadata$Group[seq(1,40,2)] <- 'A'
+#'   metadata$Group[seq(2,40,2)] <- 'B'
+#'   metadata$CRP <- sample.int(100, size=ncol(mat), replace=TRUE)
+#'   metadata$ESR <- sample.int(100, size=ncol(mat), replace=TRUE)
+#'
+#'   p <- pca(mat, metadata = metadata, removeVar = 0.1)
+#'
+#'   eigencorplot(p, components = getComponents(p, 1:10),
+#'     metavars = c('ESR', 'CRP'))
+#'
+#' @importFrom stats cor cor.test p.adjust symnum
+#' @importFrom lattice levelplot
+#' @importFrom lattice panel.levelplot
+#' @importFrom lattice ltext
+#' @importFrom grDevices colorRampPalette
+#' @importFrom methods is
+#' 
+#' @export
 eigencorplot <- function(
   pcaobj,
   components = getComponents(pcaobj, seq_len(10)),

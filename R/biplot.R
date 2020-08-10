@@ -1,3 +1,189 @@
+#' Draw a bi-plot, comparing 2 selected principal components / eigenvectors.
+#'
+#' @param pcaobj Object of class 'pca' created by pca().
+#' @param x A principal component to plot on x-axis. All principal component
+#'   names are stored in pcaobj$label.
+#' @param y A principal component to plot on y-axis. All principal component
+#'   names are stored in pcaobj$label.
+#' @param showLoadings Logical, indicating whether or not to overlay
+#'   variable loadings.
+#' @param ntopLoadings If showLoadings == TRUE, select this many variables
+#'   based on absolute ordered variable loading for each PC in the biplot.
+#'   As a result of looking across 2 PCs, it can occur whereby greater than
+#'   this number are actually displayed.
+#' @param showLoadingsNames Logical, indicating to show variable loadings names
+#'   or not.
+#' @param colLoadingsNames If 'showLoadings == TRUE', colour of text labels.
+#' @param sizeLoadingsNames If 'showLoadings == TRUE', size of text labels.
+#' @param boxedLoadingsNames Logical, if 'showLoadings == TRUE', draw text
+#'   labels in boxes.
+#' @param fillBoxedLoadings When 'boxedLoadingsNames == TRUE', this controls
+#'   the background fill of the boxes. To control both the fill and
+#'   transparency, user can specify a value of the form
+#'   'alpha(<colour>, <alpha>)'.
+#' @param drawConnectorsLoadings If 'showLoadings == TRUE', draw line connectors
+#'   to the variable loadings arrows in order to fit more labels in the plot
+#'   space.
+#' @param widthConnectorsLoadings If 'showLoadings == TRUE', width of the line
+#'   connectors drawn to the variable loadings arrows.
+#' @param colConnectorsLoadings If 'showLoadings == TRUE', colour of the line
+#'   connectors drawn to the variable loadings arrows.
+#' @param lengthLoadingsArrowsFactor If 'showLoadings == TRUE', multiply the
+#'   internally-determined length of the variable loadings arrows by this
+#'   factor.
+#' @param colLoadingsArrows If showLoadings == TRUE, colour of the variable
+#'   loadings arrows.
+#' @param widthLoadingsArrows If showLoadings == TRUE, width of the variable
+#'   loadings arrows.
+#' @param alphaLoadingsArrow If showLoadings == TRUE, colour transparency of
+#'   the variable loadings arrows.
+#' @param colby If NULL, all points will be coloured differently. If not NULL,
+#'   value is assumed to be a column name in pcaobj$metadata relating to some
+#'   grouping/categorical variable.
+#' @param colkey Vector of name-value pairs relating to value passed to 'col',
+#'   e.g., c(A='forestgreen', B='gold').
+#' @param colLegendTitle Title of the legend for the variable specified
+#'   by 'colby'.
+#' @param singlecol If specified, all points will be shaded by this colour.
+#'   Overrides 'col'.
+#' @param shape If NULL, all points will be have the same shape. If not NULL,
+#'   value is assumed to be a column name in pcaobj$metadata relating to some
+#'   grouping/categorical variable.
+#' @param shapekey Vector of name-value pairs relating to value passed to
+#'   'shape', e.g., c(A=10, B=21).
+#' @param shapeLegendTitle Title of the legend for the variable specified
+#'   by 'shape'.
+#' @param pointSize Size of plotted points.
+#' @param legendPosition Position of legend ('top', 'bottom', 'left', 'right',
+#'   'none').
+#' @param legendLabSize Size of plot legend text.
+#' @param legendTitleSize Size of plot legend title text.
+#' @param legendIconSize Size of plot legend icons / symbols.
+#' @param encircle Logical, indicating whether to draw a polygon around
+#'   the groups specified by 'colby'.
+#' @param encircleFill Logical, if 'encircle == TRUE', this determines
+#'   whether to fill the encircled region or not.
+#' @param encircleFillKey Vector of name-value pairs relating to value passed to
+#'   'encircleFill', e.g., c(A='forestgreen', B='gold'). If NULL, the fill
+#'   is controlled by whatever has already been used for 'colby' / 'colkey'.
+#' @param encircleAlpha Alpha for purposes of controlling colour transparency of
+#'   the encircled region. Used when 'encircle == TRUE'.
+#' @param encircleLineSize Line width of the encircled line when
+#'   'encircle == TRUE'.
+#' @param encircleLineCol Colour of the encircled line when
+#'   'encircle == TRUE'.
+#' @param ellipse Logical, indicating whether to draw a stat ellipse around
+#'   the groups specified by 'colby'.
+#' @param ellipseConf Confidence intervals of the stat ellipses when
+#'   ellipse == TRUE.
+#' @param ellipseFill Logical, if 'ellipse == TRUE', this determines
+#'   whether to fill the region or not.
+#' @param ellipseFillKey Vector of name-value pairs relating to value passed to
+#'   'ellipseFill', e.g., c(A='forestgreen', B='gold'). If NULL, the fill
+#'   is controlled by whatever has already been used for 'colby' / 'colkey'.
+#' @param ellipseAlpha Alpha for purposes of controlling colour transparency of
+#'   the ellipse region. Used when 'ellipse == TRUE'.
+#' @param ellipseLineSize Line width of the ellipse line when 'ellipse == TRUE'.
+#' @param ellipseLineCol Colour of the ellipse line when 'ellipse == TRUE'.
+#' @param xlim Limits of the x-axis.
+#' @param ylim Limits of the y-axis.
+#' @param lab A vector containing labels to add to the plot. 
+#' @param labSize Size of labels.
+#' @param labhjust Horizontal adjustment of label.
+#' @param labvjust Vertical adjustment of label.
+#' @param boxedLabels Logical, draw text labels in boxes.
+#' @param selectLab A vector containing a subset of lab to plot.
+#' @param drawConnectors Logical, indicating whether or not to connect plot
+#'   labels to their corresponding points by line connectors.
+#' @param widthConnectors Line width of connectors.
+#' @param colConnectors Line colour of connectors.
+#' @param xlab Label for x-axis.
+#' @param xlabAngle Rotation angle of x-axis labels.
+#' @param xlabhjust Horizontal adjustment of x-axis labels.
+#' @param xlabvjust Vertical adjustment of x-axis labels.
+#' @param ylab Label for y-axis.
+#' @param ylabAngle Rotation angle of y-axis labels.
+#' @param ylabhjust Horizontal adjustment of y-axis labels.
+#' @param ylabvjust Vertical adjustment of y-axis labels.
+#' @param axisLabSize Size of x- and y-axis labels.
+#' @param title Plot title.
+#' @param subtitle Plot subtitle.
+#' @param caption Plot caption.
+#' @param titleLabSize Size of plot title.
+#' @param subtitleLabSize Size of plot subtitle.
+#' @param captionLabSize Size of plot caption.
+#' @param hline Draw one or more horizontal lines passing through this/these
+#'   values on y-axis. For single values, only a single numerical value is
+#'   necessary. For multiple lines, pass these as a vector, e.g., c(60,90).
+#' @param hlineType Line type for hline ('blank', 'solid', 'dashed', 'dotted',
+#'   'dotdash', 'longdash', 'twodash').
+#' @param hlineCol Colour of hline.
+#' @param hlineWidth Width of hline.
+#' @param vline Draw one or more vertical lines passing through this/these
+#'   values on x-axis. For single values, only a single numerical value is
+#'   necessary. For multiple lines, pass these as a vector, e.g., c(60,90).
+#' @param vlineType Line type for vline ('blank', 'solid', 'dashed', 'dotted',
+#'   'dotdash', 'longdash', 'twodash').
+#' @param vlineCol Colour of vline.
+#' @param vlineWidth Width of vline.
+#' @param gridlines.major Logical, indicating whether or not to draw major
+#'   gridlines.
+#' @param gridlines.minor Logical, indicating whether or not to draw minor
+#'   gridlines.
+#' @param borderWidth Width of the border on the x and y axes.
+#' @param borderColour Colour of the border on the x and y axes.
+#' @param returnPlot Logical, indicating whether or not to return the plot
+#'   object.
+#'
+#' @details Draw a bi-plot, comparing 2 selected principal components / eigenvectors.
+#'
+#' @return A \code{\link{ggplot2}} object.
+#'
+#' @author Kevin Blighe <kevin@clinicalbioinformatics.co.uk>
+#'
+#' @examples
+#'   options(scipen=10)
+#'   options(digits=6)
+#'
+#'   col <- 20
+#'   row <- 20000
+#'   mat1 <- matrix(
+#'     rexp(col*row, rate = 0.1),
+#'     ncol = col)
+#'   rownames(mat1) <- paste0('gene', 1:nrow(mat1))
+#'   colnames(mat1) <- paste0('sample', 1:ncol(mat1))
+#'
+#'   mat2 <- matrix(
+#'   rexp(col*row, rate = 0.1),
+#'     ncol = col)
+#'   rownames(mat2) <- paste0('gene', 1:nrow(mat2))
+#'   colnames(mat2) <- paste0('sample', (ncol(mat1)+1):(ncol(mat1)+ncol(mat2)))
+#'
+#'   mat <- cbind(mat1, mat2)
+#'
+#'   metadata <- data.frame(row.names = colnames(mat))
+#'   metadata$Group <- rep(NA, ncol(mat))
+#'   metadata$Group[seq(1,40,2)] <- 'A'
+#'   metadata$Group[seq(2,40,2)] <- 'B'
+#'   metadata$CRP <- sample.int(100, size=ncol(mat), replace=TRUE)
+#'   metadata$ESR <- sample.int(100, size=ncol(mat), replace=TRUE)
+#'
+#'   p <- pca(mat, metadata = metadata, removeVar = 0.1)
+#'
+#'   biplot(p)
+#'
+#'   biplot(p, colby = 'Group', shape = 'Group')
+#'
+#'   biplot(p, colby = 'Group', colkey = c(A = 'forestgreen', B = 'gold'),
+#'     legendPosition = 'right')
+#'
+#'   biplot(p, colby = 'Group', colkey = c(A='forestgreen', B='gold'),
+#'     shape = 'Group', shapekey = c(A=10, B=21), legendPosition = 'bottom')
+#'
+#' @import ggplot2
+#' @import ggrepel
+#' 
+#' @export
 biplot <- function(
   pcaobj,
   x = 'PC1',
@@ -41,8 +227,10 @@ biplot <- function(
   ellipseAlpha = 1/4,
   ellipseLineSize = 0.25,
   ellipseLineCol = NULL,
-  xlim = if(showLoadings) c(min(pcaobj$rotated[,x]) - 5, max(pcaobj$rotated[,x]) + 5) else c(min(pcaobj$rotated[,x]) - 1, max(pcaobj$rotated[,x]) + 1),
-  ylim = if(showLoadings) c(min(pcaobj$rotated[,y]) - 5, max(pcaobj$rotated[,y]) + 5) else c(min(pcaobj$rotated[,y]) - 1, max(pcaobj$rotated[,y]) + 1),
+  xlim = if(showLoadings) c(min(pcaobj$rotated[,x]) - 5, max(pcaobj$rotated[,x]) + 5) else
+    c(min(pcaobj$rotated[,x]) - 1, max(pcaobj$rotated[,x]) + 1),
+  ylim = if(showLoadings) c(min(pcaobj$rotated[,y]) - 5, max(pcaobj$rotated[,y]) + 5) else
+    c(min(pcaobj$rotated[,y]) - 1, max(pcaobj$rotated[,y]) + 1),
   lab = rownames(pcaobj$metadata),
   labSize = 3.0,
   labhjust = 1.5,

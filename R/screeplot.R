@@ -1,3 +1,99 @@
+#' Draw a SCREE plot, showing the distribution of explained variance across all or select principal components / eigenvectors.
+#'
+#' @param pcaobj Object of class 'pca' created by pca().
+#' @param components The principal components to be included in the plot.
+#' @param xlim Limits of the x-axis.
+#' @param ylim Limits of the y-axis.
+#' @param xlab Label for x-axis.
+#' @param xlabAngle Rotation angle of x-axis labels.
+#' @param xlabhjust Horizontal adjustment of x-axis labels.
+#' @param xlabvjust Vertical adjustment of x-axis labels.
+#' @param ylab Label for y-axis.
+#' @param ylabAngle Rotation angle of y-axis labels.
+#' @param ylabhjust Horizontal adjustment of y-axis labels.
+#' @param ylabvjust Vertical adjustment of y-axis labels.
+#' @param axisLabSize Size of x- and y-axis labels.
+#' @param title Plot title.
+#' @param subtitle Plot subtitle.
+#' @param caption Plot caption.
+#' @param titleLabSize Size of plot title.
+#' @param subtitleLabSize Size of plot subtitle.
+#' @param captionLabSize Size of plot caption.
+#' @param colBar Colour of the vertical bars.
+#' @param drawCumulativeSumLine Logical, indicating whether or not to overlay
+#'   plot with a cumulative explained variance line.
+#' @param colCumulativeSumLine Colour of cumulative explained variance line.
+#' @param sizeCumulativeSumLine Size of cumulative explained variance line.
+#' @param drawCumulativeSumPoints Logical, indicating whether or not to draw
+#'   the cumulative explained variance points.
+#' @param colCumulativeSumPoints Colour of cumulative explained variance
+#'   points.
+#' @param sizeCumulativeSumPoints Size of cumulative explained variance points.
+#' @param hline Draw one or more horizontal lines passing through this/these
+#'   values on y-axis. For single values, only a single numerical value is
+#'   necessary. For multiple lines, pass these as a vector, e.g., c(60,90).
+#' @param hlineType Line type for hline ('blank', 'solid', 'dashed', 'dotted',
+#'   'dotdash', 'longdash', 'twodash').
+#' @param hlineCol Colour of hline.
+#' @param hlineWidth Width of hline.
+#' @param vline Draw one or more vertical lines passing through this/these
+#'   values on x-axis. For single values, only a single numerical value is
+#'   necessary. For multiple lines, pass these as a vector, e.g., c(60,90).
+#' @param vlineType Line type for vline ('blank', 'solid', 'dashed', 'dotted',
+#'   'dotdash', 'longdash', 'twodash').
+#' @param vlineCol Colour of vline.
+#' @param vlineWidth Width of vline.
+#' @param gridlines.major Logical, indicating whether or not to draw major
+#'   gridlines.
+#' @param gridlines.minor Logical, indicating whether or not to draw minor
+#'   gridlines.
+#' @param borderWidth Width of the border on the x and y axes.
+#' @param borderColour Colour of the border on the x and y axes.
+#' @param returnPlot Logical, indicating whether or not to return the plot
+#'   object.
+#'
+#' @details Draw a SCREE plot, showing the distribution of explained variance across all or select principal components / eigenvectors.
+#'
+#' @return A \code{\link{ggplot2}} object.
+#'
+#' @author Kevin Blighe <kevin@clinicalbioinformatics.co.uk>
+#'
+#' @examples
+#'   options(scipen=10)
+#'   options(digits=6)
+#'
+#'   col <- 20
+#'   row <- 20000
+#'   mat1 <- matrix(
+#'     rexp(col*row, rate = 0.1),
+#'     ncol = col)
+#'   rownames(mat1) <- paste0('gene', 1:nrow(mat1))
+#'   colnames(mat1) <- paste0('sample', 1:ncol(mat1))
+#'
+#'   mat2 <- matrix(
+#'     rexp(col*row, rate = 0.1),
+#'     ncol = col)
+#'   rownames(mat2) <- paste0('gene', 1:nrow(mat2))
+#'   colnames(mat2) <- paste0('sample', (ncol(mat1)+1):(ncol(mat1)+ncol(mat2)))
+#'
+#'   mat <- cbind(mat1, mat2)
+#'
+#'   metadata <- data.frame(row.names = colnames(mat))
+#'   metadata$Group <- rep(NA, ncol(mat))
+#'   metadata$Group[seq(1,40,2)] <- 'A'
+#'   metadata$Group[seq(2,40,2)] <- 'B'
+#'   metadata$CRP <- sample.int(100, size=ncol(mat), replace=TRUE)
+#'   metadata$ESR <- sample.int(100, size=ncol(mat), replace=TRUE)
+#'
+#'   p <- pca(mat, metadata = metadata, removeVar = 0.1)
+#'
+#'   screeplot(p)
+#'
+#'   screeplot(p, hline = 80)
+#'
+#' @import ggplot2
+#'
+#' @export
 screeplot <- function(
   pcaobj,
   components = getComponents(pcaobj),

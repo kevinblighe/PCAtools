@@ -1,3 +1,117 @@
+#' Plot the component loadings for selected principal components / eigenvectors and label variables driving variation along these.
+#'
+#' @param pcaobj Object of class 'pca' created by pca().
+#' @param components The principal components to be included in the plot.
+#' @param rangeRetain Cut-off value for retaining variables. The function
+#'   will look across each specified principal component and retain the variables
+#'   that fall within this top/bottom fraction of the loadings range.
+#' @param absolute Logical, indicating whether or not to plot absolute loadings.
+#' @param col Colours used for generation of fill gradient according to
+#'   loadings values. Can be 2 or 3 colours.
+#' @param colMidpoint Mid-point (loading) for the colour range.
+#' @param shape Shape of the plotted points.
+#' @param shapeSizeRange Size range for the plotted points (min, max).
+#' @param legendPosition Position of legend ('top', 'bottom', 'left', 'right',
+#'   'none').
+#' @param legendLabSize Size of plot legend text.
+#' @param legendIconSize Size of plot legend icons / symbols.
+#' @param xlim Limits of the x-axis.
+#' @param ylim Limits of the y-axis.
+#' @param labSize Size of labels.
+#' @param labhjust Horizontal adjustment of label.
+#' @param labvjust Vertical adjustment of label.
+#' @param drawConnectors Logical, indicating whether or not to connect plot
+#'   labels to their corresponding points by line connectors.
+#' @param positionConnectors Position of the connectors and their labels with
+#'   respect to the plotted points ('left', 'right').
+#' @param widthConnectors Line width of connectors.
+#' @param typeConnectors Have the arrow head open or filled ('closed')?
+#'   ('open', 'closed').
+#' @param endsConnectors Which end of connectors to draw arrow head? ('last',
+#'   'first', 'both').
+#' @param lengthConnectors Length of the connectors.
+#' @param colConnectors Line colour of connectors.
+#' @param xlab Label for x-axis.
+#' @param xlabAngle Rotation angle of x-axis labels.
+#' @param xlabhjust Horizontal adjustment of x-axis labels.
+#' @param xlabvjust Vertical adjustment of x-axis labels.
+#' @param ylab Label for y-axis.
+#' @param ylabAngle Rotation angle of y-axis labels.
+#' @param ylabhjust Horizontal adjustment of y-axis labels.
+#' @param ylabvjust Vertical adjustment of y-axis labels.
+#' @param axisLabSize Size of x- and y-axis labels.
+#' @param title Plot title.
+#' @param subtitle Plot subtitle.
+#' @param caption Plot caption.
+#' @param titleLabSize Size of plot title.
+#' @param subtitleLabSize Size of plot subtitle.
+#' @param captionLabSize Size of plot caption.
+#' @param hline Draw one or more horizontal lines passing through this/these
+#'   values on y-axis. For single values, only a single numerical value is
+#'   necessary. For multiple lines, pass these as a vector, e.g., c(60,90).
+#' @param hlineType Line type for hline ('blank', 'solid', 'dashed', 'dotted',
+#'   'dotdash', 'longdash', 'twodash').
+#' @param hlineCol Colour of hline.
+#' @param hlineWidth Width of hline.
+#' @param vline Draw one or more vertical lines passing through this/these
+#'   values on x-axis. For single values, only a single numerical value is
+#'   necessary. For multiple lines, pass these as a vector, e.g., c(60,90).
+#' @param vlineType Line type for vline ('blank', 'solid', 'dashed', 'dotted',
+#'   'dotdash', 'longdash', 'twodash').
+#' @param vlineCol Colour of vline.
+#' @param vlineWidth Width of vline.
+#' @param gridlines.major Logical, indicating whether or not to draw major
+#'   gridlines.
+#' @param gridlines.minor Logical, indicating whether or not to draw minor
+#'   gridlines.
+#' @param borderWidth Width of the border on the x and y axes.
+#' @param borderColour Colour of the border on the x and y axes.
+#' @param returnPlot Logical, indicating whether or not to return the plot
+#'   object.
+#'
+#' @details Plot the component loadings for selected principal components / eigenvectors and label variables driving variation along these.
+#'
+#' @return A \code{\link{ggplot2}} object.
+#'
+#' @author Kevin Blighe <kevin@clinicalbioinformatics.co.uk>
+#'
+#' @examples
+#'   options(scipen=10)
+#'   options(digits=6)
+#'
+#'   col <- 20
+#'   row <- 20000
+#'   mat1 <- matrix(
+#'     rexp(col*row, rate = 0.1),
+#'     ncol = col)
+#'   rownames(mat1) <- paste0('gene', 1:nrow(mat1))
+#'   colnames(mat1) <- paste0('sample', 1:ncol(mat1))
+#'
+#'   mat2 <- matrix(
+#'     rexp(col*row, rate = 0.1),
+#'     ncol = col)
+#'   rownames(mat2) <- paste0('gene', 1:nrow(mat2))
+#'   colnames(mat2) <- paste0('sample', (ncol(mat1)+1):(ncol(mat1)+ncol(mat2)))
+#'
+#'   mat <- cbind(mat1, mat2)
+#'
+#'   metadata <- data.frame(row.names = colnames(mat))
+#'   metadata$Group <- rep(NA, ncol(mat))
+#'   metadata$Group[seq(1,40,2)] <- 'A'
+#'   metadata$Group[seq(2,40,2)] <- 'B'
+#'   metadata$CRP <- sample.int(100, size=ncol(mat), replace=TRUE)
+#'   metadata$ESR <- sample.int(100, size=ncol(mat), replace=TRUE)
+#'
+#'   p <- pca(mat, metadata = metadata, removeVar = 0.1)
+#'
+#'   plotloadings(p, drawConnectors = TRUE)
+#'
+#' @import ggplot2
+#' @import ggrepel
+#' @importFrom reshape2 melt
+#' @importFrom stats var
+#'
+#' @export
 plotloadings <- function(
   pcaobj,
   components = getComponents(pcaobj, seq_len(5)),

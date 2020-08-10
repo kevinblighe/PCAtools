@@ -1,7 +1,7 @@
 PCAtools: everything Principal Component Analysis
 ================
 Kevin Blighe, Aaron Lun
-2020-07-06
+2020-08-09
 
 # Introduction
 
@@ -896,11 +896,11 @@ sessionInfo()
     ## [8] methods   base     
     ## 
     ## other attached packages:
-    ##  [1] ggplotify_0.0.5      hgu133a.db_3.2.3     org.Hs.eg.db_3.11.4 
-    ##  [4] AnnotationDbi_1.50.0 IRanges_2.22.2       S4Vectors_0.26.1    
-    ##  [7] GEOquery_2.56.0      Biobase_2.48.0       BiocGenerics_0.34.0 
-    ## [10] PCAtools_2.1.14      cowplot_1.0.0        lattice_0.20-41     
-    ## [13] reshape2_1.4.4       ggrepel_0.8.2        ggplot2_3.3.2       
+    ##  [1] ggplotify_0.0.5      cowplot_1.0.0        hgu133a.db_3.2.3    
+    ##  [4] org.Hs.eg.db_3.11.4  AnnotationDbi_1.50.0 IRanges_2.22.2      
+    ##  [7] S4Vectors_0.26.1     GEOquery_2.56.0      Biobase_2.48.0      
+    ## [10] BiocGenerics_0.34.0  PCAtools_2.1.22      ggrepel_0.8.2       
+    ## [13] ggplot2_3.3.2       
     ## 
     ## loaded via a namespace (and not attached):
     ##  [1] maps_3.3.0                BiocSingular_1.4.0       
@@ -910,35 +910,36 @@ sessionInfo()
     ##  [9] dqrng_0.2.1               blob_1.2.1               
     ## [11] yaml_2.2.1                Rttf2pt1_1.3.8           
     ## [13] pillar_1.4.4              RSQLite_2.2.0            
-    ## [15] glue_1.4.1                limma_3.44.3             
-    ## [17] extrafontdb_1.0           digest_0.6.25            
-    ## [19] RColorBrewer_1.1-2        colorspace_1.4-1         
-    ## [21] htmltools_0.5.0           Matrix_1.2-18            
-    ## [23] plyr_1.8.6                pkgconfig_2.0.3          
-    ## [25] purrr_0.3.4               scales_1.1.1             
-    ## [27] BiocParallel_1.22.0       tibble_3.0.1             
-    ## [29] generics_0.0.2            farver_2.0.3             
-    ## [31] ellipsis_0.3.1            withr_2.2.0              
-    ## [33] magrittr_1.5              crayon_1.3.4             
-    ## [35] memoise_1.1.0             evaluate_0.14            
-    ## [37] ash_1.0-15                MASS_7.3-51.6            
-    ## [39] xml2_1.3.2                tools_4.0.2              
-    ## [41] hms_0.5.3                 lifecycle_0.2.0          
-    ## [43] matrixStats_0.56.0        stringr_1.4.0            
-    ## [45] munsell_0.5.0             DelayedArray_0.14.0      
-    ## [47] irlba_2.3.3               compiler_4.0.2           
-    ## [49] ggalt_0.4.0               rsvd_1.0.3               
-    ## [51] gridGraphics_0.5-0        rlang_0.4.6              
-    ## [53] grid_4.0.2                labeling_0.3             
-    ## [55] rmarkdown_2.3             proj4_1.0-10             
-    ## [57] gtable_0.3.0              DBI_1.1.0                
-    ## [59] curl_4.3                  R6_2.4.1                 
-    ## [61] knitr_1.29                dplyr_1.0.0              
-    ## [63] bit_1.1-15.2              extrafont_0.17           
-    ## [65] KernSmooth_2.23-17        readr_1.3.1              
-    ## [67] stringi_1.4.6             Rcpp_1.0.4.6             
-    ## [69] vctrs_0.3.1               tidyselect_1.1.0         
-    ## [71] xfun_0.15
+    ## [15] lattice_0.20-41           glue_1.4.1               
+    ## [17] limma_3.44.3              extrafontdb_1.0          
+    ## [19] digest_0.6.25             RColorBrewer_1.1-2       
+    ## [21] colorspace_1.4-1          htmltools_0.5.0          
+    ## [23] Matrix_1.2-18             plyr_1.8.6               
+    ## [25] pkgconfig_2.0.3           purrr_0.3.4              
+    ## [27] scales_1.1.1              BiocParallel_1.22.0      
+    ## [29] tibble_3.0.1              generics_0.0.2           
+    ## [31] farver_2.0.3              ellipsis_0.3.1           
+    ## [33] withr_2.2.0               magrittr_1.5             
+    ## [35] crayon_1.3.4              memoise_1.1.0            
+    ## [37] evaluate_0.14             ash_1.0-15               
+    ## [39] MASS_7.3-51.6             xml2_1.3.2               
+    ## [41] tools_4.0.2               hms_0.5.3                
+    ## [43] lifecycle_0.2.0           matrixStats_0.56.0       
+    ## [45] stringr_1.4.0             munsell_0.5.0            
+    ## [47] DelayedArray_0.14.0       irlba_2.3.3              
+    ## [49] compiler_4.0.2            ggalt_0.4.0              
+    ## [51] rsvd_1.0.3                gridGraphics_0.5-0       
+    ## [53] rlang_0.4.6               grid_4.0.2               
+    ## [55] labeling_0.3              rmarkdown_2.3            
+    ## [57] proj4_1.0-10              gtable_0.3.0             
+    ## [59] DBI_1.1.0                 curl_4.3                 
+    ## [61] reshape2_1.4.4            R6_2.4.1                 
+    ## [63] knitr_1.29                dplyr_1.0.0              
+    ## [65] bit_1.1-15.2              extrafont_0.17           
+    ## [67] KernSmooth_2.23-17        readr_1.3.1              
+    ## [69] stringi_1.4.6             Rcpp_1.0.4.6             
+    ## [71] vctrs_0.3.1               tidyselect_1.1.0         
+    ## [73] xfun_0.15
 
 # References
 

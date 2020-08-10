@@ -1,3 +1,128 @@
+#' Draw multiple bi-plots.
+#'
+#' @param pcaobj Object of class 'pca' created by pca().
+#' @param components The principal components to be included in the plot. These
+#'   will be compared in a pairwise fashion via multiple calls to biplot().
+#' @param triangle Logical, indicating whether or not to draw the plots in the
+#'   upper panel in a triangular arrangement? Principal component names will be
+#'   labeled along the diagonal.
+#' @param trianglelabSize Size of p rincipal component label (when triangle =
+#'   TRUE).
+#' @param plotaxes Logical, indicating whether or not to draw the axis tick,
+#'   labels, and titles.
+#' @param margingaps The margins between plots in the plot space. Takes the form
+#'   of a 'unit()' variable.
+#' @param ncol If triangle = FALSE, the number of columns in the final merged
+#'   plot.
+#' @param nrow If triangle = FALSE, the number of rows in the final merged
+#'   plot.
+#' @param x A principal component to plot on x-axis. All principal component
+#'   names are stored in pcaobj$label.
+#' @param y A principal component to plot on y-axis. All principal component
+#'   names are stored in pcaobj$label.
+#' @param colby If NULL, all points will be coloured differently. If not NULL,
+#'   value is assumed to be a column name in pcaobj$metadata relating to some
+#'   grouping/categorical variable.
+#' @param colkey Vector of name-value pairs relating to value passed to 'col',
+#'   e.g., c(A='forestgreen', B='gold').
+#' @param singlecol If specified, all points will be shaded by this colour.
+#'   Overrides 'col'.
+#' @param shape If NULL, all points will be have the same shape. If not NULL,
+#'   value is assumed to be a column name in pcaobj$metadata relating to some
+#'   grouping/categorical variable.
+#' @param shapekey Vector of name-value pairs relating to value passed to
+#'   'shape', e.g., c(A=10, B=21).
+#' @param pointSize Size of plotted points.
+#' @param legendPosition Position of legend ('top', 'bottom', 'left', 'right',
+#'   'none').
+#' @param legendLabSize Size of plot legend text.
+#' @param legendIconSize Size of plot legend icons / symbols.
+#' @param xlim Limits of the x-axis.
+#' @param ylim Limits of the y-axis.
+#' @param lab A vector containing labels to add to the plot.
+#' @param labSize Size of labels.
+#' @param labhjust Horizontal adjustment of label.
+#' @param labvjust Vertical adjustment of label.
+#' @param selectLab A vector containing a subset of lab to plot.
+#' @param drawConnectors Logical, indicating whether or not to connect plot
+#'   labels to their corresponding points by line connectors.
+#' @param widthConnectors Line width of connectors.
+#' @param colConnectors Line colour of connectors.
+#' @param xlab Label for x-axis.
+#' @param xlabAngle Rotation angle of x-axis labels.
+#' @param xlabhjust Horizontal adjustment of x-axis labels.
+#' @param xlabvjust Vertical adjustment of x-axis labels.
+#' @param ylab Label for y-axis.
+#' @param ylabAngle Rotation angle of y-axis labels.
+#' @param ylabhjust Horizontal adjustment of y-axis labels.
+#' @param ylabvjust Vertical adjustment of y-axis labels.
+#' @param axisLabSize Size of x- and y-axis labels.
+#' @param title Plot title.
+#' @param titleLabSize Size of plot title.
+#' @param hline Draw one or more horizontal lines passing through this/these
+#'   values on y-axis. For single values, only a single numerical value is
+#'   necessary. For multiple lines, pass these as a vector, e.g., c(60,90).
+#' @param hlineType Line type for hline ('blank', 'solid', 'dashed', 'dotted',
+#'   'dotdash', 'longdash', 'twodash').
+#' @param hlineCol Colour of hline.
+#' @param hlineWidth Width of hline.
+#' @param vline Draw one or more vertical lines passing through this/these
+#'   values on x-axis. For single values, only a single numerical value is
+#'   necessary. For multiple lines, pass these as a vector, e.g., c(60,90).
+#' @param vlineType Line type for vline ('blank', 'solid', 'dashed', 'dotted',
+#'   'dotdash', 'longdash', 'twodash').
+#' @param vlineCol Colour of vline.
+#' @param vlineWidth Width of vline.
+#' @param gridlines.major Logical, indicating whether or not to draw major
+#'   gridlines.
+#' @param gridlines.minor Logical, indicating whether or not to draw minor
+#'   gridlines.
+#' @param borderWidth Width of the border on the x and y axes.
+#' @param borderColour Colour of the border on the x and y axes.
+#' @param returnPlot Logical, indicating whether or not to return the plot
+#'   object.
+#'
+#' @details Draw multiple bi-plots.
+#'
+#' @return A \code{\link{cowplot}} object.
+#'
+#' @author Kevin Blighe <kevin@clinicalbioinformatics.co.uk>
+#'
+#' @examples
+#'   options(scipen=10)
+#'   options(digits=6)
+#'
+#'   col <- 20
+#'   row <- 20000
+#'   mat1 <- matrix(
+#'     rexp(col*row, rate = 0.1),
+#'     ncol = col)
+#'   rownames(mat1) <- paste0('gene', 1:nrow(mat1))
+#'   colnames(mat1) <- paste0('sample', 1:ncol(mat1))
+#'
+#'   mat2 <- matrix(
+#'     rexp(col*row, rate = 0.1),
+#'     ncol = col)
+#'   rownames(mat2) <- paste0('gene', 1:nrow(mat2))
+#'   colnames(mat2) <- paste0('sample', (ncol(mat1)+1):(ncol(mat1)+ncol(mat2)))
+#'
+#'   mat <- cbind(mat1, mat2)
+#'
+#'   metadata <- data.frame(row.names = colnames(mat))
+#'   metadata$Group <- rep(NA, ncol(mat))
+#'   metadata$Group[seq(1,40,2)] <- 'A'
+#'   metadata$Group[seq(2,40,2)] <- 'B'
+#'   metadata$CRP <- sample.int(100, size=ncol(mat), replace=TRUE)
+#'   metadata$ESR <- sample.int(100, size=ncol(mat), replace=TRUE)
+#'
+#'   p <- pca(mat, metadata = metadata, removeVar = 0.1)
+#'
+#'   pairsplot(p, triangle = TRUE)
+#'
+#' @import ggplot2
+#' @import cowplot
+#'
+#' @export
 pairsplot <- function(
   pcaobj,
   components = getComponents(pcaobj, seq_len(5)),

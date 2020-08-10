@@ -12,15 +12,14 @@ Description: Principal Component Analysis (PCA) is a very powerful technique tha
 License: GPL-3
 Depends:
   ggplot2,
-  ggrepel,
-  reshape2,
+  ggrepel
+Imports:
   lattice,
   grDevices,
-  cowplot
-Imports:
+  cowplot,
   methods,
+  reshape2,
   stats,
-  utils,
   Matrix,
   DelayedMatrixStats,
   DelayedArray,
@@ -50,5 +49,5 @@ biocViews: RNASeq, GeneExpression, Transcription, SingleCell, PrincipalComponent
 VignetteBuilder:
   knitr
 SystemRequirements: C++11
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 Encoding: UTF-8
