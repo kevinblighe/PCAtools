@@ -159,7 +159,7 @@ pca <- function(
   if (scale) {
     total.var <- length(vars)
   } else {
-    total.var <- sum(vars)
+    total.var <- sum(pcaobj$sdev ^ 2)
   }
   proportionvar <- (pcaobj$sdev ^ 2) / total.var * 100
 
