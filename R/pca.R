@@ -128,7 +128,12 @@ pca <- function(
   }
 
   # remove lower portion of variables based on variation
-  vars <- colVars(DelayedArray(mat))
+  if (center) {
+    vars <- colVars(DelayedArray(mat))
+  } else {
+    vars <- colVars(DelayedArray(mat), center = FALSE)
+  }
+
   if (!is.null(removeVar)) {
     message('-- removing the lower ', removeVar * 100,
       '% of variables based on variance')
