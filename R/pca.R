@@ -128,11 +128,8 @@ pca <- function(
   }
 
   # remove lower portion of variables based on variation
-  if (center) {
-    vars <- colVars(DelayedArray(mat))
-  } else {
-    vars <- colVars(DelayedArray(mat), center = FALSE)
-  }
+  .center <- if (center) NULL else 0
+  vars <- colVars(DelayedArray(mat), center=.center)
 
   if (!is.null(removeVar)) {
     message('-- removing the lower ', removeVar * 100,

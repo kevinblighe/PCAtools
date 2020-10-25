@@ -8,6 +8,12 @@ test_that("pca settings work as expected", {
 
     scaled <- pca(lcounts, scale=TRUE)
     expect_equal(as.matrix(scaled$rotated), prcomp(t(lcounts), scale=TRUE)$x)
+
+    not_centered <- pca(lcounts, center=FALSE, rank=10)
+    expect_equal(
+      as.matrix(not_centered$rotated),
+      prcomp(t(lcounts), center=FALSE, rank=10)$x
+    )
     
     trunc <- pca(lcounts, rank=10)
     expect_equal(as.matrix(trunc$rotated), prcomp(t(lcounts), rank=10)$x)
@@ -39,6 +45,12 @@ test_that("percentage of variance calculations are correct", {
     scaled <- pca(lcounts, rank=min(dim(lcounts)), scale=TRUE)
     expect_equal(sum(scaled$variance), 100)
     expect_false(isTRUE(all.equal(scaled, basic)))
+
+    not_centered <- pca(lcounts, center=FALSE, rank=10)
+    expect_equal(
+      round(not_centered$variance, 3),
+      round(summary(prcomp(t(lcounts), center=FALSE, rank=10))$importance[2, seq_len(10)] * 100, 3)
+    )
 
     removed <- pca(lcounts, rank=min(dim(lcounts)), removeVar=0.5)
     expect_equal(sum(removed$variance), 100)
