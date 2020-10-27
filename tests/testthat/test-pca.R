@@ -50,7 +50,8 @@ test_that("percentage of variance calculations are correct", {
     expect_equal(
       not_centered$variance,
       head(summary(prcomp(t(lcounts), center=FALSE, rank=10))$importance[2,], 10) * 100,
-      tolerance=1e-4, check.attributes=TRUE
+      tolerance=1e-4, # summary.prcomp rounds to 5th decimal place.
+      check.attributes=TRUE
     )
 
     removed <- pca(lcounts, rank=min(dim(lcounts)), removeVar=0.5)
