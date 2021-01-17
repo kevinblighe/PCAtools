@@ -136,7 +136,7 @@ The variables are indicated by arrows drawn from the origin, which indicate
 their 'weight' in different directions. We touch on this later via the
 *plotLoadings* function.
 
-```{r ex2b, fig.height = 7, fig.width = 7, fig.cap = 'Figure 2b: A bi-plot'}
+```{r ex2b, fig.height = 7, fig.width = 7, fig.cap = 'Figure 2: A bi-plot'}
 
   biplot(p, showLoadings = TRUE,
     labSize = 5, pointSize = 5, sizeLoadingsNames = 5)
@@ -223,7 +223,7 @@ Conduct principal component analysis (PCA):
 
 ```
 
-```{r ex3b, fig.height = 6, fig.width = 7, fig.cap = 'Figure 2b: A bi-plot'}
+```{r ex3b, fig.height = 6, fig.width = 7, fig.cap = 'Figure 3: A bi-plot'}
 
   biplot(p, showLoadings = TRUE, lab = NULL)
 
@@ -239,7 +239,7 @@ More on this later in this vignette.
 
 ## A pairs plot
 
-```{r ex4, message = FALSE, fig.height = 10, fig.width = 10, fig.cap = 'Figure 3: A pairs plot'}
+```{r ex4, message = FALSE, fig.height = 10, fig.width = 10, fig.cap = 'Figure 4: A pairs plot'}
 
   pairsplot(p)
 
@@ -251,7 +251,7 @@ If the biplot was previously generated with *showLoadings = TRUE*, check how
 this loadings plot corresponds to the biplot loadings - they should match up
 for the top hits.
 
-```{r ex5, fig.height = 6, fig.width = 8, fig.cap = 'Figure 4: A loadings plot'}
+```{r ex5, fig.height = 6, fig.width = 8, fig.cap = 'Figure 5: A loadings plot'}
 
   plotloadings(p, labSize = 3)
 
@@ -260,7 +260,7 @@ for the top hits.
 
 ## An eigencor plot
 
-```{r ex6, warning = FALSE, fig.height = 4, fig.width = 8, fig.cap = 'Figure 5: An eigencor plot'}
+```{r ex6, warning = FALSE, fig.height = 4, fig.width = 8, fig.cap = 'Figure 6: An eigencor plot'}
 
   eigencorplot(p,
     metavars = c('Study','Age','Distant.RFS','ER',
@@ -345,7 +345,7 @@ number of clusters in a dataset - there is no correct answer.
 
 Taking these values, we can produce a new scree plot and mark these:
 
-```{r ex7, fig.height = 7, fig.width = 9, fig.cap = 'Figure 6: Advanced scree plot illustrating optimum number of PCs'}
+```{r ex7, fig.height = 7, fig.width = 9, fig.cap = 'Figure 7: Advanced scree plot illustrating optimum number of PCs'}
 
   library(ggplot2)
 
@@ -382,7 +382,7 @@ In a bi-plot, we can shade the points by different groups and add many more feat
 
 ### Colour by a metadata factor, use a custom label, add lines through origin, and add legend
 
-```{r ex8, fig.height = 7, fig.width = 7.5, fig.cap = 'Figure 7: Colour by a metadata factor, use a custom label, add lines through origin, and add legend'}
+```{r ex8, fig.height = 7, fig.width = 7.5, fig.cap = 'Figure 8: Colour by a metadata factor, use a custom label, add lines through origin, and add legend'}
 
   biplot(p,
     lab = paste0(p$metadata$Age, ' años'),
@@ -399,7 +399,7 @@ The encircle functionality literally draws a polygon around
 each group specified by *colby*. It says nothing about any statistic
 pertaining to each group.
 
-```{r ex9, message = FALSE, fig.height = 7.5, fig.width = 7, fig.cap = 'Figure 8: Supply custom colours and encircle variables by group'}
+```{r ex9, message = FALSE, fig.height = 7.5, fig.width = 7, fig.cap = 'Figure 9: Supply custom colours and encircle variables by group'}
 
   biplot(p,
     colby = 'ER', colkey = c('ER+' = 'forestgreen', 'ER-' = 'purple'),
@@ -428,7 +428,7 @@ Stat ellipses are also drawn around each group but have a greater statistical
 meaning and can be used, for example, as a strict determination of outlier
 samples. Here, we draw ellipses around each group at the 95% confidence level:
 
-```{r ex10, message = FALSE, fig.height = 7.5, fig.width = 7, fig.cap = 'Figure 9: Stat ellipses'}
+```{r ex10, message = FALSE, fig.height = 7.5, fig.width = 7, fig.cap = 'Figure 10: Stat ellipses'}
 
   biplot(p,
     colby = 'ER', colkey = c('ER+' = 'forestgreen', 'ER-' = 'purple'),
@@ -496,7 +496,7 @@ samples. Here, we draw ellipses around each group at the 95% confidence level:
 
 Let's plot the same as above but with loadings:
 
-```{r ex12b, message = FALSE, fig.height = 5.5, fig.width = 11, fig.cap = 'Figure 11b: Modify line types, remove gridlines, and increase point size'}
+```{r ex12b, message = FALSE, fig.height = 5.5, fig.width = 11, fig.cap = 'Figure 11: Modify line types, remove gridlines, and increase point size'}
 
   biplot(p,
     # loadings parameters
@@ -525,7 +525,7 @@ Let's plot the same as above but with loadings:
 There are two ways to colour by a continuous variable. In the first way, we simply
 'add on' a continuous colour scale via *scale_colour_gradient*:
 
-```{r ex13a, fig.height = 5.5, fig.width = 6, fig.cap = 'Figure 12a: Colour by a continuous variable and plot other PCs'}
+```{r ex13a, fig.height = 5.5, fig.width = 6, fig.cap = 'Figure 12: Colour by a continuous variable and plot other PCs'}
 
   # add ESR1 gene expression to the metadata
   p$metadata$ESR1 <- mat['205225_at',]
@@ -647,7 +647,7 @@ With the loadings plot, in addition, we can instead plot absolute values and
 modify the point sizes to be proportional to the loadings. We can also switch
 off the line connectors and plot the loadings for any PCs
 
-```{r ex17, fig.height = 7, fig.width = 9, fig.cap = 'Figure 16: plotting absolute component loadings'}
+```{r ex17a, fig.height = 7, fig.width = 9, fig.cap = 'Figure 16: plotting absolute component loadings'}
 
   plotloadings(p,
     components = getComponents(p, c(4,33,11,1)),
@@ -663,6 +663,19 @@ off the line connectors and plot the loadings for any PCs
 
 ```
 
+We can plot just this single PC and flip the plot on its side, if we wish:
+
+```{r ex17b, fig.height = 4.5, fig.width = 9, fig.cap = 'Figure 17: plotting absolute component loadings'}
+
+  plotloadings(p,
+    components = getComponents(p, c(2)),
+    rangeRetain = 0.12, absolute = TRUE,
+    col = c('black', 'pink', 'red4'),
+    drawConnectors = TRUE, labSize = 4) + coord_flip()
+
+```
+
+
 ## Correlate the principal components back to the clinical data
 
 Further exploration of the PCs can come through correlations with clinical
@@ -677,7 +690,7 @@ correlations.
 [CorLevelPlot](https://github.com/kevinblighe/CorLevelPlot). Further examples
 can be found there.
 
-```{r ex18a, warning = FALSE, fig.height = 4.25, fig.width = 12, fig.cap = 'Figure 17a: Correlate the principal components back to the clinical data'}
+```{r ex18a, warning = FALSE, fig.height = 4.25, fig.width = 12, fig.cap = 'Figure 18: Correlate the principal components back to the clinical data'}
 
   eigencorplot(p,
     components = getComponents(p, 1:27),
@@ -701,7 +714,7 @@ can be found there.
 We can also supply different cut-offs for statistical significance, apply
 p-value adjustment, plot R-squared values, and specify correlation method:
 
-```{r ex18b, warning = FALSE, fig.height = 5, fig.width = 12, fig.cap = 'Figure 17b: Correlate the principal components back to the clinical data'}
+```{r ex18b, warning = FALSE, fig.height = 5, fig.width = 12, fig.cap = 'Figure 19: Correlate the principal components back to the clinical data'}
 
   eigencorplot(p,
     components = getComponents(p, 1:horn$n),
@@ -735,7 +748,7 @@ just a bi-plot used to identify outliers!
 
 ## Plot the entire project on a single panel
 
-```{r ex19, message = FALSE, warning = FALSE, fig.height = 10, fig.width = 15, fig.cap = 'Figure 18: a merged panel of all PCAtools plots'}
+```{r ex19, message = FALSE, warning = FALSE, fig.height = 10, fig.width = 15, fig.cap = 'Figure 20: a merged panel of all PCAtools plots'}
 
   pscree <- screeplot(p, components = getComponents(p, 1:30),
     hline = 80, vline = 27, axisLabSize = 14, titleLabSize = 20,

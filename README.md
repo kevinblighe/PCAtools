@@ -130,7 +130,7 @@ on this later via the *plotLoadings* function.
     labSize = 5, pointSize = 5, sizeLoadingsNames = 5)
 ```
 
-![Figure 2b: A bi-plot](README_files/figure-gfm/ex2b-1.png)
+![Figure 2: A bi-plot](README_files/figure-gfm/ex2b-1.png)
 
 # Quick start: Gene Expression Omnibus (GEO)
 
@@ -214,7 +214,7 @@ Conduct principal component analysis (PCA):
   biplot(p, showLoadings = TRUE, lab = NULL)
 ```
 
-![Figure 2b: A bi-plot](README_files/figure-gfm/ex3b-1.png)
+![Figure 3: A bi-plot](README_files/figure-gfm/ex3b-1.png)
 
 One of the probes pointing downward is *205225\_at*, which targets the
 *ESR1* gene. This is already a useful validation, as the oestrogen
@@ -230,7 +230,7 @@ More on this later in this vignette.
   pairsplot(p)
 ```
 
-![Figure 3: A pairs plot](README_files/figure-gfm/ex4-1.png)
+![Figure 4: A pairs plot](README_files/figure-gfm/ex4-1.png)
 
 ## A loadings plot
 
@@ -247,7 +247,7 @@ match up for the top
 
     ## 215281_x_at, 214464_at, 211122_s_at, 210163_at, 204533_at, 205225_at, 209351_at, 205044_at, 202037_s_at, 204540_at, 215176_x_at, 214768_x_at, 212671_s_at, 219415_at, 37892_at, 208650_s_at, 206754_s_at, 205358_at, 205380_at, 205825_at
 
-![Figure 4: A loadings plot](README_files/figure-gfm/ex5-1.png)
+![Figure 5: A loadings plot](README_files/figure-gfm/ex5-1.png)
 
 ## An eigencor plot
 
@@ -257,7 +257,7 @@ match up for the top
       'GGI','Grade','Size','Time.RFS'))
 ```
 
-![Figure 5: An eigencor plot](README_files/figure-gfm/ex6-1.png)
+![Figure 6: An eigencor plot](README_files/figure-gfm/ex6-1.png)
 
 ## Access the internal data
 
@@ -367,7 +367,7 @@ Taking these values, we can produce a new scree plot and mark these:
       label = 'Elbow method', vjust = -1, size = 8))
 ```
 
-![Figure 6: Advanced scree plot illustrating optimum number of
+![Figure 7: Advanced scree plot illustrating optimum number of
 PCs](README_files/figure-gfm/ex7-1.png)
 
 If all else fails, one can simply take the number of PCs that
@@ -402,7 +402,7 @@ features.
     legendPosition = 'right')
 ```
 
-![Figure 7: Colour by a metadata factor, use a custom label, add lines
+![Figure 8: Colour by a metadata factor, use a custom label, add lines
 through origin, and add legend](README_files/figure-gfm/ex8-1.png)
 
 ### Supply custom colours and encircle variables by group
@@ -422,7 +422,7 @@ each group.
     legendPosition = 'top', legendLabSize = 16, legendIconSize = 8.0)
 ```
 
-![Figure 8: Supply custom colours and encircle variables by
+![Figure 9: Supply custom colours and encircle variables by
 group](README_files/figure-gfm/ex9-1.png)
 
 ``` r
@@ -436,7 +436,7 @@ group](README_files/figure-gfm/ex9-1.png)
     legendPosition = 'top', legendLabSize = 16, legendIconSize = 8.0)
 ```
 
-![Figure 8: Supply custom colours and encircle variables by
+![Figure 9: Supply custom colours and encircle variables by
 group](README_files/figure-gfm/ex9-2.png)
 
 ### Stat ellipses
@@ -460,7 +460,7 @@ group at the 95% confidence level:
     legendPosition = 'top', legendLabSize = 16, legendIconSize = 8.0)
 ```
 
-![Figure 9: Stat ellipses](README_files/figure-gfm/ex10-1.png)
+![Figure 10: Stat ellipses](README_files/figure-gfm/ex10-1.png)
 
 ``` r
   biplot(p,
@@ -477,7 +477,7 @@ group at the 95% confidence level:
     legendPosition = 'top', legendLabSize = 16, legendIconSize = 8.0)
 ```
 
-![Figure 9: Stat
+![Figure 10: Stat
 ellipses](README_files/figure-gfm/ex10-2.png)
 
 ### Change shape based on tumour grade, remove connectors, and add titles
@@ -536,7 +536,7 @@ Let’s plot the same as above but with loadings:
       caption = '27 PCs ≈ 80%')
 ```
 
-![Figure 11b: Modify line types, remove gridlines, and increase point
+![Figure 11: Modify line types, remove gridlines, and increase point
 size](README_files/figure-gfm/ex12b-1.png)
 
 ### Colour by a continuous variable and plot other PCs
@@ -560,7 +560,7 @@ we simply ‘add on’ a continuous colour scale via
   scale_colour_gradient(low = 'gold', high = 'red2')
 ```
 
-![Figure 12a: Colour by a continuous variable and plot other
+![Figure 12: Colour by a continuous variable and plot other
 PCs](README_files/figure-gfm/ex13a-1.png)
 
 We can also just permit that the internal *ggplot2* engine picks the
@@ -693,7 +693,25 @@ also switch off the line connectors and plot the loadings for any PCs
     ## CXCL11, IGKC, CXCL9, 210163_at, 214768_x_at, 211645_x_at, 211644_x_at, IGHA1, 216491_x_at, 214777_at, 216576_x_at, 212671_s_at, IL23A, PLAAT4, 212588_at, 212998_x_at, KRT14, GABRP, SOX10, PTX3, TTYH1, CPB1, KRT15, MYBPC1, DST, CXADR, GALNT3, CDH3, TCIM, DHRS2, MMP1, CRABP1, CST1, MAGEA3, ACOX2, PRKAR2B, PLCB1, HDGFL3, CYP2B6, ORM1, 205040_at, HSPB8, SCGB2A2, JCHAIN, POGZ, 213872_at, DYNC2LI1, CDC42BPA
 
 ![Figure 16: plotting absolute component
-loadings](README_files/figure-gfm/ex17-1.png)
+loadings](README_files/figure-gfm/ex17a-1.png)
+
+We can plot just this single PC and flip the plot on its side, if we
+wish:
+
+``` r
+  plotloadings(p,
+    components = getComponents(p, c(2)),
+    rangeRetain = 0.12, absolute = TRUE,
+    col = c('black', 'pink', 'red4'),
+    drawConnectors = TRUE, labSize = 4) + coord_flip()
+```
+
+    ## -- variables retained:
+
+    ## S100A8, PROM1, CXCL11, MMP1, FABP7, 205029_s_at, CXCL9, 210163_at, UBD, IGHG3, RARRES1, 206392_s_at, CXCL10, GBP1, ASPM, CDC20, NAT1, ESR1, SCUBE2
+
+![Figure 17: plotting absolute component
+loadings](README_files/figure-gfm/ex17b-1.png)
 
 ## Correlate the principal components back to the clinical data
 
@@ -729,7 +747,7 @@ examples can be found there.
     plotRsquared = FALSE)
 ```
 
-![Figure 17a: Correlate the principal components back to the clinical
+![Figure 18: Correlate the principal components back to the clinical
 data](README_files/figure-gfm/ex18a-1.png)
 
 We can also supply different cut-offs for statistical significance,
@@ -756,7 +774,7 @@ method:
     signifCutpoints = c(0, 0.0001, 0.001, 0.01, 0.05, 1))
 ```
 
-![Figure 17b: Correlate the principal components back to the clinical
+![Figure 19: Correlate the principal components back to the clinical
 data](README_files/figure-gfm/ex18b-1.png)
 
 Clearly, PC2 is coming across as the most interesting PC in this
@@ -860,7 +878,7 @@ than just a bi-plot used to identify outliers\!
       rel_heights = c(1.1, 0.9))
 ```
 
-![Figure 18: a merged panel of all PCAtools
+![Figure 20: a merged panel of all PCAtools
 plots](README_files/figure-gfm/ex19-1.png)
 
 ## Make predictions on new data
