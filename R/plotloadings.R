@@ -166,7 +166,7 @@ plotloadings <- function(
   returnPlot = TRUE)
 {
   # filter in the variables in the top percentRetain of the loadings range
-  x <- pcaobj$loadings[,components]
+  x <- pcaobj$loadings[,components, drop = FALSE]
   retain <- c()
   for (i in seq_along(components)) {
     # for each PC, based on the loadings range, calculate the rangeRetain
@@ -184,13 +184,13 @@ plotloadings <- function(
   }
   message('-- variables retained:')
   message(paste0(rownames(x)[retain], collapse = ', '))
-  x <- x[retain,]
+  x <- x[retain,, drop = FALSE]
 
   PC <- Loading <- NULL
 
   # create a plot object (2-col df) of PC names and
   # explained variance of each
-  x <- data.frame(rownames(x), x[,components])
+  x <- data.frame(rownames(x), x[,components, drop = FALSE])
   colnames(x)[1] <- 'var'
   plotobj <- melt(x, id = 'var')
   colnames(plotobj) <- c('var','PC','Loading')

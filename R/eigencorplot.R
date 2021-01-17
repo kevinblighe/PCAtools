@@ -179,8 +179,8 @@ eigencorplot <- function(
   #	Character (A-Z a-z) are converted to NA
   #	Character numbers are converted to integers
   #	Factors are converted to numbers based on level ordering
-  xvals <- data.matrix(data[,which(colnames(data) %in% components)])
-  yvals <- metadata[,which(colnames(metadata) %in% metavars)]
+  xvals <- data.matrix(data[,which(colnames(data) %in% components), drop = FALSE])
+  yvals <- metadata[,which(colnames(metadata) %in% metavars), drop = FALSE]
 
   ### code courtesy of aleighbrown
     # let's make sure that anything that isnt' numeric becomes a numeric

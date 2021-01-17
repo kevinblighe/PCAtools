@@ -1,4 +1,9 @@
 
+CHANGES IN VERSION 2.4.0
+------------------------
+ - added DESeq2 section to vignette intro
+ - permit that users can now specifiy just a single PC for plotloadings()
+
 CHANGES IN VERSION 2.2.0
 ------------------------
  - added support to overlay variable loadings arrows on biplot

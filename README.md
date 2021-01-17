@@ -1,7 +1,7 @@
 PCAtools: everything Principal Component Analysis
 ================
 Kevin Blighe, Aaron Lun
-2020-08-09
+2021-01-17
 
 # Introduction
 
@@ -51,11 +51,94 @@ Note: to install development version direct from GitHub:
     library(PCAtools)
 ```
 
-# Quick start
+# Quick start: *DESeq2*
 
-For this vignette, we will load breast cancer gene expression data with
-recurrence free survival (RFS) from [Gene Expression Profiling in Breast
-Cancer: Understanding the Molecular Basis of Histologic Grade To Improve
+For this example, we will follow the tutorial (from Section 3.1) of
+[RNA-seq workflow: gene-level exploratory analysis and differential
+expression](http://master.bioconductor.org/packages/release/workflows/vignettes/rnaseqGene/inst/doc/rnaseqGene.html).
+Specifically, we will load the ‘airway’ data, where different airway
+smooth muscle cells were treated with dexamethasone.
+
+``` r
+  library(airway)
+  library(magrittr)
+
+  data('airway')
+  airway$dex %<>% relevel('untrt')
+```
+
+Annotate the Ensembl gene IDs to gene symbols:
+
+``` r
+  ens <- rownames(airway)
+
+  library(org.Hs.eg.db)
+  symbols <- mapIds(org.Hs.eg.db, keys = ens,
+    column = c('SYMBOL'), keytype = 'ENSEMBL')
+  symbols <- symbols[!is.na(symbols)]
+  symbols <- symbols[match(rownames(airway), names(symbols))]
+  rownames(airway) <- symbols
+  keep <- !is.na(rownames(airway))
+  airway <- airway[keep,]
+```
+
+Normalise the data and transform the normalised counts to
+variance-stabilised expression levels:
+
+``` r
+  library('DESeq2')
+
+  dds <- DESeqDataSet(airway, design = ~ cell + dex)
+  dds <- DESeq(dds)
+  vst <- assay(vst(dds))
+```
+
+## Conduct principal component analysis (PCA):
+
+``` r
+  p <- pca(vst, metadata = colData(airway), removeVar = 0.1)
+```
+
+    ## -- removing the lower 10% of variables based on variance
+
+## A scree plot
+
+``` r
+  screeplot(p, axisLabSize = 18, titleLabSize = 22)
+```
+
+![Figure 1: A scree plot](README_files/figure-gfm/ex1-1.png)
+
+## A bi-plot
+
+Different interpretations of the biplot exist. In the OMICs era, for
+most general users, a biplot is a simple representation of samples in a
+2-dimensional space, usually focusing on just the first two PCs:
+
+``` r
+  biplot(p)
+```
+
+However, the original definition of a biplot by Gabriel KR (Gabriel
+1971) is a plot that plots both variables and observatinos (samples) in
+the same space. The variables are indicated by arrows drawn from the
+origin, which indicate their ‘weight’ in different directions. We touch
+on this later via the *plotLoadings* function.
+
+``` r
+  biplot(p, showLoadings = TRUE,
+    labSize = 5, pointSize = 5, sizeLoadingsNames = 5)
+```
+
+![Figure 2b: A bi-plot](README_files/figure-gfm/ex2b-1.png)
+
+# Quick start: Gene Expression Omnibus (GEO)
+
+Here, we will instead start with data from [Gene Expression
+Omnibus](https://www.ncbi.nlm.nih.gov/geo/). We will load breast cancer
+gene expression data with recurrence free survival (RFS) from [Gene
+Expression Profiling in Breast Cancer: Understanding the Molecular Basis
+of Histologic Grade To Improve
 Prognosis](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE2990).
 
 First, let’s read in and prepare the data:
@@ -121,35 +204,17 @@ Conduct principal component analysis (PCA):
 
     ## -- removing the lower 10% of variables based on variance
 
-## A scree plot
-
-``` r
-  screeplot(p, axisLabSize = 18, titleLabSize = 22)
-```
-
-![Figure 1: A scree plot](README_files/figure-gfm/ex1-1.png)
-
 ## A bi-plot
-
-Different interpretations of the biplot exist. In the OMICs era, for
-most general users, a biplot is a simple representation of samples in a
-2-dimensional space, usually focusing on just the first two PCs:
 
 ``` r
   biplot(p)
 ```
 
-However, the original definition of a biplot by Gabriel KR (Gabriel
-1971) is a plot that plots both variables and observatinos (samples) in
-the same space. The variables are indicated by arrows drawn from the
-origin, which indicate their ‘weight’ in different directions. We touch
-on this later via the *plotLoadings* function.
-
 ``` r
   biplot(p, showLoadings = TRUE, lab = NULL)
 ```
 
-![Figure 2b: A bi-plot](README_files/figure-gfm/ex2b-1.png)
+![Figure 2b: A bi-plot](README_files/figure-gfm/ex3b-1.png)
 
 One of the probes pointing downward is *205225\_at*, which targets the
 *ESR1* gene. This is already a useful validation, as the oestrogen
@@ -165,7 +230,7 @@ More on this later in this vignette.
   pairsplot(p)
 ```
 
-![Figure 3: A pairs plot](README_files/figure-gfm/ex3-1.png)
+![Figure 3: A pairs plot](README_files/figure-gfm/ex4-1.png)
 
 ## A loadings plot
 
@@ -182,7 +247,7 @@ match up for the top
 
     ## 215281_x_at, 214464_at, 211122_s_at, 210163_at, 204533_at, 205225_at, 209351_at, 205044_at, 202037_s_at, 204540_at, 215176_x_at, 214768_x_at, 212671_s_at, 219415_at, 37892_at, 208650_s_at, 206754_s_at, 205358_at, 205380_at, 205825_at
 
-![Figure 4: A loadings plot](README_files/figure-gfm/ex4-1.png)
+![Figure 4: A loadings plot](README_files/figure-gfm/ex5-1.png)
 
 ## An eigencor plot
 
@@ -192,7 +257,7 @@ match up for the top
       'GGI','Grade','Size','Time.RFS'))
 ```
 
-![Figure 5: An eigencor plot](README_files/figure-gfm/ex5-1.png)
+![Figure 5: An eigencor plot](README_files/figure-gfm/ex6-1.png)
 
 ## Access the internal data
 
@@ -303,7 +368,7 @@ Taking these values, we can produce a new scree plot and mark these:
 ```
 
 ![Figure 6: Advanced scree plot illustrating optimum number of
-PCs](README_files/figure-gfm/ex6-1.png)
+PCs](README_files/figure-gfm/ex7-1.png)
 
 If all else fails, one can simply take the number of PCs that
 contributes to a pre-selected total of explained variation, e.g., in
@@ -338,7 +403,7 @@ features.
 ```
 
 ![Figure 7: Colour by a metadata factor, use a custom label, add lines
-through origin, and add legend](README_files/figure-gfm/ex7-1.png)
+through origin, and add legend](README_files/figure-gfm/ex8-1.png)
 
 ### Supply custom colours and encircle variables by group
 
@@ -358,7 +423,7 @@ each group.
 ```
 
 ![Figure 8: Supply custom colours and encircle variables by
-group](README_files/figure-gfm/ex8-1.png)
+group](README_files/figure-gfm/ex9-1.png)
 
 ``` r
   biplot(p,
@@ -372,7 +437,7 @@ group](README_files/figure-gfm/ex8-1.png)
 ```
 
 ![Figure 8: Supply custom colours and encircle variables by
-group](README_files/figure-gfm/ex8-2.png)
+group](README_files/figure-gfm/ex9-2.png)
 
 ### Stat ellipses
 
@@ -395,7 +460,7 @@ group at the 95% confidence level:
     legendPosition = 'top', legendLabSize = 16, legendIconSize = 8.0)
 ```
 
-![Figure 9: Stat ellipses](README_files/figure-gfm/ex9-1.png)
+![Figure 9: Stat ellipses](README_files/figure-gfm/ex10-1.png)
 
 ``` r
   biplot(p,
@@ -413,7 +478,7 @@ group at the 95% confidence level:
 ```
 
 ![Figure 9: Stat
-ellipses](README_files/figure-gfm/ex9-2.png)
+ellipses](README_files/figure-gfm/ex10-2.png)
 
 ### Change shape based on tumour grade, remove connectors, and add titles
 
@@ -472,7 +537,7 @@ Let’s plot the same as above but with loadings:
 ```
 
 ![Figure 11b: Modify line types, remove gridlines, and increase point
-size](README_files/figure-gfm/ex11b-1.png)
+size](README_files/figure-gfm/ex12b-1.png)
 
 ### Colour by a continuous variable and plot other PCs
 
@@ -496,7 +561,7 @@ we simply ‘add on’ a continuous colour scale via
 ```
 
 ![Figure 12a: Colour by a continuous variable and plot other
-PCs](README_files/figure-gfm/ex12a-1.png)
+PCs](README_files/figure-gfm/ex13a-1.png)
 
 We can also just permit that the internal *ggplot2* engine picks the
 colour scheme - here, we also plot PC10 versus PC50:
@@ -542,7 +607,7 @@ additionally help us to rapidly skim over the data.
 ```
 
 ![Figure 13: Quickly explore potentially informative PCs via a pairs
-plot](README_files/figure-gfm/ex13-1.png)
+plot](README_files/figure-gfm/ex14-1.png)
 
 We can arrange these in a way that makes better use of the screen space
 by setting ‘triangle = FALSE’. In this case, we can further control the
@@ -563,7 +628,7 @@ will automatically determine these based on your input data.
 ```
 
 ![Figure 14: arranging a pairs plot
-horizontally](README_files/figure-gfm/ex14-1.png)
+horizontally](README_files/figure-gfm/ex15-1.png)
 
 ## Determine the variables that drive variation among each PC
 
@@ -597,7 +662,7 @@ range per PC.
     ## POGZ, CDC42BPA, CXCL11, ESR1, SFRP1, EEF1A2, IGKC, GABRP, CD24, PDZK1
 
 ![Figure 15: Determine the variables that drive variation among each
-PC](README_files/figure-gfm/ex15-1.png)
+PC](README_files/figure-gfm/ex16-1.png)
 
 At least one interesting finding is *205225\_at* / *ESR1*, which is by
 far the gene most responsible for variation along PC2. The previous
@@ -628,7 +693,7 @@ also switch off the line connectors and plot the loadings for any PCs
     ## CXCL11, IGKC, CXCL9, 210163_at, 214768_x_at, 211645_x_at, 211644_x_at, IGHA1, 216491_x_at, 214777_at, 216576_x_at, 212671_s_at, IL23A, PLAAT4, 212588_at, 212998_x_at, KRT14, GABRP, SOX10, PTX3, TTYH1, CPB1, KRT15, MYBPC1, DST, CXADR, GALNT3, CDH3, TCIM, DHRS2, MMP1, CRABP1, CST1, MAGEA3, ACOX2, PRKAR2B, PLCB1, HDGFL3, CYP2B6, ORM1, 205040_at, HSPB8, SCGB2A2, JCHAIN, POGZ, 213872_at, DYNC2LI1, CDC42BPA
 
 ![Figure 16: plotting absolute component
-loadings](README_files/figure-gfm/ex16-1.png)
+loadings](README_files/figure-gfm/ex17-1.png)
 
 ## Correlate the principal components back to the clinical data
 
@@ -665,7 +730,7 @@ examples can be found there.
 ```
 
 ![Figure 17a: Correlate the principal components back to the clinical
-data](README_files/figure-gfm/ex17a-1.png)
+data](README_files/figure-gfm/ex18a-1.png)
 
 We can also supply different cut-offs for statistical significance,
 apply p-value adjustment, plot R-squared values, and specify correlation
@@ -692,7 +757,7 @@ method:
 ```
 
 ![Figure 17b: Correlate the principal components back to the clinical
-data](README_files/figure-gfm/ex17b-1.png)
+data](README_files/figure-gfm/ex18b-1.png)
 
 Clearly, PC2 is coming across as the most interesting PC in this
 experiment, with highly statistically significant correlation
@@ -796,7 +861,7 @@ than just a bi-plot used to identify outliers\!
 ```
 
 ![Figure 18: a merged panel of all PCAtools
-plots](README_files/figure-gfm/ex18-1.png)
+plots](README_files/figure-gfm/ex19-1.png)
 
 ## Make predictions on new data
 
@@ -876,9 +941,9 @@ suggestions from:
 sessionInfo()
 ```
 
-    ## R version 4.0.2 (2020-06-22)
+    ## R version 4.0.3 (2020-10-10)
     ## Platform: x86_64-pc-linux-gnu (64-bit)
-    ## Running under: Ubuntu 16.04.6 LTS
+    ## Running under: Ubuntu 16.04.7 LTS
     ## 
     ## Matrix products: default
     ## BLAS:   /usr/lib/atlas-base/atlas/libblas.so.3.0
@@ -893,54 +958,65 @@ sessionInfo()
     ## [11] LC_MEASUREMENT=en_GB.UTF-8 LC_IDENTIFICATION=C       
     ## 
     ## attached base packages:
-    ## [1] stats4    parallel  stats     graphics  grDevices utils     datasets 
+    ## [1] parallel  stats4    stats     graphics  grDevices utils     datasets 
     ## [8] methods   base     
     ## 
     ## other attached packages:
-    ##  [1] ggplotify_0.0.5      cowplot_1.0.0        hgu133a.db_3.2.3    
-    ##  [4] org.Hs.eg.db_3.11.4  AnnotationDbi_1.50.0 IRanges_2.22.2      
-    ##  [7] S4Vectors_0.26.1     GEOquery_2.56.0      Biobase_2.48.0      
-    ## [10] BiocGenerics_0.34.0  PCAtools_2.1.22      ggrepel_0.8.2       
-    ## [13] ggplot2_3.3.2       
+    ##  [1] ggplotify_0.0.5             cowplot_1.0.0              
+    ##  [3] hgu133a.db_3.2.3            GEOquery_2.56.0            
+    ##  [5] DESeq2_1.28.1               org.Hs.eg.db_3.11.4        
+    ##  [7] AnnotationDbi_1.50.0        magrittr_1.5               
+    ##  [9] airway_1.8.0                SummarizedExperiment_1.18.1
+    ## [11] DelayedArray_0.14.0         matrixStats_0.56.0         
+    ## [13] Biobase_2.48.0              GenomicRanges_1.40.0       
+    ## [15] GenomeInfoDb_1.24.2         IRanges_2.22.2             
+    ## [17] S4Vectors_0.26.1            BiocGenerics_0.34.0        
+    ## [19] PCAtools_2.3.1              ggrepel_0.8.2              
+    ## [21] ggplot2_3.3.2              
     ## 
     ## loaded via a namespace (and not attached):
-    ##  [1] maps_3.3.0                BiocSingular_1.4.0       
-    ##  [3] tidyr_1.1.0               bit64_0.9-7              
-    ##  [5] DelayedMatrixStats_1.10.0 BiocManager_1.30.10      
-    ##  [7] rvcheck_0.1.8             highr_0.8                
-    ##  [9] dqrng_0.2.1               blob_1.2.1               
-    ## [11] yaml_2.2.1                Rttf2pt1_1.3.8           
-    ## [13] pillar_1.4.4              RSQLite_2.2.0            
-    ## [15] lattice_0.20-41           glue_1.4.1               
-    ## [17] limma_3.44.3              extrafontdb_1.0          
-    ## [19] digest_0.6.25             RColorBrewer_1.1-2       
-    ## [21] colorspace_1.4-1          htmltools_0.5.0          
-    ## [23] Matrix_1.2-18             plyr_1.8.6               
-    ## [25] pkgconfig_2.0.3           purrr_0.3.4              
-    ## [27] scales_1.1.1              BiocParallel_1.22.0      
-    ## [29] tibble_3.0.1              generics_0.0.2           
-    ## [31] farver_2.0.3              ellipsis_0.3.1           
-    ## [33] withr_2.2.0               magrittr_1.5             
-    ## [35] crayon_1.3.4              memoise_1.1.0            
-    ## [37] evaluate_0.14             ash_1.0-15               
-    ## [39] MASS_7.3-51.6             xml2_1.3.2               
-    ## [41] tools_4.0.2               hms_0.5.3                
-    ## [43] lifecycle_0.2.0           matrixStats_0.56.0       
-    ## [45] stringr_1.4.0             munsell_0.5.0            
-    ## [47] DelayedArray_0.14.0       irlba_2.3.3              
-    ## [49] compiler_4.0.2            ggalt_0.4.0              
-    ## [51] rsvd_1.0.3                gridGraphics_0.5-0       
-    ## [53] rlang_0.4.6               grid_4.0.2               
-    ## [55] labeling_0.3              rmarkdown_2.3            
-    ## [57] proj4_1.0-10              gtable_0.3.0             
-    ## [59] DBI_1.1.0                 curl_4.3                 
-    ## [61] reshape2_1.4.4            R6_2.4.1                 
-    ## [63] knitr_1.29                dplyr_1.0.0              
-    ## [65] bit_1.1-15.2              extrafont_0.17           
-    ## [67] KernSmooth_2.23-17        readr_1.3.1              
-    ## [69] stringi_1.4.6             Rcpp_1.0.4.6             
-    ## [71] vctrs_0.3.1               tidyselect_1.1.0         
-    ## [73] xfun_0.15
+    ##  [1] bitops_1.0-6              bit64_0.9-7              
+    ##  [3] ash_1.0-15                RColorBrewer_1.1-2       
+    ##  [5] tools_4.0.3               R6_2.4.1                 
+    ##  [7] irlba_2.3.3               KernSmooth_2.23-17       
+    ##  [9] DBI_1.1.0                 colorspace_1.4-1         
+    ## [11] withr_2.2.0               tidyselect_1.1.0         
+    ## [13] ggalt_0.4.0               bit_1.1-15.2             
+    ## [15] curl_4.3                  compiler_4.0.3           
+    ## [17] extrafontdb_1.0           xml2_1.3.2               
+    ## [19] labeling_0.3              scales_1.1.1             
+    ## [21] proj4_1.0-10              readr_1.3.1              
+    ## [23] genefilter_1.70.0         stringr_1.4.0            
+    ## [25] digest_0.6.25             rmarkdown_2.3            
+    ## [27] XVector_0.28.0            pkgconfig_2.0.3          
+    ## [29] htmltools_0.5.0           extrafont_0.17           
+    ## [31] limma_3.44.3              highr_0.8                
+    ## [33] maps_3.3.0                rlang_0.4.6              
+    ## [35] RSQLite_2.2.0             DelayedMatrixStats_1.10.0
+    ## [37] gridGraphics_0.5-0        farver_2.0.3             
+    ## [39] generics_0.0.2            BiocParallel_1.22.0      
+    ## [41] dplyr_1.0.0               RCurl_1.98-1.2           
+    ## [43] BiocSingular_1.4.0        GenomeInfoDbData_1.2.3   
+    ## [45] Matrix_1.2-18             Rcpp_1.0.4.6             
+    ## [47] munsell_0.5.0             lifecycle_0.2.0          
+    ## [49] stringi_1.4.6             yaml_2.2.1               
+    ## [51] MASS_7.3-53               zlibbioc_1.34.0          
+    ## [53] plyr_1.8.6                grid_4.0.3               
+    ## [55] blob_1.2.1                dqrng_0.2.1              
+    ## [57] crayon_1.3.4              lattice_0.20-41          
+    ## [59] splines_4.0.3             annotate_1.66.0          
+    ## [61] hms_0.5.3                 locfit_1.5-9.4           
+    ## [63] knitr_1.29                pillar_1.4.4             
+    ## [65] geneplotter_1.66.0        reshape2_1.4.4           
+    ## [67] XML_3.99-0.3              glue_1.4.1               
+    ## [69] evaluate_0.14             BiocManager_1.30.10      
+    ## [71] vctrs_0.3.1               Rttf2pt1_1.3.8           
+    ## [73] gtable_0.3.0              purrr_0.3.4              
+    ## [75] tidyr_1.1.0               xfun_0.15                
+    ## [77] rsvd_1.0.3                xtable_1.8-4             
+    ## [79] survival_3.2-3            tibble_3.0.1             
+    ## [81] rvcheck_0.1.8             memoise_1.1.0            
+    ## [83] ellipsis_0.3.1
 
 # References
 

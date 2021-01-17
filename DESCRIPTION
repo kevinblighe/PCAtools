@@ -1,7 +1,7 @@
 Package: PCAtools
 Type: Package
 Title: PCAtools: Everything Principal Components Analysis
-Version: 2.3.3
+Version: 2.3.1
 Authors@R: c(
     person("Kevin", "Blighe", role = c("aut", "cre"), email = "kevin@clinicalbioinformatics.co.uk"),
     person("Anna-Leigh", "Brown", role = c("ctb")),
@@ -38,7 +38,11 @@ Suggests:
   ggplotify,
   beachmat,
   RMTstat,
-  ggalt
+  ggalt,
+  DESeq2,
+  airway,
+  org.Hs.eg.db,
+  magrittr
 LinkingTo:
   Rcpp,
   beachmat,
