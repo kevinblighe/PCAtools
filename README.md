@@ -120,7 +120,7 @@ most general users, a biplot is a simple representation of samples in a
 ```
 
 However, the original definition of a biplot by Gabriel KR (Gabriel
-1971) is a plot that plots both variables and observatinos (samples) in
+1971) is a plot that plots both variables and observations (samples) in
 the same space. The variables are indicated by arrows drawn from the
 origin, which indicate their ‘weight’ in different directions. We touch
 on this later via the *plotLoadings* function.
@@ -261,7 +261,7 @@ match up for the top
 
 ## Access the internal data
 
-The rotated data that represents the observatinos / samples is stored in
+The rotated data that represents the observations / samples is stored in
 *rotated*, while the variable loadings are stored in *loadings*
 
 ``` r
