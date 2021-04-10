@@ -41,25 +41,33 @@ biplot(
   encircleLineSize = 0.25,
   encircleLineCol = NULL,
   ellipse = FALSE,
-  ellipseConf = 0.95,
+  ellipseType = "t",
+  ellipseLevel = 0.95,
+  ellipseSegments = 51,
   ellipseFill = TRUE,
   ellipseFillKey = NULL,
   ellipseAlpha = 1/4,
   ellipseLineSize = 0.25,
   ellipseLineCol = NULL,
-  xlim = if (showLoadings) c(min(pcaobj$rotated[, x]) - 5, max(pcaobj$rotated[, x]) +
-    5) else c(min(pcaobj$rotated[, x]) - 1, max(pcaobj$rotated[, x]) + 1),
-  ylim = if (showLoadings) c(min(pcaobj$rotated[, y]) - 5, max(pcaobj$rotated[, y]) +
-    5) else c(min(pcaobj$rotated[, y]) - 1, max(pcaobj$rotated[, y]) + 1),
+  xlim = if (showLoadings || ellipse) c(min(pcaobj$rotated[, x]) -
+    abs((min(pcaobj$rotated[, x])/100) * 25), max(pcaobj$rotated[, x]) +
+    abs((min(pcaobj$rotated[, x])/100) * 25)) else c(min(pcaobj$rotated[, x]) -
+    abs((min(pcaobj$rotated[, x])/100) * 10), max(pcaobj$rotated[, x]) +
+    abs((min(pcaobj$rotated[, x])/100) * 10)),
+  ylim = if (showLoadings || ellipse) c(min(pcaobj$rotated[, y]) -
+    abs((min(pcaobj$rotated[, y])/100) * 25), max(pcaobj$rotated[, y]) +
+    abs((min(pcaobj$rotated[, y])/100) * 25)) else c(min(pcaobj$rotated[, y]) -
+    abs((min(pcaobj$rotated[, y])/100) * 10), max(pcaobj$rotated[, y]) +
+    abs((min(pcaobj$rotated[, y])/100) * 10)),
   lab = rownames(pcaobj$metadata),
   labSize = 3,
-  labhjust = 1.5,
-  labvjust = 0,
   boxedLabels = FALSE,
   selectLab = NULL,
   drawConnectors = TRUE,
   widthConnectors = 0.5,
   colConnectors = "grey50",
+  maxoverlapsConnectors = 15,
+  directionConnectors = "both",
   xlab = paste0(x, ", ", round(pcaobj$variance[x], digits = 2), "\% variation"),
   xlabAngle = 0,
   xlabhjust = 0.5,
@@ -198,11 +206,23 @@ the encircled region. Used when 'encircle == TRUE'.}
 \item{encircleLineCol}{Colour of the encircled line when
 'encircle == TRUE'.}
 
-\item{ellipse}{Logical, indicating whether to draw a stat ellipse around
+\item{ellipse}{Logical, indicating whether to draw a data ellipse around
 the groups specified by 'colby'.}
 
-\item{ellipseConf}{Confidence intervals of the stat ellipses when
-ellipse == TRUE.}
+\item{ellipseType}{[paraphrased from
+https://ggplot2.tidyverse.org/reference/stat_ellipse.html]
+The type of ellipse. "t" assumes a multivariate t-distribution, while
+"norm" assumes a multivariate normal distribution. "euclid" draws a circle with
+the radius equal to level, representing the euclidean distance from the center.
+This ellipse probably won't appear circular unless coord_fixed() is applied.}
+
+\item{ellipseLevel}{[paraphrased from
+https://ggplot2.tidyverse.org/reference/stat_ellipse.html]
+The level at which to draw an ellipse, or, if ellipseType="euclid", the radius of the circle to be drawn.}
+
+\item{ellipseSegments}{[from
+https://ggplot2.tidyverse.org/reference/stat_ellipse.html]
+The number of segments to be used in drawing the ellipse.}
 
 \item{ellipseFill}{Logical, if 'ellipse == TRUE', this determines
 whether to fill the region or not.}
@@ -226,10 +246,6 @@ the ellipse region. Used when 'ellipse == TRUE'.}
 
 \item{labSize}{Size of labels.}
 
-\item{labhjust}{Horizontal adjustment of label.}
-
-\item{labvjust}{Vertical adjustment of label.}
-
 \item{boxedLabels}{Logical, draw text labels in boxes.}
 
 \item{selectLab}{A vector containing a subset of lab to plot.}
@@ -240,6 +256,12 @@ labels to their corresponding points by line connectors.}
 \item{widthConnectors}{Line width of connectors.}
 
 \item{colConnectors}{Line colour of connectors.}
+
+\item{maxoverlapsConnectors}{Equivalent of max.overlaps in ggrepel. Set to
+'Inf' to always display all labels when drawConnectors = TRUE.}
+
+\item{directionConnectors}{direction in which to draw connectors.
+'both', 'x', or 'y'.}
 
 \item{xlab}{Label for x-axis.}
 

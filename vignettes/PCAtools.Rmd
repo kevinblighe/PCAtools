@@ -434,7 +434,8 @@ samples. Here, we draw ellipses around each group at the 95% confidence level:
     colby = 'ER', colkey = c('ER+' = 'forestgreen', 'ER-' = 'purple'),
     # ellipse config
       ellipse = TRUE,
-      ellipseConf = 0.95,
+      ellipseType = 't',
+      ellipseLevel = 0.95,
       ellipseFill = TRUE,
       ellipseAlpha = 1/4,
       ellipseLineSize = 1.0,
@@ -446,7 +447,8 @@ samples. Here, we draw ellipses around each group at the 95% confidence level:
     colby = 'ER', colkey = c('ER+' = 'forestgreen', 'ER-' = 'purple'),
     # ellipse config
       ellipse = TRUE,
-      ellipseConf = 0.95,
+      ellipseType = 't',
+      ellipseLevel = 0.95,
       ellipseFill = TRUE,
       ellipseAlpha = 1/4,
       ellipseLineSize = 0,

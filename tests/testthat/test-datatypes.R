@@ -30,8 +30,9 @@ test_that('datatypes', {
   expect_is(biplot(pcaobj), class = 'pca')
   expect_type(biplot(x, y, colLoadingsNames, colConnectorsLoadings,
     colLoadingsArrows, fillBoxedLoadings, colby, colkey, colLegendTitle, singlecol, shapeLegendTitle,
-    legendPosition, encircleFillKey, ellipseFillKey, encircleLineCol, ellipseLineCol, lab, selectLab, colConnectors, xlab, ylab, title, subtitle,
-    caption, hlineType, hlineCol, vlineType, vlineCol, borderColour),
+    legendPosition, encircleFillKey, ellipseTypem, ellipseFillKey, encircleLineCol, ellipseLineCol,
+    lab, selectLab, colConnectors, xlab, ylab, title, subtitle,
+    caption, hlineType, hlineCol, vlineType, vlineCol, borderColour, directionConnectors),
     c('language', 'character'))
   expect_type(biplot(showLoadings, showLoadingsNames, boxedLoadingsNames,
     encircleByGroup, encircleFill, ellipse, ellipseFill,
@@ -41,8 +42,8 @@ test_that('datatypes', {
   expect_type(biplot(ntopLoadings, sizeLoadingsNames, widthConnectorsLoadings,
     lengthLoadingsArrowsFactor, widthLoadingsArrows, alphaLoadingsArrow, shape,
     shapekey, pointSize, legendLabSize, legendTitleSize, legendIconSize, encircleAlpha,
-    encircleLineSize, ellipseConf, ellipseAlpha, ellipseLineSize, xlim, ylim,
-    labSize, labhjust, labvjust, widthConnectors, xlabAngle, xlabhjust,
+    encircleLineSize, ellipseLevel, ellipseSegments, ellipseAlpha, ellipseLineSize, xlim, ylim,
+    labSize, widthConnectors, maxoverlapsConnectors, xlabAngle, xlabhjust,
     xlabvjust, ylabAngle, ylabhjust, ylabvjust, axisLabSize, titleLabSize,
     subtitleLabSize, captionLabSize, hline, hlineWidth, vline, vlineWidth,
     borderWidth),

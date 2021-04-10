@@ -72,10 +72,21 @@
 #'   'encircle == TRUE'.
 #' @param encircleLineCol Colour of the encircled line when
 #'   'encircle == TRUE'.
-#' @param ellipse Logical, indicating whether to draw a stat ellipse around
+#' @param ellipse Logical, indicating whether to draw a data ellipse around
 #'   the groups specified by 'colby'.
-#' @param ellipseConf Confidence intervals of the stat ellipses when
-#'   ellipse == TRUE.
+#' @param ellipseType [paraphrased from
+#'   https://ggplot2.tidyverse.org/reference/stat_ellipse.html]
+#'   The type of ellipse. "t" assumes a multivariate t-distribution, while
+#'   "norm" assumes a multivariate normal distribution. "euclid" draws a circle with
+#'   the radius equal to level, representing the euclidean distance from the center.
+#'   This ellipse probably won't appear circular unless coord_fixed() is applied.
+#' @param ellipseLevel [paraphrased from
+#'   https://ggplot2.tidyverse.org/reference/stat_ellipse.html]
+#'   The level at which to draw an ellipse, or, if ellipseType="euclid", the radius of the circle to be drawn.
+#' @param ellipseSegments [from
+#'   https://ggplot2.tidyverse.org/reference/stat_ellipse.html]
+#'   The number of segments to be used in drawing the ellipse.
+
 #' @param ellipseFill Logical, if 'ellipse == TRUE', this determines
 #'   whether to fill the region or not.
 #' @param ellipseFillKey Vector of name-value pairs relating to value passed to
@@ -89,14 +100,16 @@
 #' @param ylim Limits of the y-axis.
 #' @param lab A vector containing labels to add to the plot. 
 #' @param labSize Size of labels.
-#' @param labhjust Horizontal adjustment of label.
-#' @param labvjust Vertical adjustment of label.
 #' @param boxedLabels Logical, draw text labels in boxes.
 #' @param selectLab A vector containing a subset of lab to plot.
 #' @param drawConnectors Logical, indicating whether or not to connect plot
 #'   labels to their corresponding points by line connectors.
 #' @param widthConnectors Line width of connectors.
 #' @param colConnectors Line colour of connectors.
+#' @param maxoverlapsConnectors Equivalent of max.overlaps in ggrepel. Set to
+#'   'Inf' to always display all labels when drawConnectors = TRUE.
+#' @param directionConnectors direction in which to draw connectors.
+#'   'both', 'x', or 'y'.
 #' @param xlab Label for x-axis.
 #' @param xlabAngle Rotation angle of x-axis labels.
 #' @param xlabhjust Horizontal adjustment of x-axis labels.
@@ -221,25 +234,33 @@ biplot <- function(
   encircleLineSize = 0.25,
   encircleLineCol = NULL,
   ellipse = FALSE,
-  ellipseConf = 0.95,
+  ellipseType = 't',
+  ellipseLevel = 0.95,
+  ellipseSegments = 51,
   ellipseFill = TRUE,
   ellipseFillKey = NULL,
   ellipseAlpha = 1/4,
   ellipseLineSize = 0.25,
   ellipseLineCol = NULL,
-  xlim = if(showLoadings) c(min(pcaobj$rotated[,x]) - 5, max(pcaobj$rotated[,x]) + 5) else
-    c(min(pcaobj$rotated[,x]) - 1, max(pcaobj$rotated[,x]) + 1),
-  ylim = if(showLoadings) c(min(pcaobj$rotated[,y]) - 5, max(pcaobj$rotated[,y]) + 5) else
-    c(min(pcaobj$rotated[,y]) - 1, max(pcaobj$rotated[,y]) + 1),
+  xlim = if(showLoadings || ellipse) c(
+    min(pcaobj$rotated[,x]) - abs((min(pcaobj$rotated[,x])/100)*25),
+    max(pcaobj$rotated[,x]) + abs((min(pcaobj$rotated[,x])/100)*25)) else c(
+    min(pcaobj$rotated[,x]) - abs((min(pcaobj$rotated[,x])/100)*10),
+    max(pcaobj$rotated[,x]) + abs((min(pcaobj$rotated[,x])/100)*10)),
+  ylim = if(showLoadings || ellipse) c(
+    min(pcaobj$rotated[,y]) - abs((min(pcaobj$rotated[,y])/100)*25),
+    max(pcaobj$rotated[,y]) + abs((min(pcaobj$rotated[,y])/100)*25)) else c(
+    min(pcaobj$rotated[,y]) - abs((min(pcaobj$rotated[,y])/100)*10),
+    max(pcaobj$rotated[,y]) + abs((min(pcaobj$rotated[,y])/100)*10)),
   lab = rownames(pcaobj$metadata),
   labSize = 3.0,
-  labhjust = 1.5,
-  labvjust = 0,
   boxedLabels = FALSE,
   selectLab = NULL,
   drawConnectors = TRUE,
   widthConnectors = 0.5,
   colConnectors = 'grey50',
+  maxoverlapsConnectors = 15,
+  directionConnectors = 'both',
   xlab = paste0(x, ', ', round(pcaobj$variance[x], digits = 2), '% variation'),
   xlabAngle = 0,
   xlabhjust = 0.5,
@@ -403,47 +424,51 @@ biplot <- function(
     if (showLoadingsNames) {
       if (drawConnectorsLoadings) {
         if (boxedLoadingsNames) {
-          plot <- plot + coord_equal() +
+          plot <- plot +
             geom_label_repel(data = pcaobj$loadings[vars,], 
               aes(label = vars,
                 x = pcaobj$loadings[vars,x] * r * lengthLoadingsArrowsFactor,
-                y = pcaobj$loadings[vars,y] * r * lengthLoadingsArrowsFactor,
-              hjust = 0),
+                y = pcaobj$loadings[vars,y] * r * lengthLoadingsArrowsFactor),
+              xlim = c(NA, NA),
+              ylim = c(NA, NA),
               color = colLoadingsNames,
               size = sizeLoadingsNames,
               fill = fillBoxedLoadings,
               segment.color = colConnectorsLoadings,
-              segment.size = widthConnectorsLoadings)
+              segment.size = widthConnectorsLoadings,
+              direction = directionConnectors,
+              max.overlaps = maxoverlapsConnectors)
         } else {
-          plot <- plot + coord_equal() +
+          plot <- plot +
             geom_text_repel(data = pcaobj$loadings[vars,], 
               aes(label = vars,
                 x = pcaobj$loadings[vars,x] * r * lengthLoadingsArrowsFactor,
-                y = pcaobj$loadings[vars,y] * r * lengthLoadingsArrowsFactor,
-              hjust = 0),
+                y = pcaobj$loadings[vars,y] * r * lengthLoadingsArrowsFactor),
+              xlim = c(NA, NA),
+              ylim = c(NA, NA),
               color = colLoadingsNames,
               size = sizeLoadingsNames,
               segment.color = colConnectorsLoadings,
-              segment.size = widthConnectorsLoadings)
+              segment.size = widthConnectorsLoadings,
+              direction = directionConnectors,
+              max.overlaps = maxoverlapsConnectors)
         }
       } else {
         if (boxedLoadingsNames) {
-          plot <- plot + coord_equal() +
+          plot <- plot +
             geom_label(data = pcaobj$loadings[vars,], 
               aes(label = vars,
                 x = pcaobj$loadings[vars,x] * r * lengthLoadingsArrowsFactor,
-                y = pcaobj$loadings[vars,y] * r * lengthLoadingsArrowsFactor,
-              hjust = 0),
+                y = pcaobj$loadings[vars,y] * r * lengthLoadingsArrowsFactor),
               color = colLoadingsNames,
               size = sizeLoadingsNames,
               fill = NA)
         } else {
-          plot <- plot + coord_equal() +
+          plot <- plot +
             geom_text(data = pcaobj$loadings[vars,], 
               aes(label = vars,
                 x = pcaobj$loadings[vars,x] * r * lengthLoadingsArrowsFactor,
-                y = pcaobj$loadings[vars,y] * r * lengthLoadingsArrowsFactor,
-              hjust = 0),
+                y = pcaobj$loadings[vars,y] * r * lengthLoadingsArrowsFactor),
               color = colLoadingsNames,
               size = sizeLoadingsNames,
               check_overlap = TRUE)
@@ -519,57 +544,61 @@ biplot <- function(
       plot <- plot + labFun(
         data = plotobj,
           aes(label = lab),
+          xlim = c(NA, NA),
+          ylim = c(NA, NA),
           size = labSize,
           segment.color = colConnectors,
           segment.size = widthConnectors,
-          hjust = labhjust,
-          vjust = labvjust)
+          direction = directionConnectors,
+          max.overlaps = maxoverlapsConnectors)
     } else if (drawConnectors && !is.null(selectLab)) {
       plot <- plot + labFun(
         data=subset(plotobj,
           !is.na(plotobj[,'lab'])),
           aes(label = lab),
+          xlim = c(NA, NA),
+          ylim = c(NA, NA),
           size = labSize,
           segment.color = colConnectors,
           segment.size = widthConnectors,
-          hjust = labhjust,
-          vjust = labvjust)
+          direction = directionConnectors,
+          max.overlaps = maxoverlapsConnectors)
     } else if (!drawConnectors && !is.null(selectLab)) {
       if (boxedLabels) {
         plot <- plot + labFun(
           data=subset(plotobj,
             !is.na(plotobj[,'lab'])),
             aes(label = lab),
-            size = labSize,
-            hjust = labhjust,
-            vjust = labvjust)
+            xlim = c(NA, NA),
+            ylim = c(NA, NA),
+            size = labSize)
       } else {
         plot <- plot + labFun(
           data=subset(plotobj,
             !is.na(plotobj[,'lab'])),
             aes(label = lab),
+            xlim = c(NA, NA),
+            ylim = c(NA, NA),
             size = labSize,
-            check_overlap = TRUE,
-            hjust = labhjust,
-            vjust = labvjust)
+            check_overlap = TRUE)
       }
     } else if (!drawConnectors && is.null(selectLab)) {
       if (boxedLabels) {
         plot <- plot + labFun(
           data = plotobj,
             aes(label = lab),
+            xlim = c(NA, NA),
+            ylim = c(NA, NA),
             size = labSize,
-            check_overlap = TRUE,
-            hjust = labhjust,
-            vjust = labvjust)
+            check_overlap = TRUE)
       } else {
         plot <- plot + labFun(
           data = plotobj,
             aes(label = lab),
+            xlim = c(NA, NA),
+            ylim = c(NA, NA),
             size = labSize,
-            check_overlap = TRUE,
-            hjust = labhjust,
-            vjust = labvjust)
+            check_overlap = TRUE)
       }
     }
   }
@@ -643,7 +672,9 @@ biplot <- function(
               fill = col,
               colour = col),
             geom = 'polygon',
-            level = ellipseConf,
+            type = ellipseType,
+            level = ellipseLevel,
+            segments = ellipseSegments,
             alpha = ellipseAlpha,
             size = ellipseLineSize,
             show.legend = FALSE,
@@ -655,7 +686,9 @@ biplot <- function(
               fill = col),
             colour = ellipseLineCol,
             geom = 'polygon',
-            level = ellipseConf,
+            type = ellipseType,
+            level = ellipseLevel,
+            segments = ellipseSegments,
             alpha = ellipseAlpha,
             size = ellipseLineSize,
             show.legend = FALSE,
@@ -669,7 +702,9 @@ biplot <- function(
               colour = col),
             fill = NA,
             geom = 'polygon',
-            level = ellipseConf,
+            type = ellipseType,
+            level = ellipseLevel,
+            segments = ellipseSegments,
             alpha = ellipseAlpha,
             size = ellipseLineSize,
             show.legend = FALSE,
@@ -681,7 +716,9 @@ biplot <- function(
             colour = ellipseLineCol,
             fill = NA,
             geom = 'polygon',
-            level = ellipseConf,
+            type = ellipseType,
+            level = ellipseLevel,
+            segments = ellipseSegments,
             alpha = ellipseAlpha,
             size = ellipseLineSize,
             show.legend = FALSE,
@@ -699,6 +736,8 @@ biplot <- function(
       }
     }
   }
+
+  plot <- plot + coord_cartesian(clip = 'off')
 
   # return plot?
   if (returnPlot) {

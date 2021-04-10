@@ -28,8 +28,6 @@ pairsplot(
   ylim = NULL,
   lab = NULL,
   labSize = 1.5,
-  labhjust = 1.5,
-  labvjust = 0,
   selectLab = NULL,
   drawConnectors = FALSE,
   widthConnectors = 0.5,
@@ -124,10 +122,6 @@ grouping/categorical variable.}
 \item{lab}{A vector containing labels to add to the plot.}
 
 \item{labSize}{Size of labels.}
-
-\item{labhjust}{Horizontal adjustment of label.}
-
-\item{labvjust}{Vertical adjustment of label.}
 
 \item{selectLab}{A vector containing a subset of lab to plot.}
 

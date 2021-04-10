@@ -1,7 +1,7 @@
 PCAtools: everything Principal Component Analysis
 ================
 Kevin Blighe, Aaron Lun
-2021-01-17
+2021-04-10
 
 # Introduction
 
@@ -247,6 +247,9 @@ match up for the top
 
     ## 215281_x_at, 214464_at, 211122_s_at, 210163_at, 204533_at, 205225_at, 209351_at, 205044_at, 202037_s_at, 204540_at, 215176_x_at, 214768_x_at, 212671_s_at, 219415_at, 37892_at, 208650_s_at, 206754_s_at, 205358_at, 205380_at, 205825_at
 
+    ## Warning: ggrepel: 17 unlabeled data points (too many overlaps). Consider
+    ## increasing max.overlaps
+
 ![Figure 5: A loadings plot](README_files/figure-gfm/ex5-1.png)
 
 ## An eigencor plot
@@ -402,6 +405,9 @@ features.
     legendPosition = 'right')
 ```
 
+    ## Warning: ggrepel: 20 unlabeled data points (too many overlaps). Consider
+    ## increasing max.overlaps
+
 ![Figure 8: Colour by a metadata factor, use a custom label, add lines
 through origin, and add legend](README_files/figure-gfm/ex8-1.png)
 
@@ -422,6 +428,9 @@ each group.
     legendPosition = 'top', legendLabSize = 16, legendIconSize = 8.0)
 ```
 
+    ## Warning: ggrepel: 26 unlabeled data points (too many overlaps). Consider
+    ## increasing max.overlaps
+
 ![Figure 9: Supply custom colours and encircle variables by
 group](README_files/figure-gfm/ex9-1.png)
 
@@ -435,6 +444,9 @@ group](README_files/figure-gfm/ex9-1.png)
     hline = 0, vline = c(-25, 0, 25),
     legendPosition = 'top', legendLabSize = 16, legendIconSize = 8.0)
 ```
+
+    ## Warning: ggrepel: 26 unlabeled data points (too many overlaps). Consider
+    ## increasing max.overlaps
 
 ![Figure 9: Supply custom colours and encircle variables by
 group](README_files/figure-gfm/ex9-2.png)
@@ -451,7 +463,8 @@ group at the 95% confidence level:
     colby = 'ER', colkey = c('ER+' = 'forestgreen', 'ER-' = 'purple'),
     # ellipse config
       ellipse = TRUE,
-      ellipseConf = 0.95,
+      ellipseType = 't',
+      ellipseLevel = 0.95,
       ellipseFill = TRUE,
       ellipseAlpha = 1/4,
       ellipseLineSize = 1.0,
@@ -460,6 +473,9 @@ group at the 95% confidence level:
     legendPosition = 'top', legendLabSize = 16, legendIconSize = 8.0)
 ```
 
+    ## Warning: ggrepel: 40 unlabeled data points (too many overlaps). Consider
+    ## increasing max.overlaps
+
 ![Figure 10: Stat ellipses](README_files/figure-gfm/ex10-1.png)
 
 ``` r
@@ -467,7 +483,8 @@ group at the 95% confidence level:
     colby = 'ER', colkey = c('ER+' = 'forestgreen', 'ER-' = 'purple'),
     # ellipse config
       ellipse = TRUE,
-      ellipseConf = 0.95,
+      ellipseType = 't',
+      ellipseLevel = 0.95,
       ellipseFill = TRUE,
       ellipseAlpha = 1/4,
       ellipseLineSize = 0,
@@ -476,6 +493,9 @@ group at the 95% confidence level:
     hline = 0, vline = c(-25, 0, 25),
     legendPosition = 'top', legendLabSize = 16, legendIconSize = 8.0)
 ```
+
+    ## Warning: ggrepel: 40 unlabeled data points (too many overlaps). Consider
+    ## increasing max.overlaps
 
 ![Figure 10: Stat
 ellipses](README_files/figure-gfm/ex10-2.png)
@@ -661,6 +681,9 @@ range per PC.
 
     ## POGZ, CDC42BPA, CXCL11, ESR1, SFRP1, EEF1A2, IGKC, GABRP, CD24, PDZK1
 
+    ## Warning: ggrepel: 1 unlabeled data points (too many overlaps). Consider
+    ## increasing max.overlaps
+
 ![Figure 15: Determine the variables that drive variation among each
 PC](README_files/figure-gfm/ex16-1.png)
 
@@ -709,6 +732,9 @@ wish:
     ## -- variables retained:
 
     ## S100A8, PROM1, CXCL11, MMP1, FABP7, 205029_s_at, CXCL9, 210163_at, UBD, IGHG3, RARRES1, 206392_s_at, CXCL10, GBP1, ASPM, CDC20, NAT1, ESR1, SCUBE2
+
+    ## Warning: ggrepel: 2 unlabeled data points (too many overlaps). Consider
+    ## increasing max.overlaps
 
 ![Figure 17: plotting absolute component
 loadings](README_files/figure-gfm/ex17b-1.png)
@@ -980,61 +1006,64 @@ sessionInfo()
     ## [8] methods   base     
     ## 
     ## other attached packages:
-    ##  [1] ggplotify_0.0.5             cowplot_1.0.0              
+    ##  [1] ggplotify_0.0.5             cowplot_1.1.1              
     ##  [3] hgu133a.db_3.2.3            GEOquery_2.56.0            
     ##  [5] DESeq2_1.28.1               org.Hs.eg.db_3.11.4        
-    ##  [7] AnnotationDbi_1.50.0        magrittr_1.5               
-    ##  [9] airway_1.8.0                SummarizedExperiment_1.18.1
-    ## [11] DelayedArray_0.14.0         matrixStats_0.56.0         
+    ##  [7] AnnotationDbi_1.53.0        magrittr_2.0.1             
+    ##  [9] airway_1.8.0                SummarizedExperiment_1.18.2
+    ## [11] DelayedArray_0.14.1         matrixStats_0.57.0         
     ## [13] Biobase_2.48.0              GenomicRanges_1.40.0       
     ## [15] GenomeInfoDb_1.24.2         IRanges_2.22.2             
     ## [17] S4Vectors_0.26.1            BiocGenerics_0.34.0        
-    ## [19] PCAtools_2.3.1              ggrepel_0.8.2              
-    ## [21] ggplot2_3.3.2              
+    ## [19] PCAtools_2.3.11             ggrepel_0.9.1              
+    ## [21] ggplot2_3.3.3              
     ## 
     ## loaded via a namespace (and not attached):
-    ##  [1] bitops_1.0-6              bit64_0.9-7              
+    ##  [1] bitops_1.0-6              bit64_4.0.5              
     ##  [3] ash_1.0-15                RColorBrewer_1.1-2       
-    ##  [5] tools_4.0.3               R6_2.4.1                 
-    ##  [7] irlba_2.3.3               KernSmooth_2.23-17       
-    ##  [9] DBI_1.1.0                 colorspace_1.4-1         
-    ## [11] withr_2.2.0               tidyselect_1.1.0         
-    ## [13] ggalt_0.4.0               bit_1.1-15.2             
-    ## [15] curl_4.3                  compiler_4.0.3           
-    ## [17] extrafontdb_1.0           xml2_1.3.2               
-    ## [19] labeling_0.3              scales_1.1.1             
-    ## [21] proj4_1.0-10              readr_1.3.1              
-    ## [23] genefilter_1.70.0         stringr_1.4.0            
-    ## [25] digest_0.6.25             rmarkdown_2.3            
-    ## [27] XVector_0.28.0            pkgconfig_2.0.3          
-    ## [29] htmltools_0.5.0           extrafont_0.17           
-    ## [31] limma_3.44.3              highr_0.8                
-    ## [33] maps_3.3.0                rlang_0.4.6              
-    ## [35] RSQLite_2.2.0             DelayedMatrixStats_1.10.0
-    ## [37] gridGraphics_0.5-0        farver_2.0.3             
-    ## [39] generics_0.0.2            BiocParallel_1.22.0      
-    ## [41] dplyr_1.0.0               RCurl_1.98-1.2           
-    ## [43] BiocSingular_1.4.0        GenomeInfoDbData_1.2.3   
-    ## [45] Matrix_1.2-18             Rcpp_1.0.4.6             
-    ## [47] munsell_0.5.0             lifecycle_0.2.0          
-    ## [49] stringi_1.4.6             yaml_2.2.1               
-    ## [51] MASS_7.3-53               zlibbioc_1.34.0          
-    ## [53] plyr_1.8.6                grid_4.0.3               
-    ## [55] blob_1.2.1                dqrng_0.2.1              
-    ## [57] crayon_1.3.4              lattice_0.20-41          
-    ## [59] splines_4.0.3             annotate_1.66.0          
-    ## [61] hms_0.5.3                 locfit_1.5-9.4           
-    ## [63] knitr_1.29                pillar_1.4.4             
-    ## [65] geneplotter_1.66.0        reshape2_1.4.4           
-    ## [67] XML_3.99-0.3              glue_1.4.1               
-    ## [69] evaluate_0.14             BiocManager_1.30.10      
-    ## [71] vctrs_0.3.1               Rttf2pt1_1.3.8           
-    ## [73] gtable_0.3.0              purrr_0.3.4              
-    ## [75] tidyr_1.1.0               xfun_0.15                
-    ## [77] rsvd_1.0.3                xtable_1.8-4             
-    ## [79] survival_3.2-3            tibble_3.0.1             
-    ## [81] rvcheck_0.1.8             memoise_1.1.0            
-    ## [83] ellipsis_0.3.1
+    ##  [5] tools_4.0.3               R6_2.5.0                 
+    ##  [7] irlba_2.3.3               KernSmooth_2.23-18       
+    ##  [9] DBI_1.1.1                 colorspace_2.0-0         
+    ## [11] withr_2.4.1               tidyselect_1.1.0         
+    ## [13] ggalt_0.4.0               extrafontdb_1.0          
+    ## [15] bit_4.0.4                 curl_4.3                 
+    ## [17] compiler_4.0.3            cli_2.2.0                
+    ## [19] xml2_1.3.2                labeling_0.4.2           
+    ## [21] scales_1.1.1              proj4_1.0-10.1           
+    ## [23] readr_1.4.0               genefilter_1.70.0        
+    ## [25] stringr_1.4.0             digest_0.6.27            
+    ## [27] rmarkdown_2.6             XVector_0.28.0           
+    ## [29] pkgconfig_2.0.3           htmltools_0.5.1.1        
+    ## [31] extrafont_0.17            maps_3.3.0               
+    ## [33] fastmap_1.1.0             limma_3.44.3             
+    ## [35] highr_0.8                 rlang_0.4.10             
+    ## [37] rstudioapi_0.13           RSQLite_2.2.3            
+    ## [39] DelayedMatrixStats_1.10.1 gridGraphics_0.5-1       
+    ## [41] generics_0.1.0            farver_2.0.3             
+    ## [43] BiocParallel_1.22.0       dplyr_1.0.3              
+    ## [45] RCurl_1.98-1.2            BiocSingular_1.4.0       
+    ## [47] GenomeInfoDbData_1.2.3    Matrix_1.3-2             
+    ## [49] Rcpp_1.0.6                munsell_0.5.0            
+    ## [51] fansi_0.4.2               lifecycle_0.2.0          
+    ## [53] stringi_1.5.3             yaml_2.2.1               
+    ## [55] MASS_7.3-53               zlibbioc_1.34.0          
+    ## [57] plyr_1.8.6                grid_4.0.3               
+    ## [59] blob_1.2.1                dqrng_0.2.1              
+    ## [61] crayon_1.3.4              lattice_0.20-41          
+    ## [63] splines_4.0.3             annotate_1.66.0          
+    ## [65] hms_1.0.0                 locfit_1.5-9.4           
+    ## [67] knitr_1.31                pillar_1.4.7             
+    ## [69] geneplotter_1.66.0        reshape2_1.4.4           
+    ## [71] XML_3.99-0.5              glue_1.4.2               
+    ## [73] evaluate_0.14             BiocManager_1.30.10      
+    ## [75] vctrs_0.3.6               Rttf2pt1_1.3.8           
+    ## [77] gtable_0.3.0              purrr_0.3.4              
+    ## [79] tidyr_1.1.2               assertthat_0.2.1         
+    ## [81] cachem_1.0.1              xfun_0.20                
+    ## [83] rsvd_1.0.3                xtable_1.8-4             
+    ## [85] survival_3.2-7            tibble_3.0.1             
+    ## [87] rvcheck_0.1.8             memoise_2.0.0            
+    ## [89] ellipsis_0.3.1
 
 # References
 

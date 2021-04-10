@@ -3,6 +3,12 @@ CHANGES IN VERSION 2.4.0
 ------------------------
  - added DESeq2 section to vignette intro
  - permit that users can now specifiy just a single PC for plotloadings()
+ - improved ellipse functionality with addition of parameters ellipseType,
+   ellipseLevel, and ellipseSegments
+ - over-rides ggrepel's new default value for max.overlaps via introduction of
+   maxoverlapsConnectors = 15
+ - user can now specify a direction for connectors via directionConnectors
+ - removed labhjust and labvjust
 
 CHANGES IN VERSION 2.2.0
 ------------------------
