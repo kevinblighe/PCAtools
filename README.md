@@ -1,7 +1,7 @@
 PCAtools: everything Principal Component Analysis
 ================
 Kevin Blighe, Aaron Lun
-2021-04-10
+2021-04-22
 
 # Introduction
 
@@ -326,10 +326,11 @@ to retain?
 
 *PCAtools* provides four metrics for this purpose:
 
-  - Elbow method
-  - Horn’s parallel analysis (Horn 1965) (Buja and Eyuboglu 1992).
-  - Marchenko-Pastur limit
-  - Gavish-Donoho method
+  - Elbow method (`findElbowPoint()`)
+  - Horn’s parallel analysis (Horn 1965) (Buja and Eyuboglu 1992)
+    (`parallelPCA()`)
+  - Marchenko-Pastur limit (`chooseMarchenkoPastur()`)
+  - Gavish-Donoho method (`chooseGavishDonoho()`)
 
 Let’s perform Horn’s parallel analysis first:
 
