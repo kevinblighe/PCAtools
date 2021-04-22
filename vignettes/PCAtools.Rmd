@@ -316,10 +316,10 @@ variation, but how can we determine the optimum number of PCs to retain?
 
 *PCAtools* provides four metrics for this purpose:
 
-* Elbow method
-* Horn's parallel analysis [@Horn] [@Buja].
-* Marchenko-Pastur limit
-* Gavish-Donoho method
+* Elbow method (`findElbowPoint()`)
+* Horn's parallel analysis [@Horn] [@Buja] (`parallelPCA()`)
+* Marchenko-Pastur limit (`chooseMarchenkoPastur()`)
+* Gavish-Donoho method (`chooseGavishDonoho()`)
 
 Let's perform Horn's parallel analysis first:
 
