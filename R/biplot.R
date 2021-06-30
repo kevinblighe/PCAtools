@@ -1,10 +1,10 @@
 #' Draw a bi-plot, comparing 2 selected principal components / eigenvectors.
 #'
-#' @param pcaobj Object of class 'pca' created by pca().
-#' @param x A principal component to plot on x-axis. All principal component
-#'   names are stored in pcaobj$label.
-#' @param y A principal component to plot on y-axis. All principal component
-#'   names are stored in pcaobj$label.
+#' @param x Object of class 'pca' created by pca().
+#' @param xvar A principal component to plot on x-axis. All principal component
+#'   names are stored in x$label.
+#' @param yvar A principal component to plot on y-axis. All principal component
+#'   names are stored in x$label.
 #' @param showLoadings Logical, indicating whether or not to overlay
 #'   variable loadings.
 #' @param ntopLoadings If showLoadings == TRUE, select this many variables
@@ -38,7 +38,7 @@
 #' @param alphaLoadingsArrow If showLoadings == TRUE, colour transparency of
 #'   the variable loadings arrows.
 #' @param colby If NULL, all points will be coloured differently. If not NULL,
-#'   value is assumed to be a column name in pcaobj$metadata relating to some
+#'   value is assumed to be a column name in x$metadata relating to some
 #'   grouping/categorical variable.
 #' @param colkey Vector of name-value pairs relating to value passed to 'col',
 #'   e.g., c(A='forestgreen', B='gold').
@@ -47,7 +47,7 @@
 #' @param singlecol If specified, all points will be shaded by this colour.
 #'   Overrides 'col'.
 #' @param shape If NULL, all points will be have the same shape. If not NULL,
-#'   value is assumed to be a column name in pcaobj$metadata relating to some
+#'   value is assumed to be a column name in x$metadata relating to some
 #'   grouping/categorical variable.
 #' @param shapekey Vector of name-value pairs relating to value passed to
 #'   'shape', e.g., c(A=10, B=21).
@@ -147,6 +147,7 @@
 #' @param borderColour Colour of the border on the x and y axes.
 #' @param returnPlot Logical, indicating whether or not to return the plot
 #'   object.
+#' @param ... For consistency with \code{\link[stats]{biplot}}; unused.
 #'
 #' @details Draw a bi-plot, comparing 2 selected principal components / eigenvectors.
 #'
@@ -198,9 +199,9 @@
 #' @importFrom stats biplot
 #' @export
 biplot.pca <- function(
-  pcaobj,
-  x = 'PC1',
-  y = 'PC2',
+  x,
+  xvar = 'PC1',
+  yvar = 'PC2',
   showLoadings = FALSE,
   ntopLoadings = 5,
   showLoadingsNames = if (showLoadings) TRUE else FALSE,
@@ -243,16 +244,16 @@ biplot.pca <- function(
   ellipseLineSize = 0.25,
   ellipseLineCol = NULL,
   xlim = if(showLoadings || ellipse) c(
-    min(pcaobj$rotated[,x]) - abs((min(pcaobj$rotated[,x])/100)*25),
-    max(pcaobj$rotated[,x]) + abs((min(pcaobj$rotated[,x])/100)*25)) else c(
-    min(pcaobj$rotated[,x]) - abs((min(pcaobj$rotated[,x])/100)*10),
-    max(pcaobj$rotated[,x]) + abs((min(pcaobj$rotated[,x])/100)*10)),
+    min(x$rotated[,xvar]) - abs((min(x$rotated[,xvar])/100)*25),
+    max(x$rotated[,xvar]) + abs((min(x$rotated[,xvar])/100)*25)) else c(
+    min(x$rotated[,xvar]) - abs((min(x$rotated[,xvar])/100)*10),
+    max(x$rotated[,xvar]) + abs((min(x$rotated[,xvar])/100)*10)),
   ylim = if(showLoadings || ellipse) c(
-    min(pcaobj$rotated[,y]) - abs((min(pcaobj$rotated[,y])/100)*25),
-    max(pcaobj$rotated[,y]) + abs((min(pcaobj$rotated[,y])/100)*25)) else c(
-    min(pcaobj$rotated[,y]) - abs((min(pcaobj$rotated[,y])/100)*10),
-    max(pcaobj$rotated[,y]) + abs((min(pcaobj$rotated[,y])/100)*10)),
-  lab = rownames(pcaobj$metadata),
+    min(x$rotated[,yvar]) - abs((min(x$rotated[,yvar])/100)*25),
+    max(x$rotated[,yvar]) + abs((min(x$rotated[,yvar])/100)*25)) else c(
+    min(x$rotated[,yvar]) - abs((min(x$rotated[,yvar])/100)*10),
+    max(x$rotated[,yvar]) + abs((min(x$rotated[,yvar])/100)*10)),
+  lab = rownames(x$metadata),
   labSize = 3.0,
   boxedLabels = FALSE,
   selectLab = NULL,
@@ -261,11 +262,11 @@ biplot.pca <- function(
   colConnectors = 'grey50',
   maxoverlapsConnectors = 15,
   directionConnectors = 'both',
-  xlab = paste0(x, ', ', round(pcaobj$variance[x], digits = 2), '% variation'),
+  xlab = paste0(xvar, ', ', round(x$variance[xvar], digits = 2), '% variation'),
   xlabAngle = 0,
   xlabhjust = 0.5,
   xlabvjust = 0.5,
-  ylab = paste0(y, ', ', round(pcaobj$variance[y], digits = 2), '% variation'),
+  ylab = paste0(yvar, ', ', round(x$variance[yvar], digits = 2), '% variation'),
   ylabAngle = 0,
   ylabhjust = 0.5,
   ylabvjust = 0.5,
@@ -288,7 +289,8 @@ biplot.pca <- function(
   gridlines.minor = TRUE,
   borderWidth = 0.8,
   borderColour = 'black',
-  returnPlot = TRUE)
+  returnPlot = TRUE,
+  ...)
 {
 
   labFun <- xidx <- yidx <- NULL
@@ -322,8 +324,8 @@ biplot.pca <- function(
 
   # set plot data labels (e.g. sample names)
   plotobj <- NULL
-  plotobj$x <- pcaobj$rotated[,x]
-  plotobj$y <- pcaobj$rotated[,y]
+  plotobj$xvar <- x$rotated[,xvar]
+  plotobj$yvar <- x$rotated[,yvar]
   if (!is.null(lab)) {
     plotobj$lab <- lab
   }
@@ -348,17 +350,17 @@ biplot.pca <- function(
     if (!is.null(lab)) {
       plotobj$col <- lab
     } else {
-      plotobj$col <- seq_len(length(pcaobj$yvars))
+      plotobj$col <- seq_len(length(x$yvars))
     }
   } else {
-    plotobj$col <- pcaobj$metadata[,colby]
+    plotobj$col <- x$metadata[,colby]
   }
   if (!is.null(shape)) {
-    plotobj$shape <- pcaobj$metadata[,shape]
+    plotobj$shape <- x$metadata[,shape]
   }
 
   # create the plot object
-  plot <- ggplot(plotobj, aes(x = x, y = y)) + th +
+  plot <- ggplot(plotobj, aes(x = xvar, y = yvar)) + th +
 
     guides(fill = guide_legend(),
       shape = guide_legend(),
@@ -397,24 +399,24 @@ biplot.pca <- function(
   # plot loadings arrows?
   if (showLoadings) {
     # get top ntopLoadings to display
-    xidx <- order(abs(pcaobj$loadings[,x]), decreasing = TRUE)
-    yidx <- order(abs(pcaobj$loadings[,y]), decreasing = TRUE)
+    xidx <- order(abs(x$loadings[,xvar]), decreasing = TRUE)
+    yidx <- order(abs(x$loadings[,yvar]), decreasing = TRUE)
     vars <- unique(c(
-      rownames(pcaobj$loadings)[xidx][seq_len(ntopLoadings)],
-      rownames(pcaobj$loadings)[yidx][seq_len(ntopLoadings)]))
+      rownames(x$loadings)[xidx][seq_len(ntopLoadings)],
+      rownames(x$loadings)[yidx][seq_len(ntopLoadings)]))
 
     # get scaling parameter to match between variable loadings and rotated loadings
     r <- min(
-      (max(pcaobj$rotated[,x]) - min(pcaobj$rotated[,x]) /
-        (max(pcaobj$loadings[,x]) - min(pcaobj$loadings[,x]))),
-      (max(pcaobj$rotated[,y]) - min(pcaobj$rotated[,y]) /
-        (max(pcaobj$loadings[,y]) - min(pcaobj$loadings[,y]))))
+      (max(x$rotated[,xvar]) - min(x$rotated[,xvar]) /
+        (max(x$loadings[,xvar]) - min(x$loadings[,xvar]))),
+      (max(x$rotated[,yvar]) - min(x$rotated[,yvar]) /
+        (max(x$loadings[,yvar]) - min(x$loadings[,yvar]))))
 
     plot <- plot +
-      geom_segment(data = pcaobj$loadings[vars,],
+      geom_segment(data = x$loadings[vars,],
         aes(x = 0, y = 0,
-          xend = pcaobj$loadings[vars,x] * r * lengthLoadingsArrowsFactor,
-          yend = pcaobj$loadings[vars,y] * r * lengthLoadingsArrowsFactor),
+          xend = x$loadings[vars,xvar] * r * lengthLoadingsArrowsFactor,
+          yend = x$loadings[vars,yvar] * r * lengthLoadingsArrowsFactor),
         arrow = arrow(length = unit(1/2, 'picas'), ends = 'last'), 
         color = colLoadingsArrows,
         size = widthLoadingsArrows,
@@ -425,10 +427,10 @@ biplot.pca <- function(
       if (drawConnectorsLoadings) {
         if (boxedLoadingsNames) {
           plot <- plot +
-            geom_label_repel(data = pcaobj$loadings[vars,], 
+            geom_label_repel(data = x$loadings[vars,], 
               aes(label = vars,
-                x = pcaobj$loadings[vars,x] * r * lengthLoadingsArrowsFactor,
-                y = pcaobj$loadings[vars,y] * r * lengthLoadingsArrowsFactor),
+                x = x$loadings[vars,xvar] * r * lengthLoadingsArrowsFactor,
+                y = x$loadings[vars,yvar] * r * lengthLoadingsArrowsFactor),
               xlim = c(NA, NA),
               ylim = c(NA, NA),
               color = colLoadingsNames,
@@ -440,10 +442,10 @@ biplot.pca <- function(
               max.overlaps = maxoverlapsConnectors)
         } else {
           plot <- plot +
-            geom_text_repel(data = pcaobj$loadings[vars,], 
+            geom_text_repel(data = x$loadings[vars,], 
               aes(label = vars,
-                x = pcaobj$loadings[vars,x] * r * lengthLoadingsArrowsFactor,
-                y = pcaobj$loadings[vars,y] * r * lengthLoadingsArrowsFactor),
+                x = x$loadings[vars,xvar] * r * lengthLoadingsArrowsFactor,
+                y = x$loadings[vars,yvar] * r * lengthLoadingsArrowsFactor),
               xlim = c(NA, NA),
               ylim = c(NA, NA),
               color = colLoadingsNames,
@@ -456,19 +458,19 @@ biplot.pca <- function(
       } else {
         if (boxedLoadingsNames) {
           plot <- plot +
-            geom_label(data = pcaobj$loadings[vars,], 
+            geom_label(data = x$loadings[vars,], 
               aes(label = vars,
-                x = pcaobj$loadings[vars,x] * r * lengthLoadingsArrowsFactor,
-                y = pcaobj$loadings[vars,y] * r * lengthLoadingsArrowsFactor),
+                x = x$loadings[vars,xvar] * r * lengthLoadingsArrowsFactor,
+                y = x$loadings[vars,yvar] * r * lengthLoadingsArrowsFactor),
               color = colLoadingsNames,
               size = sizeLoadingsNames,
               fill = NA)
         } else {
           plot <- plot +
-            geom_text(data = pcaobj$loadings[vars,], 
+            geom_text(data = x$loadings[vars,], 
               aes(label = vars,
-                x = pcaobj$loadings[vars,x] * r * lengthLoadingsArrowsFactor,
-                y = pcaobj$loadings[vars,y] * r * lengthLoadingsArrowsFactor),
+                x = x$loadings[vars,xvar] * r * lengthLoadingsArrowsFactor,
+                y = x$loadings[vars,yvar] * r * lengthLoadingsArrowsFactor),
               color = colLoadingsNames,
               size = sizeLoadingsNames,
               check_overlap = TRUE)
