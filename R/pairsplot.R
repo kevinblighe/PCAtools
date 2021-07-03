@@ -214,8 +214,8 @@ pairsplot <- function(
 
         # call the biplot() function
         biplots[[nplots]] <- biplot(pcaobj,
-          x = x,
-          y = y,
+          xvar = x,
+          yvar = y,
           # other biplot() params:
           colby = colby,
           colkey = colkey,

@@ -533,7 +533,7 @@ There are two ways to colour by a continuous variable. In the first way, we simp
   p$metadata$ESR1 <- mat['205225_at',]
 
   biplot(p,
-    x = 'PC2', y = 'PC3',
+    xvar = 'PC2', yvar = 'PC3',
     lab = NULL,
     colby = 'ESR1',
     shape = 'ER',
@@ -549,7 +549,7 @@ scheme - here, we also plot PC10 versus PC50:
 
 ```{r ex13b, eval = FALSE}
 
-  biplot(p, x = 'PC10', y = 'PC50',
+  biplot(p, xvar = 'PC10', yvar = 'PC50',
     lab = NULL,
     colby = 'Age',
     hline = 0, vline = 0,

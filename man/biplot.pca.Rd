@@ -5,9 +5,9 @@
 \title{Draw a bi-plot, comparing 2 selected principal components / eigenvectors.}
 \usage{
 \method{biplot}{pca}(
-  pcaobj,
-  x = "PC1",
-  y = "PC2",
+  x,
+  xvar = "PC1",
+  yvar = "PC2",
   showLoadings = FALSE,
   ntopLoadings = 5,
   showLoadingsNames = if (showLoadings) TRUE else FALSE,
@@ -49,17 +49,15 @@
   ellipseAlpha = 1/4,
   ellipseLineSize = 0.25,
   ellipseLineCol = NULL,
-  xlim = if (showLoadings || ellipse) c(min(pcaobj$rotated[, x]) -
-    abs((min(pcaobj$rotated[, x])/100) * 25), max(pcaobj$rotated[, x]) +
-    abs((min(pcaobj$rotated[, x])/100) * 25)) else c(min(pcaobj$rotated[, x]) -
-    abs((min(pcaobj$rotated[, x])/100) * 10), max(pcaobj$rotated[, x]) +
-    abs((min(pcaobj$rotated[, x])/100) * 10)),
-  ylim = if (showLoadings || ellipse) c(min(pcaobj$rotated[, y]) -
-    abs((min(pcaobj$rotated[, y])/100) * 25), max(pcaobj$rotated[, y]) +
-    abs((min(pcaobj$rotated[, y])/100) * 25)) else c(min(pcaobj$rotated[, y]) -
-    abs((min(pcaobj$rotated[, y])/100) * 10), max(pcaobj$rotated[, y]) +
-    abs((min(pcaobj$rotated[, y])/100) * 10)),
-  lab = rownames(pcaobj$metadata),
+  xlim = if (showLoadings || ellipse) c(min(x$rotated[, xvar]) - abs((min(x$rotated[,
+    xvar])/100) * 25), max(x$rotated[, xvar]) + abs((min(x$rotated[, xvar])/100) * 25))
+    else c(min(x$rotated[, xvar]) - abs((min(x$rotated[, xvar])/100) * 10),
+    max(x$rotated[, xvar]) + abs((min(x$rotated[, xvar])/100) * 10)),
+  ylim = if (showLoadings || ellipse) c(min(x$rotated[, yvar]) - abs((min(x$rotated[,
+    yvar])/100) * 25), max(x$rotated[, yvar]) + abs((min(x$rotated[, yvar])/100) * 25))
+    else c(min(x$rotated[, yvar]) - abs((min(x$rotated[, yvar])/100) * 10),
+    max(x$rotated[, yvar]) + abs((min(x$rotated[, yvar])/100) * 10)),
+  lab = rownames(x$metadata),
   labSize = 3,
   boxedLabels = FALSE,
   selectLab = NULL,
@@ -68,11 +66,11 @@
   colConnectors = "grey50",
   maxoverlapsConnectors = 15,
   directionConnectors = "both",
-  xlab = paste0(x, ", ", round(pcaobj$variance[x], digits = 2), "\% variation"),
+  xlab = paste0(xvar, ", ", round(x$variance[xvar], digits = 2), "\% variation"),
   xlabAngle = 0,
   xlabhjust = 0.5,
   xlabvjust = 0.5,
-  ylab = paste0(y, ", ", round(pcaobj$variance[y], digits = 2), "\% variation"),
+  ylab = paste0(yvar, ", ", round(x$variance[yvar], digits = 2), "\% variation"),
   ylabAngle = 0,
   ylabhjust = 0.5,
   ylabvjust = 0.5,
@@ -95,17 +93,18 @@
   gridlines.minor = TRUE,
   borderWidth = 0.8,
   borderColour = "black",
-  returnPlot = TRUE
+  returnPlot = TRUE,
+  ...
 )
 }
 \arguments{
-\item{pcaobj}{Object of class 'pca' created by pca().}
+\item{x}{Object of class 'pca' created by pca().}
 
-\item{x}{A principal component to plot on x-axis. All principal component
-names are stored in pcaobj$label.}
+\item{xvar}{A principal component to plot on x-axis. All principal component
+names are stored in x$label.}
 
-\item{y}{A principal component to plot on y-axis. All principal component
-names are stored in pcaobj$label.}
+\item{yvar}{A principal component to plot on y-axis. All principal component
+names are stored in x$label.}
 
 \item{showLoadings}{Logical, indicating whether or not to overlay
 variable loadings.}
@@ -154,7 +153,7 @@ loadings arrows.}
 the variable loadings arrows.}
 
 \item{colby}{If NULL, all points will be coloured differently. If not NULL,
-value is assumed to be a column name in pcaobj$metadata relating to some
+value is assumed to be a column name in x$metadata relating to some
 grouping/categorical variable.}
 
 \item{colkey}{Vector of name-value pairs relating to value passed to 'col',
@@ -167,7 +166,7 @@ by 'colby'.}
 Overrides 'col'.}
 
 \item{shape}{If NULL, all points will be have the same shape. If not NULL,
-value is assumed to be a column name in pcaobj$metadata relating to some
+value is assumed to be a column name in x$metadata relating to some
 grouping/categorical variable.}
 
 \item{shapekey}{Vector of name-value pairs relating to value passed to
@@ -327,6 +326,8 @@ gridlines.}
 
 \item{returnPlot}{Logical, indicating whether or not to return the plot
 object.}
+
+\item{...}{For consistency with \code{\link[stats]{biplot}}; unused.}
 }
 \value{
 A \code{\link{ggplot2}} object.
