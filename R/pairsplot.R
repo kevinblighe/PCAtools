@@ -213,7 +213,7 @@ pairsplot <- function(
         y <- components[j]
 
         # call the biplot() function
-        biplots[[nplots]] <- biplot(pcaobj,
+        biplots[[nplots]] <- biplot.pca(pcaobj,
           x = x,
           y = y,
           # other biplot() params:

@@ -196,6 +196,7 @@
 #' @import ggplot2
 #' @import ggrepel
 #' @importFrom stats biplot
+#' @export biplot.pca
 #' @export
 biplot.pca <- function(
   pcaobj,
