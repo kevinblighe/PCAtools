@@ -1,7 +1,7 @@
 PCAtools: everything Principal Component Analysis
 ================
 Kevin Blighe, Aaron Lun
-2021-04-22
+2021-07-06
 
 # Introduction
 
@@ -326,11 +326,10 @@ to retain?
 
 *PCAtools* provides four metrics for this purpose:
 
-  - Elbow method (`findElbowPoint()`)
-  - Horn’s parallel analysis (Horn 1965) (Buja and Eyuboglu 1992)
-    (`parallelPCA()`)
-  - Marchenko-Pastur limit (`chooseMarchenkoPastur()`)
-  - Gavish-Donoho method (`chooseGavishDonoho()`)
+  - Elbow method
+  - Horn’s parallel analysis (Horn 1965) (Buja and Eyuboglu 1992).
+  - Marchenko-Pastur limit
+  - Gavish-Donoho method
 
 Let’s perform Horn’s parallel analysis first:
 
@@ -580,9 +579,6 @@ we simply ‘add on’ a continuous colour scale via
 
   scale_colour_gradient(low = 'gold', high = 'red2')
 ```
-
-![Figure 12: Colour by a continuous variable and plot other
-PCs](README_files/figure-gfm/ex13a-1.png)
 
 We can also just permit that the internal *ggplot2* engine picks the
 colour scheme - here, we also plot PC10 versus PC50:
@@ -979,6 +975,7 @@ suggestions from:
   - Pandula Priyadarshana
   - Barley Rose Collier Harris
   - Bob Policastro
+  - Alan O’Callaghan
 
 # Session info
 
