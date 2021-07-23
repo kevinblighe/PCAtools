@@ -106,8 +106,11 @@
 #'   labels to their corresponding points by line connectors.
 #' @param widthConnectors Line width of connectors.
 #' @param colConnectors Line colour of connectors.
-#' @param maxoverlapsConnectors Equivalent of max.overlaps in ggrepel. Set to
+#' @param max.overlaps Equivalent of max.overlaps in ggrepel. Set to
 #'   'Inf' to always display all labels when drawConnectors = TRUE.
+#' @param maxoverlapsConnectors See max.overlaps.
+#' @param min.segment.length When drawConnectors = TRUE, specifies the minimum
+#'   length of the connector line segments.
 #' @param directionConnectors direction in which to draw connectors.
 #'   'both', 'x', or 'y'.
 #' @param xlab Label for x-axis.
@@ -243,13 +246,13 @@ biplot <- function(
   ellipseLineSize = 0.25,
   ellipseLineCol = NULL,
   xlim = if(showLoadings || ellipse) c(
-    min(pcaobj$rotated[,x]) - abs((min(pcaobj$rotated[,x])/100)*25),
-    max(pcaobj$rotated[,x]) + abs((min(pcaobj$rotated[,x])/100)*25)) else c(
+    min(pcaobj$rotated[,x]) - abs((min(pcaobj$rotated[,x])/100)*35),
+    max(pcaobj$rotated[,x]) + abs((min(pcaobj$rotated[,x])/100)*35)) else c(
     min(pcaobj$rotated[,x]) - abs((min(pcaobj$rotated[,x])/100)*10),
     max(pcaobj$rotated[,x]) + abs((min(pcaobj$rotated[,x])/100)*10)),
   ylim = if(showLoadings || ellipse) c(
-    min(pcaobj$rotated[,y]) - abs((min(pcaobj$rotated[,y])/100)*25),
-    max(pcaobj$rotated[,y]) + abs((min(pcaobj$rotated[,y])/100)*25)) else c(
+    min(pcaobj$rotated[,y]) - abs((min(pcaobj$rotated[,y])/100)*35),
+    max(pcaobj$rotated[,y]) + abs((min(pcaobj$rotated[,y])/100)*35)) else c(
     min(pcaobj$rotated[,y]) - abs((min(pcaobj$rotated[,y])/100)*10),
     max(pcaobj$rotated[,y]) + abs((min(pcaobj$rotated[,y])/100)*10)),
   lab = rownames(pcaobj$metadata),
@@ -259,7 +262,9 @@ biplot <- function(
   drawConnectors = TRUE,
   widthConnectors = 0.5,
   colConnectors = 'grey50',
-  maxoverlapsConnectors = 15,
+  max.overlaps = 15,
+  maxoverlapsConnectors = NULL,
+  min.segment.length = 0,
   directionConnectors = 'both',
   xlab = paste0(x, ', ', round(pcaobj$variance[x], digits = 2), '% variation'),
   xlabAngle = 0,
@@ -292,6 +297,10 @@ biplot <- function(
 {
 
   labFun <- xidx <- yidx <- NULL
+
+  if (!is.null(maxoverlapsConnectors)) {
+    max.overlaps <- maxoverlapsConnectors
+  }
 
   # create a base theme that will later be modified
   th <- theme_bw(base_size = 24) +
@@ -437,7 +446,8 @@ biplot <- function(
               segment.color = colConnectorsLoadings,
               segment.size = widthConnectorsLoadings,
               direction = directionConnectors,
-              max.overlaps = maxoverlapsConnectors)
+              max.overlaps = max.overlaps,
+              min.segment.length = min.segment.length)
         } else {
           plot <- plot +
             geom_text_repel(data = pcaobj$loadings[vars,], 
@@ -451,7 +461,8 @@ biplot <- function(
               segment.color = colConnectorsLoadings,
               segment.size = widthConnectorsLoadings,
               direction = directionConnectors,
-              max.overlaps = maxoverlapsConnectors)
+              max.overlaps = max.overlaps,
+              min.segment.length = min.segment.length)
         }
       } else {
         if (boxedLoadingsNames) {
@@ -550,7 +561,8 @@ biplot <- function(
           segment.color = colConnectors,
           segment.size = widthConnectors,
           direction = directionConnectors,
-          max.overlaps = maxoverlapsConnectors)
+          max.overlaps = max.overlaps,
+          min.segment.length = min.segment.length)
     } else if (drawConnectors && !is.null(selectLab)) {
       plot <- plot + labFun(
         data=subset(plotobj,
@@ -562,23 +574,21 @@ biplot <- function(
           segment.color = colConnectors,
           segment.size = widthConnectors,
           direction = directionConnectors,
-          max.overlaps = maxoverlapsConnectors)
+          max.overlaps = max.overlaps,
+          min.segment.length = min.segment.length)
     } else if (!drawConnectors && !is.null(selectLab)) {
       if (boxedLabels) {
         plot <- plot + labFun(
           data=subset(plotobj,
             !is.na(plotobj[,'lab'])),
             aes(label = lab),
-            xlim = c(NA, NA),
-            ylim = c(NA, NA),
             size = labSize)
       } else {
         plot <- plot + labFun(
           data=subset(plotobj,
             !is.na(plotobj[,'lab'])),
             aes(label = lab),
-            xlim = c(NA, NA),
-            ylim = c(NA, NA),
+
             size = labSize,
             check_overlap = TRUE)
       }
@@ -587,16 +597,12 @@ biplot <- function(
         plot <- plot + labFun(
           data = plotobj,
             aes(label = lab),
-            xlim = c(NA, NA),
-            ylim = c(NA, NA),
             size = labSize,
             check_overlap = TRUE)
       } else {
         plot <- plot + labFun(
           data = plotobj,
             aes(label = lab),
-            xlim = c(NA, NA),
-            ylim = c(NA, NA),
             size = labSize,
             check_overlap = TRUE)
       }

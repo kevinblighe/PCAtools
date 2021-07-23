@@ -43,8 +43,8 @@ test_that('datatypes', {
     lengthLoadingsArrowsFactor, widthLoadingsArrows, alphaLoadingsArrow, shape,
     shapekey, pointSize, legendLabSize, legendTitleSize, legendIconSize, encircleAlpha,
     encircleLineSize, ellipseLevel, ellipseSegments, ellipseAlpha, ellipseLineSize, xlim, ylim,
-    labSize, widthConnectors, maxoverlapsConnectors, xlabAngle, xlabhjust,
-    xlabvjust, ylabAngle, ylabhjust, ylabvjust, axisLabSize, titleLabSize,
+    labSize, widthConnectors, max.overlaps, maxoverlapsConnectors, min.segment.length,
+    xlabAngle, xlabhjust, xlabvjust, ylabAngle, ylabhjust, ylabvjust, axisLabSize, titleLabSize,
     subtitleLabSize, captionLabSize, hline, hlineWidth, vline, vlineWidth,
     borderWidth),
     c('double'))

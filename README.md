@@ -1,7 +1,7 @@
 PCAtools: everything Principal Component Analysis
 ================
 Kevin Blighe, Aaron Lun
-2021-07-06
+2021-07-23
 
 # Introduction
 
@@ -1013,7 +1013,7 @@ sessionInfo()
     ## [13] Biobase_2.48.0              GenomicRanges_1.40.0       
     ## [15] GenomeInfoDb_1.24.2         IRanges_2.22.2             
     ## [17] S4Vectors_0.26.1            BiocGenerics_0.34.0        
-    ## [19] PCAtools_2.3.11             ggrepel_0.9.1              
+    ## [19] PCAtools_2.5.5              ggrepel_0.9.1              
     ## [21] ggplot2_3.3.3              
     ## 
     ## loaded via a namespace (and not attached):

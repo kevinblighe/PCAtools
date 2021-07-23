@@ -50,13 +50,13 @@ biplot(
   ellipseLineSize = 0.25,
   ellipseLineCol = NULL,
   xlim = if (showLoadings || ellipse) c(min(pcaobj$rotated[, x]) -
-    abs((min(pcaobj$rotated[, x])/100) * 25), max(pcaobj$rotated[, x]) +
-    abs((min(pcaobj$rotated[, x])/100) * 25)) else c(min(pcaobj$rotated[, x]) -
+    abs((min(pcaobj$rotated[, x])/100) * 35), max(pcaobj$rotated[, x]) +
+    abs((min(pcaobj$rotated[, x])/100) * 35)) else c(min(pcaobj$rotated[, x]) -
     abs((min(pcaobj$rotated[, x])/100) * 10), max(pcaobj$rotated[, x]) +
     abs((min(pcaobj$rotated[, x])/100) * 10)),
   ylim = if (showLoadings || ellipse) c(min(pcaobj$rotated[, y]) -
-    abs((min(pcaobj$rotated[, y])/100) * 25), max(pcaobj$rotated[, y]) +
-    abs((min(pcaobj$rotated[, y])/100) * 25)) else c(min(pcaobj$rotated[, y]) -
+    abs((min(pcaobj$rotated[, y])/100) * 35), max(pcaobj$rotated[, y]) +
+    abs((min(pcaobj$rotated[, y])/100) * 35)) else c(min(pcaobj$rotated[, y]) -
     abs((min(pcaobj$rotated[, y])/100) * 10), max(pcaobj$rotated[, y]) +
     abs((min(pcaobj$rotated[, y])/100) * 10)),
   lab = rownames(pcaobj$metadata),
@@ -66,7 +66,9 @@ biplot(
   drawConnectors = TRUE,
   widthConnectors = 0.5,
   colConnectors = "grey50",
-  maxoverlapsConnectors = 15,
+  max.overlaps = 15,
+  maxoverlapsConnectors = NULL,
+  min.segment.length = 0,
   directionConnectors = "both",
   xlab = paste0(x, ", ", round(pcaobj$variance[x], digits = 2), "\% variation"),
   xlabAngle = 0,
@@ -257,8 +259,13 @@ labels to their corresponding points by line connectors.}
 
 \item{colConnectors}{Line colour of connectors.}
 
-\item{maxoverlapsConnectors}{Equivalent of max.overlaps in ggrepel. Set to
+\item{max.overlaps}{Equivalent of max.overlaps in ggrepel. Set to
 'Inf' to always display all labels when drawConnectors = TRUE.}
+
+\item{maxoverlapsConnectors}{See max.overlaps.}
+
+\item{min.segment.length}{When drawConnectors = TRUE, specifies the minimum
+length of the connector line segments.}
 
 \item{directionConnectors}{direction in which to draw connectors.
 'both', 'x', or 'y'.}
