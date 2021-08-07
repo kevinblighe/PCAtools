@@ -25,6 +25,11 @@ Principal Component Analysis (PCA) is a very powerful technique that has wide ap
 
 *PCAtools* provides functions for data exploration via PCA, and allows the user to generate publication-ready figures. PCA is performed via *BiocSingular* [@Lun] - users can also identify optimal number of principal components via different metrics, such as elbow method and Horn's parallel analysis [@Horn] [@Buja], which has relevance for data reduction in single-cell RNA-seq (scRNA-seq) and high dimensional mass cytometry data.
 
+```{r VROOM_CONNECTION_SIZE, eval = TRUE, echo = FALSE}
+
+  Sys.setenv(VROOM_CONNECTION_SIZE = 20000000)
+
+```
 
 # Installation
 
@@ -32,10 +37,10 @@ Principal Component Analysis (PCA) is a very powerful technique that has wide ap
 
 ```{r getPackage, eval = FALSE}
 
-    if (!requireNamespace('BiocManager', quietly = TRUE))
-        install.packages('BiocManager')
+  if (!requireNamespace('BiocManager', quietly = TRUE))
+    install.packages('BiocManager')
 
-    BiocManager::install('PCAtools')
+  BiocManager::install('PCAtools')
 
 ```
 
@@ -43,10 +48,10 @@ Note: to install development version direct from GitHub:
 
 ```{r getPackageDevel, eval = FALSE}
 
-    if (!requireNamespace('devtools', quietly = TRUE))
-        install.packages('devtools')
+  if (!requireNamespace('remotes', quietly = TRUE))
+    install.packages('remotes')
 
-    devtools::install_github('kevinblighe/PCAtools')
+  remotes::install_github('kevinblighe/PCAtools')
 
 ```
 
@@ -54,7 +59,7 @@ Note: to install development version direct from GitHub:
 
 ```{r Load, message = FALSE}
 
-    library(PCAtools)
+  library(PCAtools)
 
 ```
 
@@ -154,8 +159,6 @@ We will load breast cancer gene expression data with recurrence free survival (R
 First, let's read in and prepare the data:
 
 ```{r, message = FALSE}
-
-  Sys.setenv('VROOM_CONNECTION_SIZE' = 128000000)
 
   library(Biobase)
   library(GEOquery)
