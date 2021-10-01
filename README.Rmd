@@ -22,6 +22,11 @@ Principal Component Analysis (PCA) is a very powerful technique that has wide ap
 
 *PCAtools* provides functions for data exploration via PCA, and allows the user to generate publication-ready figures. PCA is performed via *BiocSingular* [@Lun] - users can also identify optimal number of principal components via different metrics, such as elbow method and Horn's parallel analysis [@Horn] [@Buja], which has relevance for data reduction in single-cell RNA-seq (scRNA-seq) and high dimensional mass cytometry data.
 
+```{r VROOM_CONNECTION_SIZE, eval = TRUE, echo = FALSE}
+
+  Sys.setenv(VROOM_CONNECTION_SIZE='512000')
+
+```
 
 # Installation
 
@@ -212,7 +217,6 @@ Conduct principal component analysis (PCA):
 ```
 
 ## A bi-plot
-
 
 ```{r ex3a, eval = FALSE}
 
@@ -475,7 +479,7 @@ samples. Here, we draw ellipses around each group at the 95% confidence level:
 
 ### Modify line types, remove gridlines, and increase point size
 
-```{r ex12a, eval = FALSE}
+```{r ex12a}
 
   biplot(p,
     lab = NULL,
@@ -546,6 +550,7 @@ scheme - here, we also plot PC10 versus PC50:
 
 ```{r ex13b, eval = FALSE}
 
+  # was always eval = FALSE
   biplot(p, x = 'PC10', y = 'PC50',
     lab = NULL,
     colby = 'Age',
@@ -688,6 +693,8 @@ correlations.
 'eigencorplot' is built upon another function by the *PCAtools* developers, namely
 [CorLevelPlot](https://github.com/kevinblighe/CorLevelPlot). Further examples
 can be found there.
+
+**NB - for factors, ensure that these are ordered in a logical fashion prior to running this function**
 
 ```{r ex18a, warning = FALSE, fig.height = 4.25, fig.width = 12, fig.cap = 'Figure 18: Correlate the principal components back to the clinical data'}
 

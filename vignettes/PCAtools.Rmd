@@ -27,7 +27,7 @@ Principal Component Analysis (PCA) is a very powerful technique that has wide ap
 
 ```{r VROOM_CONNECTION_SIZE, eval = TRUE, echo = FALSE}
 
-  Sys.setenv(VROOM_CONNECTION_SIZE = 20000000)
+  Sys.setenv(VROOM_CONNECTION_SIZE='512000')
 
 ```
 
@@ -158,7 +158,7 @@ We will load breast cancer gene expression data with recurrence free survival (R
 
 First, let's read in and prepare the data:
 
-```{r, message = FALSE, eval = FALSE}
+```{r, message = FALSE}
 
   library(Biobase)
   library(GEOquery)
@@ -213,7 +213,7 @@ First, let's read in and prepare the data:
 
 Conduct principal component analysis (PCA):
 
-```{r, eval = FALSE}
+```{r}
 
   p <- pca(mat, metadata = metadata, removeVar = 0.1)
 
@@ -221,14 +221,13 @@ Conduct principal component analysis (PCA):
 
 ## A bi-plot
 
-Note: was always eval = FALSE
 ```{r ex3a, eval = FALSE}
 
   biplot(p)
 
 ```
 
-```{r ex3b, fig.height = 6, fig.width = 7, fig.cap = 'Figure 3: A bi-plot', eval = FALSE}
+```{r ex3b, fig.height = 6, fig.width = 7, fig.cap = 'Figure 3: A bi-plot'}
 
   biplot(p, showLoadings = TRUE, lab = NULL)
 
@@ -244,7 +243,7 @@ More on this later in this vignette.
 
 ## A pairs plot
 
-```{r ex4, message = FALSE, fig.height = 10, fig.width = 10, fig.cap = 'Figure 4: A pairs plot', eval = FALSE}
+```{r ex4, message = FALSE, fig.height = 10, fig.width = 10, fig.cap = 'Figure 4: A pairs plot'}
 
   pairsplot(p)
 
@@ -256,7 +255,7 @@ If the biplot was previously generated with *showLoadings = TRUE*, check how
 this loadings plot corresponds to the biplot loadings - they should match up
 for the top hits.
 
-```{r ex5, fig.height = 6, fig.width = 8, fig.cap = 'Figure 5: A loadings plot', eval = FALSE}
+```{r ex5, fig.height = 6, fig.width = 8, fig.cap = 'Figure 5: A loadings plot'}
 
   plotloadings(p, labSize = 3)
 
@@ -265,7 +264,7 @@ for the top hits.
 
 ## An eigencor plot
 
-```{r ex6, warning = FALSE, fig.height = 4, fig.width = 8, fig.cap = 'Figure 6: An eigencor plot', eval = FALSE}
+```{r ex6, warning = FALSE, fig.height = 4, fig.width = 8, fig.cap = 'Figure 6: An eigencor plot'}
 
   eigencorplot(p,
     metavars = c('Study','Age','Distant.RFS','ER',
@@ -278,7 +277,7 @@ for the top hits.
 The rotated data that represents the observations / samples is stored in *rotated*,
 while the variable loadings are stored in *loadings*
 
-```{r, eval = FALSE}
+```{r}
 
   p$rotated[1:5,1:5]
 
@@ -298,7 +297,7 @@ First, let's sort out the gene annotation by mapping the probe IDs to gene
 symbols. The array used for this study was the Affymetrix U133a, so let's use
 the *hgu133a.db* Bioconductor package:
 
-```{r, messages = FALSE, eval = FALSE}
+```{r, messages = FALSE}
 
   suppressMessages(require(hgu133a.db))
   newnames <- mapIds(hgu133a.db,
@@ -328,7 +327,7 @@ variation, but how can we determine the optimum number of PCs to retain?
 
 Let's perform Horn's parallel analysis first:
 
-```{r, warning = FALSE, eval = FALSE}
+```{r, warning = FALSE}
 
   horn <- parallelPCA(mat)
   horn$n
@@ -337,7 +336,7 @@ Let's perform Horn's parallel analysis first:
 
 Now the elbow method:
 
-```{r, eval = FALSE}
+```{r}
 
   elbow <- findElbowPoint(p$variance)
   elbow
@@ -350,7 +349,7 @@ number of clusters in a dataset - there is no correct answer.
 
 Taking these values, we can produce a new scree plot and mark these:
 
-```{r ex7, fig.height = 7, fig.width = 9, fig.cap = 'Figure 7: Advanced scree plot illustrating optimum number of PCs', eval = FALSE}
+```{r ex7, fig.height = 7, fig.width = 9, fig.cap = 'Figure 7: Advanced scree plot illustrating optimum number of PCs'}
 
   library(ggplot2)
 
@@ -369,7 +368,7 @@ If all else fails, one can simply take the number of PCs that contributes to
 a pre-selected total of explained variation, e.g., in this case, 27 PCs account
 for >80% explained variation.
 
-```{r, eval = FALSE}
+```{r}
 
   which(cumsum(p$variance) > 80)[1]
 
@@ -387,7 +386,7 @@ In a bi-plot, we can shade the points by different groups and add many more feat
 
 ### Colour by a metadata factor, use a custom label, add lines through origin, and add legend
 
-```{r ex8, fig.height = 7, fig.width = 7.5, fig.cap = 'Figure 8: Colour by a metadata factor, use a custom label, add lines through origin, and add legend', eval = FALSE}
+```{r ex8, fig.height = 7, fig.width = 7.5, fig.cap = 'Figure 8: Colour by a metadata factor, use a custom label, add lines through origin, and add legend'}
 
   biplot(p,
     lab = paste0(p$metadata$Age, ' años'),
@@ -404,7 +403,7 @@ The encircle functionality literally draws a polygon around
 each group specified by *colby*. It says nothing about any statistic
 pertaining to each group.
 
-```{r ex9, message = FALSE, fig.height = 7.5, fig.width = 7, fig.cap = 'Figure 9: Supply custom colours and encircle variables by group', eval = FALSE}
+```{r ex9, message = FALSE, fig.height = 7.5, fig.width = 7, fig.cap = 'Figure 9: Supply custom colours and encircle variables by group'}
 
   biplot(p,
     colby = 'ER', colkey = c('ER+' = 'forestgreen', 'ER-' = 'purple'),
@@ -433,7 +432,7 @@ Stat ellipses are also drawn around each group but have a greater statistical
 meaning and can be used, for example, as a strict determination of outlier
 samples. Here, we draw ellipses around each group at the 95% confidence level:
 
-```{r ex10, message = FALSE, fig.height = 7.5, fig.width = 7, fig.cap = 'Figure 10: Stat ellipses', eval = FALSE}
+```{r ex10, message = FALSE, fig.height = 7.5, fig.width = 7, fig.cap = 'Figure 10: Stat ellipses'}
 
   biplot(p,
     colby = 'ER', colkey = c('ER+' = 'forestgreen', 'ER-' = 'purple'),
@@ -467,7 +466,7 @@ samples. Here, we draw ellipses around each group at the 95% confidence level:
 
 ### Change shape based on tumour grade, remove connectors, and add titles
 
-```{r ex11, message = FALSE, eval = FALSE, eval = FALSE}
+```{r ex11, message = FALSE, eval = FALSE}
 
   biplot(p,
     colby = 'ER', colkey = c('ER+' = 'forestgreen', 'ER-' = 'purple'),
@@ -483,7 +482,7 @@ samples. Here, we draw ellipses around each group at the 95% confidence level:
 
 ### Modify line types, remove gridlines, and increase point size
 
-```{r ex12a, eval = FALSE, eval = FALSE}
+```{r ex12a}
 
   biplot(p,
     lab = NULL,
@@ -503,7 +502,7 @@ samples. Here, we draw ellipses around each group at the 95% confidence level:
 
 Let's plot the same as above but with loadings:
 
-```{r ex12b, message = FALSE, fig.height = 5.5, fig.width = 11, fig.cap = 'Figure 11: Modify line types, remove gridlines, and increase point size', eval = FALSE}
+```{r ex12b, message = FALSE, fig.height = 5.5, fig.width = 11, fig.cap = 'Figure 11: Modify line types, remove gridlines, and increase point size'}
 
   biplot(p,
     # loadings parameters
@@ -532,7 +531,7 @@ Let's plot the same as above but with loadings:
 There are two ways to colour by a continuous variable. In the first way, we simply
 'add on' a continuous colour scale via *scale_colour_gradient*:
 
-```{r ex13a, fig.height = 5.5, fig.width = 6, fig.cap = 'Figure 12: Colour by a continuous variable and plot other PCs', eval = FALSE}
+```{r ex13a, fig.height = 5.5, fig.width = 6, fig.cap = 'Figure 12: Colour by a continuous variable and plot other PCs'}
 
   # add ESR1 gene expression to the metadata
   p$metadata$ESR1 <- mat['205225_at',]
@@ -552,7 +551,6 @@ There are two ways to colour by a continuous variable. In the first way, we simp
 We can also just permit that the internal *ggplot2* engine picks the colour
 scheme - here, we also plot PC10 versus PC50:
 
-Note: was always eval = FALSE
 ```{r ex13b, eval = FALSE}
 
   # was always eval = FALSE
@@ -584,7 +582,7 @@ can shut off titles and axis labeling to save space. Reducing point size and
 colouring by a variable of interest can additionally help us to rapidly skim
 over the data.
 
-```{r ex14, message = FALSE, fig.height = 8, fig.width = 7, fig.cap = 'Figure 13: Quickly explore potentially informative PCs via a pairs plot', eval = FALSE}
+```{r ex14, message = FALSE, fig.height = 8, fig.width = 7, fig.cap = 'Figure 13: Quickly explore potentially informative PCs via a pairs plot'}
 
   pairsplot(p,
     components = getComponents(p, c(1:10)),
@@ -603,7 +601,7 @@ setting 'triangle = FALSE'. In this case, we can further control the layout
 with the 'ncol' and 'nrow' parameters, although, the function will
 automatically determine these based on your input data.
 
-```{r ex15, fig.height = 5.5, fig.width = 6, fig.cap = 'Figure 14: arranging a pairs plot horizontally', eval = FALSE}
+```{r ex15, fig.height = 5.5, fig.width = 6, fig.cap = 'Figure 14: arranging a pairs plot horizontally'}
 
   pairsplot(p,
     components = getComponents(p, c(4,33,11,1)),
@@ -632,7 +630,7 @@ The loadings plot, like all others, is highly configurable. To modify the
 cut-off for inclusion / exclusion of variables, we use *rangeRetain*, where
 0.01 equates to the top/bottom 1% of the loadings range per PC.
 
-```{r ex16, fig.height = 5.5, fig.width = 7, fig.cap = 'Figure 15: Determine the variables that drive variation among each PC', eval = FALSE}
+```{r ex16, fig.height = 5.5, fig.width = 7, fig.cap = 'Figure 15: Determine the variables that drive variation among each PC'}
 
   plotloadings(p,
     rangeRetain = 0.01,
@@ -656,7 +654,7 @@ With the loadings plot, in addition, we can instead plot absolute values and
 modify the point sizes to be proportional to the loadings. We can also switch
 off the line connectors and plot the loadings for any PCs
 
-```{r ex17a, fig.height = 7, fig.width = 9, fig.cap = 'Figure 16: plotting absolute component loadings', eval = FALSE}
+```{r ex17a, fig.height = 7, fig.width = 9, fig.cap = 'Figure 16: plotting absolute component loadings'}
 
   plotloadings(p,
     components = getComponents(p, c(4,33,11,1)),
@@ -674,7 +672,7 @@ off the line connectors and plot the loadings for any PCs
 
 We can plot just this single PC and flip the plot on its side, if we wish:
 
-```{r ex17b, fig.height = 4.5, fig.width = 9, fig.cap = 'Figure 17: plotting absolute component loadings', eval = FALSE}
+```{r ex17b, fig.height = 4.5, fig.width = 9, fig.cap = 'Figure 17: plotting absolute component loadings'}
 
   plotloadings(p,
     components = getComponents(p, c(2)),
@@ -699,7 +697,9 @@ correlations.
 [CorLevelPlot](https://github.com/kevinblighe/CorLevelPlot). Further examples
 can be found there.
 
-```{r ex18a, warning = FALSE, fig.height = 4.25, fig.width = 12, fig.cap = 'Figure 18: Correlate the principal components back to the clinical data', eval = FALSE}
+**NB - for factors, ensure that these are ordered in a logical fashion prior to running this function**
+
+```{r ex18a, warning = FALSE, fig.height = 4.25, fig.width = 12, fig.cap = 'Figure 18: Correlate the principal components back to the clinical data'}
 
   eigencorplot(p,
     components = getComponents(p, 1:27),
@@ -723,7 +723,7 @@ can be found there.
 We can also supply different cut-offs for statistical significance, apply
 p-value adjustment, plot R-squared values, and specify correlation method:
 
-```{r ex18b, warning = FALSE, fig.height = 5, fig.width = 12, fig.cap = 'Figure 19: Correlate the principal components back to the clinical data', eval = FALSE}
+```{r ex18b, warning = FALSE, fig.height = 5, fig.width = 12, fig.cap = 'Figure 19: Correlate the principal components back to the clinical data'}
 
   eigencorplot(p,
     components = getComponents(p, 1:horn$n),
@@ -757,7 +757,7 @@ just a bi-plot used to identify outliers!
 
 ## Plot the entire project on a single panel
 
-```{r ex19, message = FALSE, warning = FALSE, fig.height = 10, fig.width = 15, fig.cap = 'Figure 20: a merged panel of all PCAtools plots', eval = FALSE}
+```{r ex19, message = FALSE, warning = FALSE, fig.height = 10, fig.width = 15, fig.cap = 'Figure 20: a merged panel of all PCAtools plots'}
 
   pscree <- screeplot(p, components = getComponents(p, 1:30),
     hline = 80, vline = 27, axisLabSize = 14, titleLabSize = 20,
@@ -860,7 +860,7 @@ The *pca* class, which is created by *PCAtools*, is not configured to work with
 create a *prcomp* object and then use that in model prediction, as elaborated
 in the following code chunk:
 
-```{r, eval = FALSE} 
+```{r} 
 
   p <- pca(mat, metadata = metadata, removeVar = 0.1)
   p.prcomp <- list(sdev = p$sdev,
