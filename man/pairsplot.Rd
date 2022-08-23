@@ -21,6 +21,7 @@ pairsplot(
   shape = NULL,
   shapekey = NULL,
   pointSize = 1,
+  shared.legend = FALSE,
   legendPosition = "none",
   legendLabSize = 6,
   legendIconSize = 1.5,
@@ -107,6 +108,8 @@ grouping/categorical variable.}
 'shape', e.g., c(A=10, B=21).}
 
 \item{pointSize}{Size of plotted points.}
+  
+\item{shared.legend}{Logical, indicating whether to draw a one shared legend for the bi-plots.}
 
 \item{legendPosition}{Position of legend ('top', 'bottom', 'left', 'right',
 'none').}
