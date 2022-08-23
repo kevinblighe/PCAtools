@@ -33,6 +33,7 @@
 #' @param shapekey Vector of name-value pairs relating to value passed to
 #'   'shape', e.g., c(A=10, B=21).
 #' @param pointSize Size of plotted points.
+#' @param shared.legend Logical, indicating whether to draw a one shared legend for the bi-plots.
 #' @param legendPosition Position of legend ('top', 'bottom', 'left', 'right',
 #'   'none').
 #' @param legendLabSize Size of plot legend text.
@@ -139,6 +140,7 @@ pairsplot <- function(
   shape = NULL,
   shapekey = NULL,
   pointSize = 1.0,
+  shared.legend = FALSE,
   legendPosition = 'none',
   legendLabSize = 6,
   legendIconSize = 1.5,
@@ -336,15 +338,29 @@ pairsplot <- function(
 
     # return plot?
     if (returnPlot) {
-      return(plot_grid(title,
-        do.call(plot_grid, c(biplots.final, ncol = ncol, nrow = nrow)),
-        ncol = 1,
-        rel_heights = c(0.1, 1.0)))
+      if(shared.legend) {
+        legend <- get_legend(biplots.final[[2]] + theme(legend.box.margin = margin(0, 0, 0, 12)))
+        bigrid <- plot_grid(title, 
+                            do.call(plot_grid, c(lapply(biplots.final, "+", theme(legend.position = "none")), ncol = ncol, nrow = nrow)), 
+                            ncol = 1, rel_heights = c(0.1, 1))
+        return(plot_grid(legend, bigrid, rel_widths = c(0.5, ncol)))
+      } else {
+        return(plot_grid(title, 
+                         do.call(plot_grid, c(biplots.final, ncol = ncol, nrow = nrow)), 
+                         ncol = 1, rel_heights = c(0.1, 1)))
+      }
     } else if (!returnPlot) {
-      plot_grid(title,
-        do.call(plot_grid, c(biplots.final, ncol = ncol, nrow = nrow)),
-        ncol = 1,
-        rel_heights = c(0.1, 1.0))
+      if(shared.legend) {
+        legend <- get_legend(biplots.final[[2]] + theme(legend.box.margin = margin(0, 0, 0, 12)))
+        bigrid <- plot_grid(title, 
+                            do.call(plot_grid, c(lapply(biplots.final, "+", theme(legend.position = "none")), ncol = ncol, nrow = nrow)), 
+                            ncol = 1, rel_heights = c(0.1, 1))
+        plot_grid(legend, bigrid, rel_widths = c(0.5, ncol))
+      } else {
+        plot_grid(title, 
+                  do.call(plot_grid, c(biplots.final, ncol = ncol, nrow = nrow)), 
+                  ncol = 1, rel_heights = c(0.1, 1))
+      }
     }
 
   # triangular layout?
@@ -378,15 +394,29 @@ pairsplot <- function(
 
     # return plot?
     if (returnPlot) {
-      return(plot_grid(title,
-        do.call(plot_grid, c(biplots, ncol = ncol, nrow = nrow)),
-        ncol = 1,
-        rel_heights = c(0.1, 1.0)))
+      if(shared.legend) {
+        legend <- get_legend(biplots[[2]] + theme(legend.box.margin = margin(0, 0, 0, 12)))
+        bigrid <- plot_grid(title, 
+                            do.call(plot_grid, c(lapply(biplots, "+", theme(legend.position = "none")), ncol = ncol, nrow = nrow)),
+                            ncol = 1, rel_heights = c(0.1, 1))
+        return(plot_grid(legend, bigrid, rel_widths = c(0.5, ncol)))
+      } else {
+        return(plot_grid(title, 
+                         do.call(plot_grid, c(biplots, ncol = ncol, nrow = nrow)), 
+                         ncol = 1, rel_heights = c(0.1, 1)))
+      }
     } else if (!returnPlot) {
-      plot_grid(title,
-        do.call(plot_grid, c(biplots, ncol = ncol, nrow = nrow)),
-        ncol = 1,
-        rel_heights = c(0.1, 1.0))
+      if(shared.legend) {
+        legend <- get_legend(biplots[[2]] + theme(legend.box.margin = margin(0, 0, 0, 12)))
+        bigrid <- plot_grid(title, 
+                            do.call(plot_grid, c(lapply(biplots, "+", theme(legend.position = "none")), ncol = ncol, nrow = nrow)), 
+                            ncol = 1, rel_heights = c(0.1, 1))
+        plot_grid(legend, bigrid, rel_widths = c(0.5, ncol))
+      } else {
+        plot_grid(title, 
+                  do.call(plot_grid, c(biplots, ncol = ncol, nrow = nrow)), 
+                  ncol = 1, rel_heights = c(0.1, 1))
+      }
     }
   }
 }
