@@ -24,6 +24,7 @@ pairsplot(
   shared.legend = FALSE,
   legendPosition = "none",
   legendLabSize = 6,
+  legendTitleSize = 14,
   legendIconSize = 1.5,
   xlim = NULL,
   ylim = NULL,
@@ -115,6 +116,8 @@ grouping/categorical variable.}
 'none').}
 
 \item{legendLabSize}{Size of plot legend text.}
+ 
+\item{legendTitleSize}{Size of plot legend title text.}
 
 \item{legendIconSize}{Size of plot legend icons / symbols.}
 
