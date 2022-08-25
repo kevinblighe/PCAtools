@@ -110,7 +110,7 @@ grouping/categorical variable.}
 
 \item{pointSize}{Size of plotted points.}
   
-\item{shared.legend}{Logical, indicating whether to draw a one shared legend for the bi-plots.}
+\item{shared.legend}{Logical, indicating whether to draw a shared legend for the bi-plots.}
 
 \item{legendPosition}{Position of legend ('top', 'bottom', 'left', 'right',
 'none').}
