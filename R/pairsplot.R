@@ -184,7 +184,12 @@ pairsplot <- function(
 
   # counter necessary for layout of objects in plot space
   nplots <- 0
-
+  
+  # the shared legend will be on the left
+  if (shared.legend) {
+    legendPosition <- 'left'
+  }
+  
   # beginning of the master loop (contains nested loop)
   # biplots will be created on a pairwise basis
   for (i in seq_along(components)) {
