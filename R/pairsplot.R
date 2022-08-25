@@ -33,7 +33,7 @@
 #' @param shapekey Vector of name-value pairs relating to value passed to
 #'   'shape', e.g., c(A=10, B=21).
 #' @param pointSize Size of plotted points.
-#' @param shared.legend Logical, indicating whether to draw a one shared legend for the bi-plots.
+#' @param shared.legend Logical, indicating whether to draw a shared legend for the bi-plots.
 #' @param legendPosition Position of legend ('top', 'bottom', 'left', 'right',
 #'   'none').
 #' @param legendLabSize Size of plot legend text.
