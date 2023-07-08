@@ -84,13 +84,15 @@ parallelPCA <- function(mat, max.rank=100, ..., niters=50, threshold=0.1,
   list(original=original, permuted=permutations, n=npcs)
 }
 
+#' @importFrom beachmat initializeCpp
 .parallel_PA <- function(mat, max.rank, ..., seed, stream, BSPARAM)
 # Function for use in bplapply, defined here to automatically 
 # take advantage of the namespace when using snowParam. Note 
 # that shuffle_matrix needs samples in columns, hence the t()
 # above and transposed=TRUE in the pca() calls.
 {
-  re.y <- shuffle_matrix(mat, seed, stream)
+  ptr <- initializeCpp(mat)
+  re.y <- shuffle_matrix(ptr, seed, stream)
   out <- pca(re.y, rank=max.rank, ..., transposed=TRUE, BSPARAM=BSPARAM)
   out$variance
 }

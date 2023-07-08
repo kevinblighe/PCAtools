@@ -1,5 +1,5 @@
 # This checks the parallelPCA function.
-# require(PCAtools); require(testthat); source("test-parallel-pca.R")
+# require(PCAtools); require(testthat); source("setup.R"); source("test-parallel-pca.R")
 
 set.seed(1001)
 test_that("parallelPCA works as expected", {
@@ -52,23 +52,32 @@ test_that("parallelPCA respects the seed", {
 set.seed(1002)
 test_that("parallelPCA's C++ code works as expected", {
     trans <- t(lcounts)
-    shuffled <- PCAtools:::shuffle_matrix(trans, 1, 1L)
+    ptr <- beachmat::initializeCpp(trans)
+    shuffled <- PCAtools:::shuffle_matrix(ptr, 1, 1L)
     expect_false(identical(shuffled, trans))
     expect_identical(apply(shuffled, 2, sort), apply(trans, 2, sort))
+    expect_true(is.matrix(shuffled))
 
     # Is reproducible.
-    shuffled2 <- PCAtools:::shuffle_matrix(trans, 1, 1L)
+    shuffled2 <- PCAtools:::shuffle_matrix(ptr, 1, 1L)
     expect_identical(shuffled, shuffled2)
 
     # Responds to the seed.
-    shuffled3 <- PCAtools:::shuffle_matrix(trans, 2, 1L)
+    shuffled3 <- PCAtools:::shuffle_matrix(ptr, 2, 1L)
     expect_false(identical(shuffled, shuffled3))
     expect_identical(apply(shuffled, 2, sort), apply(shuffled3, 2, sort))
 
     # Responds to the stream.
-    shuffled4 <- PCAtools:::shuffle_matrix(trans, 1, 2L)
+    shuffled4 <- PCAtools:::shuffle_matrix(ptr, 1, 2L)
     expect_false(identical(shuffled, shuffled4))
     expect_identical(apply(shuffled, 2, sort), apply(shuffled4, 2, sort))
+
+    # Same results with a sparse matrix.
+    sptrans <- as(trans, "dgCMatrix")
+    spptr <- beachmat::initializeCpp(sptrans)
+    spshuffled <- PCAtools:::shuffle_matrix(spptr, 1, 1L)
+    expect_s4_class(spshuffled, "dgCMatrix")
+    expect_identical(as.matrix(spshuffled), shuffled)
 })
 
 set.seed(1003)
