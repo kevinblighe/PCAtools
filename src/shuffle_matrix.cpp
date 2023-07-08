@@ -16,6 +16,12 @@ SEXP shuffle_matrix(SEXP incoming, SEXP seed, int stream) {
     std::vector<double> buffer(NR);
 
     if (ptr->sparse()) {
+        // Technically we could do another pass through the matrix to obtain 
+        // the total number of non-zeros and avoid two allocations for 'values'
+        // and 'xvec'. But this would require a second pass AND it would also
+        // require some extra work to "fill-in" explicit zeros (which would be 
+        // filtered out in the loop but would still occupy space in the total
+        // vector). So we just pay the memory cost for speed's sake.
         std::vector<std::vector<double> > values(NC);
         std::vector<std::vector<int> > indices(NC);
         Rcpp::IntegerVector indptrs(NC + 1);
@@ -61,8 +67,8 @@ SEXP shuffle_matrix(SEXP incoming, SEXP seed, int stream) {
 
         for (int c = 0; c < NC; ++c, optr += NR) {
             ext->fetch_copy(c, buffer.data());
-            boost::range::random_shuffle(buffer, gen); // double-copy (no boost span, unfortunately).
-            std::copy(buffer.begin(), buffer.end(), optr);
+            boost::range::random_shuffle(buffer, gen);
+            std::copy(buffer.begin(), buffer.end(), optr); // double-copy (no std::span, unfortunately).
         }
 
         return output;
