@@ -23,6 +23,7 @@ Imports:
   Matrix,
   DelayedMatrixStats,
   DelayedArray,
+  beachmat,
   BiocSingular,
   BiocParallel,
   Rcpp,
@@ -36,7 +37,6 @@ Suggests:
   GEOquery,
   hgu133a.db,
   ggplotify,
-  beachmat,
   RMTstat,
   ggalt,
   DESeq2,
@@ -53,6 +53,6 @@ URL: https://github.com/kevinblighe/PCAtools
 biocViews: RNASeq, ATACSeq, GeneExpression, Transcription, SingleCell, PrincipalComponent
 VignetteBuilder:
   knitr
-SystemRequirements: C++11
-RoxygenNote: 7.1.1
+SystemRequirements: C++17
+RoxygenNote: 7.2.3
 Encoding: UTF-8
