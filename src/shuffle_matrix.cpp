@@ -13,7 +13,6 @@ SEXP shuffle_matrix(SEXP incoming, SEXP seed, int stream) {
     auto NR = ptr->nrow(), NC = ptr->ncol();
 
     auto gen = pcg32(dqrng::convert_seed<uint64_t>(seed), stream);
-    std::vector<double> buffer(NR);
 
     if (ptr->sparse()) {
         // Technically we could do another pass through the matrix to obtain 
@@ -27,16 +26,15 @@ SEXP shuffle_matrix(SEXP incoming, SEXP seed, int stream) {
         Rcpp::IntegerVector indptrs(NC + 1);
 
         std::vector<double> vbuffer(NR);
-        std::vector<int> ibuffer(NR);
-        auto ext = tatami::consecutive_extractor<false, false>(ptr.get(), 0, NC);
+        auto ext = tatami::consecutive_extractor<false>(ptr.get(), false, 0, NC);
 
         for (int c = 0; c < NC; ++c) {
-            auto ptr = ext->fetch(c, buffer.data());
-            tatami::copy_n(ptr, NR, buffer.data());
-            boost::range::random_shuffle(buffer, gen);
+            auto ptr = ext->fetch(c, vbuffer.data());
+            tatami::copy_n(ptr, NR, vbuffer.data());
+            boost::range::random_shuffle(vbuffer, gen);
             for (int r = 0; r < NR; ++r) {
-                if (buffer[r]) {
-                    values[c].push_back(buffer[r]);
+                if (vbuffer[r]) {
+                    values[c].push_back(vbuffer[r]);
                     indices[c].push_back(r);
                 }
             }
@@ -64,7 +62,8 @@ SEXP shuffle_matrix(SEXP incoming, SEXP seed, int stream) {
     } else {
         Rcpp::NumericMatrix output(NR, NC);
         double* optr = static_cast<double*>(output.begin());
-        auto ext = tatami::consecutive_extractor<false, false>(ptr.get(), 0, NC);
+        auto ext = tatami::consecutive_extractor<false>(ptr.get(), false, 0, NC);
+        std::vector<double> buffer(NR);
 
         for (int c = 0; c < NC; ++c, optr += NR) {
             auto ptr = ext->fetch(c, buffer.data());
