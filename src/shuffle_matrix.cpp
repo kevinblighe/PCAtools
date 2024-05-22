@@ -31,7 +31,8 @@ SEXP shuffle_matrix(SEXP incoming, SEXP seed, int stream) {
         auto ext = tatami::consecutive_extractor<false, false>(ptr.get(), 0, NC);
 
         for (int c = 0; c < NC; ++c) {
-            ext->fetch_copy(c, buffer.data());
+            auto ptr = ext->fetch(c, buffer.data());
+            tatami::copy_n(ptr, NR, buffer.data());
             boost::range::random_shuffle(buffer, gen);
             for (int r = 0; r < NR; ++r) {
                 if (buffer[r]) {
@@ -66,7 +67,8 @@ SEXP shuffle_matrix(SEXP incoming, SEXP seed, int stream) {
         auto ext = tatami::consecutive_extractor<false, false>(ptr.get(), 0, NC);
 
         for (int c = 0; c < NC; ++c, optr += NR) {
-            ext->fetch_copy(c, buffer.data());
+            auto ptr = ext->fetch(c, buffer.data());
+            tatami::copy_n(ptr, NR, buffer.data());
             boost::range::random_shuffle(buffer, gen);
             std::copy(buffer.begin(), buffer.end(), optr); // double-copy (no std::span, unfortunately).
         }
