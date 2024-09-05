@@ -47,6 +47,7 @@ Suggests:
 LinkingTo:
   Rcpp,
   beachmat,
+  assorthead,
   BH,
   dqrng
 URL: https://github.com/kevinblighe/PCAtools
