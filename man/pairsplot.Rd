@@ -24,6 +24,12 @@ pairsplot(
   legendPosition = "none",
   legendLabSize = 6,
   legendIconSize = 1.5,
+  encircle = FALSE,
+  encircleFill = TRUE,
+  encircleFillKey = NULL,
+  encircleAlpha = 1/4,
+  encircleLineSize = 0.25,
+  encircleLineCol = NULL,
   xlim = NULL,
   ylim = NULL,
   lab = NULL,
@@ -114,6 +120,25 @@ grouping/categorical variable.}
 \item{legendLabSize}{Size of plot legend text.}
 
 \item{legendIconSize}{Size of plot legend icons / symbols.}
+
+\item{encircle}{Logical, indicating whether to draw a polygon around
+the groups specified by 'colby'.}
+
+\item{encircleFill}{Logical, if 'encircle == TRUE', this determines
+whether to fill the encircled region or not.}
+
+\item{encircleFillKey}{Vector of name-value pairs relating to value passed to
+'encircleFill', e.g., c(A='forestgreen', B='gold'). If NULL, the fill
+is controlled by whatever has already been used for 'colby' / 'colkey'.}
+
+\item{encircleAlpha}{Alpha for purposes of controlling colour transparency of
+the encircled region. Used when 'encircle == TRUE'.}
+
+\item{encircleLineSize}{Line width of the encircled line when
+'encircle == TRUE'.}
+
+\item{encircleLineCol}{Colour of the encircled line when
+'encircle == TRUE'.}
 
 \item{xlim}{Limits of the x-axis.}
 
