@@ -23,7 +23,7 @@ Imports:
   Matrix,
   DelayedMatrixStats,
   DelayedArray,
-  beachmat,
+  beachmat (>= 2.21.1),
   BiocSingular,
   BiocParallel,
   Rcpp,
@@ -48,7 +48,8 @@ LinkingTo:
   Rcpp,
   beachmat,
   BH,
-  dqrng
+  dqrng,
+  assorthead
 URL: https://github.com/kevinblighe/PCAtools
 biocViews: RNASeq, ATACSeq, GeneExpression, Transcription, SingleCell, PrincipalComponent
 VignetteBuilder:
