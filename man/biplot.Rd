@@ -97,7 +97,8 @@ biplot(
   gridlines.minor = TRUE,
   borderWidth = 0.8,
   borderColour = "black",
-  returnPlot = TRUE
+  returnPlot = TRUE,
+  flip_axes = FALSE
 )
 }
 \arguments{
@@ -334,6 +335,8 @@ gridlines.}
 
 \item{returnPlot}{Logical, indicating whether or not to return the plot
 object.}
+
+\item{flip_axes}{Logical, indicating whether to swap the x- and y-axes.}
 }
 \value{
 A \code{\link{ggplot2}} object.
