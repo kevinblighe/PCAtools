@@ -206,6 +206,7 @@ biplot <- function(
   y = 'PC2',
   showLoadings = FALSE,
   ntopLoadings = 5,
+  LoadingsNames = NULL,
   showLoadingsNames = if (showLoadings) TRUE else FALSE,
   colLoadingsNames = 'black',
   sizeLoadingsNames = 3,
@@ -405,12 +406,22 @@ biplot <- function(
 
   # plot loadings arrows?
   if (showLoadings) {
-    # get top ntopLoadings to display
+    # get top ntopLoadings to display, or use user-supplied LoadingsNames
     xidx <- order(abs(pcaobj$loadings[,x]), decreasing = TRUE)
     yidx <- order(abs(pcaobj$loadings[,y]), decreasing = TRUE)
-    vars <- unique(c(
-      rownames(pcaobj$loadings)[xidx][seq_len(ntopLoadings)],
-      rownames(pcaobj$loadings)[yidx][seq_len(ntopLoadings)]))
+    if (!is.null(LoadingsNames)) {
+      # validate provided names exist in loadings
+      missing.names <- setdiff(LoadingsNames, rownames(pcaobj$loadings))
+      if (length(missing.names) > 0) {
+        stop(paste0('The following LoadingsNames are not present in pcaobj$loadings: ',
+          paste(missing.names, collapse = ', ')))
+      }
+      vars <- unique(LoadingsNames)
+    } else {
+      vars <- unique(c(
+        rownames(pcaobj$loadings)[xidx][seq_len(ntopLoadings)],
+        rownames(pcaobj$loadings)[yidx][seq_len(ntopLoadings)]))
+    }
 
     # get scaling parameter to match between variable loadings and rotated loadings
     r <- min(
