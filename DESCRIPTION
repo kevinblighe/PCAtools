@@ -14,45 +14,46 @@ Depends:
   ggplot2,
   ggrepel
 Imports:
-  lattice,
-  grDevices,
-  cowplot,
-  methods,
-  reshape2,
-  stats,
-  Matrix,
-  DelayedMatrixStats,
-  DelayedArray,
-  beachmat,
-  BiocSingular,
-  BiocParallel,
-  Rcpp,
-  dqrng
+    lattice,
+    grDevices,
+    cowplot,
+    methods,
+    reshape2,
+    stats,
+    Matrix,
+    DelayedMatrixStats,
+    DelayedArray,
+    beachmat (>= 2.21.1),
+    BiocSingular,
+    BiocParallel,
+    Rcpp,
+    dqrng,
+    ggalt
 Suggests:
-  testthat,
-  scran,
-  BiocGenerics,
-  knitr,
-  Biobase,
-  GEOquery,
-  hgu133a.db,
-  ggplotify,
-  RMTstat,
-  ggalt,
-  DESeq2,
-  airway,
-  org.Hs.eg.db,
-  magrittr,
-  rmarkdown
+    testthat,
+    scran,
+    BiocGenerics,
+    knitr,
+    Biobase,
+    GEOquery,
+    hgu133a.db,
+    ggplotify,
+    RMTstat,
+    DESeq2,
+    airway,
+    org.Hs.eg.db,
+    magrittr,
+    rmarkdown
 LinkingTo:
   Rcpp,
   beachmat,
   BH,
-  dqrng
+  dqrng,
+  assorthead
 URL: https://github.com/kevinblighe/PCAtools
 biocViews: RNASeq, ATACSeq, GeneExpression, Transcription, SingleCell, PrincipalComponent
 VignetteBuilder:
   knitr
 SystemRequirements: C++17
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.2
 Encoding: UTF-8
