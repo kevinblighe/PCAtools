@@ -23,7 +23,7 @@ Imports:
   Matrix,
   DelayedMatrixStats,
   DelayedArray,
-  beachmat,
+  beachmat (>= 2.21.1),
   BiocSingular,
   BiocParallel,
   Rcpp,
@@ -47,6 +47,7 @@ Suggests:
 LinkingTo:
   Rcpp,
   beachmat,
+  assorthead,
   BH,
   dqrng
 URL: https://github.com/kevinblighe/PCAtools
