@@ -298,7 +298,7 @@ plotloadings <- function(
     theme(panel.border = element_rect(
       colour = borderColour,
       fill = NA,
-      size = borderWidth))
+      linewidth = borderWidth))
 
   # gridlines
   if (gridlines.major == TRUE) {
