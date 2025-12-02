@@ -55,5 +55,5 @@ biocViews: RNASeq, ATACSeq, GeneExpression, Transcription, SingleCell, Principal
 VignetteBuilder:
   knitr
 SystemRequirements: C++17
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.3
 Encoding: UTF-8

@@ -150,6 +150,7 @@
 #' @param borderColour Colour of the border on the x and y axes.
 #' @param returnPlot Logical, indicating whether or not to return the plot
 #'   object.
+#' @param flip_axes Logical, indicating whether to swap the x- and y-axes.
 #'
 #' @details Draw a bi-plot, comparing 2 selected principal components / eigenvectors.
 #'
@@ -293,7 +294,8 @@ biplot <- function(
   gridlines.minor = TRUE,
   borderWidth = 0.8,
   borderColour = 'black',
-  returnPlot = TRUE)
+  returnPlot = TRUE,
+  flip_axes = FALSE)
 {
 
   labFun <- xidx <- yidx <- NULL
@@ -367,8 +369,8 @@ biplot <- function(
   }
 
   # create the plot object
-  plot <- ggplot(plotobj, aes(x = x, y = y)) + th +
-
+  xy_aes <- if (flip_axes) aes(x = y, y = x) else aes(x = x, y = y)
+  plot <- ggplot(plotobj, xy_aes) + th +
     guides(fill = guide_legend(),
       shape = guide_legend(),
       colour = guide_legend(override.aes = list(size = legendIconSize)))
@@ -500,7 +502,7 @@ biplot <- function(
   # add elements to the plot for title, subtitle, caption, and legend titles
   plot <- plot + labs(title = title, 
     subtitle = subtitle, caption = caption,
-    fill = '', colour = colLegendTitle, shape = shapeLegendTitle)
+    fill = NULL, colour = colLegendTitle, shape = shapeLegendTitle)
 
   # add elements to the plot for vlines and hlines
   if (!is.null(vline)) {

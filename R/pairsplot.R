@@ -259,7 +259,8 @@ pairsplot <- function(
           gridlines.minor = gridlines.minor,
           borderWidth = borderWidth,
           borderColour = borderColour,
-          returnPlot = returnPlot)
+          returnPlot = returnPlot,
+          flip_axes = TRUE)
 
        # assign list name to plot, e.g. 'PC1 Vs PC3'
        names(biplots)[nplots] <- paste(components[i], 'Vs', components[j])
@@ -332,7 +333,6 @@ pairsplot <- function(
 
     # apply titles / axis changes
     biplots.final <- lapply(biplots.final, '+', margin)
-    biplots.final <- lapply(biplots.final, '+', coord_flip())
 
     # return plot?
     if (returnPlot) {
