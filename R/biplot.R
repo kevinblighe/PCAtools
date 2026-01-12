@@ -614,7 +614,7 @@ biplot <- function(
     if (encircleFill) {
       if (is.null(encircleLineCol)) {
         plot <- plot +
-          ggalt::geom_encircle(
+          ggforce::geom_mark_ellipse(
             aes(group = col,
               fill = col,
               colour = col),
@@ -624,7 +624,7 @@ biplot <- function(
             na.rm = TRUE)
       } else {
         plot <- plot +
-          ggalt::geom_encircle(
+          ggforce::geom_mark_ellipse(
             aes(group = col,
               fill = col),
             colour = encircleLineCol,
@@ -636,7 +636,7 @@ biplot <- function(
     } else {
       if (is.null(encircleLineCol)) {
         plot <- plot +
-          ggalt::geom_encircle(
+          ggforce::geom_mark_ellipse(
             aes(group = col,
               colour = col),
             fill = NA,
@@ -646,7 +646,7 @@ biplot <- function(
             na.rm = TRUE)
       } else {
         plot <- plot +
-          ggalt::geom_encircle(
+          ggforce::geom_mark_ellipse(
             aes(group = col),
             colour = encircleLineCol,
             fill = NA,
