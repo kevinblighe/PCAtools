@@ -1,10 +1,11 @@
 Package: PCAtools
 Type: Package
 Title: PCAtools: Everything Principal Components Analysis
-Version: 2.23.1
+Version: 2.23.2
 Authors@R: c(
-    person("Jared", "Andrews", role = c("aut", "cre"), email = "jared.andrews07@gmail.com"),
     person("Kevin", "Blighe", role = c("aut")),
+    person("Jared", "Andrews", role = c("aut", "cre"), email = "jared.andrews07@gmail.com",
+        orcid = "0000-0002-0780-6248"),
     person("Anna-Leigh", "Brown", role = c("ctb")),
     person("Vincent", "Carey", role = c("ctb")),
     person("Guido", "Hooiveld", role = c("ctb")),
@@ -24,6 +25,7 @@ Imports:
   Matrix,
   DelayedMatrixStats,
   DelayedArray,
+  beachmat (>= 2.21.1),
   BiocSingular,
   BiocParallel,
   Rcpp,
@@ -49,13 +51,13 @@ Suggests:
 LinkingTo:
   Rcpp,
   beachmat,
+  assorthead,
   BH,
   dqrng
 URL: https://github.com/kevinblighe/PCAtools
 biocViews: RNASeq, ATACSeq, GeneExpression, Transcription, SingleCell, PrincipalComponent
 VignetteBuilder:
   knitr
-SystemRequirements: C++11
-RoxygenNote: 7.1.1
+SystemRequirements: C++17
+RoxygenNote: 7.3.3
 Encoding: UTF-8
-

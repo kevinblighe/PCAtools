@@ -119,11 +119,6 @@ based on absolute ordered variable loading for each PC in the biplot.
 As a result of looking across 2 PCs, it can occur whereby greater than
 this number are actually displayed.}
 
-\item{LoadingsNames}{Optional character vector of variable names to display
-as loadings. If provided, these names will be used instead of selecting the
-top variables by absolute loading magnitude. All names must be present in
-\code{rownames(pcaobj$loadings)}.}
-
 \item{showLoadingsNames}{Logical, indicating to show variable loadings names
 or not.}
 
