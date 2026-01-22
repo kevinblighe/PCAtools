@@ -119,6 +119,9 @@ based on absolute ordered variable loading for each PC in the biplot.
 As a result of looking across 2 PCs, it can occur whereby greater than
 this number are actually displayed.}
 
+\item{LoadingsNames}{Names of variable loadings to display. If provided,
+this overrides 'ntopLoadings'.}
+
 \item{showLoadingsNames}{Logical, indicating to show variable loadings names
 or not.}
 

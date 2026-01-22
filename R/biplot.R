@@ -11,6 +11,8 @@
 #'   based on absolute ordered variable loading for each PC in the biplot.
 #'   As a result of looking across 2 PCs, it can occur whereby greater than
 #'   this number are actually displayed.
+#' @param LoadingsNames Names of variable loadings to display. If provided,
+#'   this overrides 'ntopLoadings'.
 #' @param showLoadingsNames Logical, indicating to show variable loadings names
 #'   or not.
 #' @param colLoadingsNames If 'showLoadings == TRUE', colour of text labels.
@@ -98,7 +100,7 @@
 #' @param ellipseLineCol Colour of the ellipse line when 'ellipse == TRUE'.
 #' @param xlim Limits of the x-axis.
 #' @param ylim Limits of the y-axis.
-#' @param lab A vector containing labels to add to the plot. 
+#' @param lab A vector containing labels to add to the plot.
 #' @param labSize Size of labels.
 #' @param boxedLabels Logical, draw text labels in boxes.
 #' @param selectLab A vector containing a subset of lab to plot.
