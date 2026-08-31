@@ -103,7 +103,7 @@ biplot(
 )
 }
 \arguments{
-\item{pcaobj}{Object of class 'pca' created by pca().}
+\item{pcaobj}{Object of class 'pca' created by [pca()].}
 
 \item{x}{A principal component to plot on x-axis. All principal component
 names are stored in pcaobj$label.}
@@ -343,7 +343,7 @@ object.}
 \item{flip_axes}{Logical, indicating whether to swap the x- and y-axes.}
 }
 \value{
-A \code{\link{ggplot2}} object.
+A `ggplot2` object.
 }
 \description{
 Draw a bi-plot, comparing 2 selected principal components / eigenvectors.

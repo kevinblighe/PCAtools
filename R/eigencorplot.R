@@ -1,6 +1,6 @@
 #' Correlate principal components to continuous variable metadata and test significancies of these.
 #'
-#' @param pcaobj Object of class 'pca' created by pca().
+#' @param pcaobj Object of class 'pca' created by [pca()].
 #' @param components The principal components to be included in the plot.
 #' @param metavars A vector of column names in metadata representing continuos
 #'   variables.
@@ -63,7 +63,7 @@
 #'
 #' @details Correlate principal components to continuous variable metadata and test significancies of these.
 #'
-#' @return A \code{\link{lattice}} object.
+#' @return A `lattice` object.
 #'
 #' @author Kevin Blighe <kevin@clinicalbioinformatics.co.uk>
 #'

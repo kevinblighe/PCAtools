@@ -164,7 +164,7 @@ First, let's read in and prepare the data:
   library(GEOquery)
 
   # load series and platform data from GEO
-    gset <- getGEO('GSE2990', GSEMatrix = TRUE, getGPL = FALSE)
+    gset <- getGEO('GSE2990', GSEMatrix = TRUE, getGPL = FALSE, returnType = "ExpressionSet")
     mat <- exprs(gset[[1]])
 
   # remove Affymetrix control probes

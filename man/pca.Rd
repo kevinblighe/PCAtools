@@ -38,7 +38,7 @@ REQUIRED for approximate SVD methods.}
 \item{transposed}{Is \code{mat} transposed? DEFAULT = FALSE. If set to TRUE,
 samples are in the rows and variables are in the columns.}
 
-\item{BSPARAM}{A \linkS4class{BiocSingularParam} object specifying the 
+\item{BSPARAM}{A [BiocParallel::BiocSingularParam-class] object specifying the 
 algorithm to use for the SVD. Defaults to an exact SVD.}
 }
 \value{

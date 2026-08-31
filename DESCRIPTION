@@ -1,7 +1,7 @@
 Package: PCAtools
 Type: Package
 Title: PCAtools: Everything Principal Components Analysis
-Version: 2.25.0
+Version: 2.25.1
 Authors@R: c(
     person("Kevin", "Blighe", role = c("aut")),
     person("Jared", "Andrews", role = c("aut", "cre"), email = "jared.andrews07@gmail.com",
@@ -29,7 +29,8 @@ Imports:
   BiocSingular,
   BiocParallel,
   Rcpp,
-  dqrng
+  dqrng,
+  scales
 Suggests:
   testthat,
   scran,
@@ -40,7 +41,6 @@ Suggests:
   hgu133a.db,
   ggplotify,
   RMTstat,
-  ggforce,
   concaveman,
   DESeq2,
   airway,
@@ -59,5 +59,5 @@ biocViews: RNASeq, ATACSeq, GeneExpression, Transcription, SingleCell, Principal
 VignetteBuilder:
   knitr
 SystemRequirements: C++17
-RoxygenNote: 7.3.3
 Encoding: UTF-8
+Config/roxygen2/version: 8.1.0

@@ -138,7 +138,7 @@ gridlines.}
 object.}
 }
 \value{
-A \code{\link{ggplot2}} object.
+A `ggplot2` object.
 }
 \description{
 Draw a SCREE plot, showing the distribution of explained variance across all or select principal components / eigenvectors.

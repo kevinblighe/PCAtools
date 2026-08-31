@@ -1,12 +1,12 @@
 #' Draw multiple bi-plots.
 #'
-#' @param pcaobj Object of class 'pca' created by pca().
+#' @param pcaobj Object of class 'pca' created by `pca()`.
 #' @param components The principal components to be included in the plot. These
-#'   will be compared in a pairwise fashion via multiple calls to biplot().
+#'   will be compared in a pairwise fashion via multiple calls to `biplot()`.
 #' @param triangle Logical, indicating whether or not to draw the plots in the
 #'   upper panel in a triangular arrangement? Principal component names will be
 #'   labeled along the diagonal.
-#' @param trianglelabSize Size of p rincipal component label (when triangle =
+#' @param trianglelabSize Size of principal component label (when triangle =
 #'   TRUE).
 #' @param plotaxes Logical, indicating whether or not to draw the axis tick,
 #'   labels, and titles.
@@ -17,21 +17,21 @@
 #' @param nrow If triangle = FALSE, the number of rows in the final merged
 #'   plot.
 #' @param x A principal component to plot on x-axis. All principal component
-#'   names are stored in pcaobj$label.
+#'   names are stored in `pcaobj$label`.
 #' @param y A principal component to plot on y-axis. All principal component
-#'   names are stored in pcaobj$label.
+#'   names are stored in `pcaobj$label`.
 #' @param colby If NULL, all points will be coloured differently. If not NULL,
 #'   value is assumed to be a column name in pcaobj$metadata relating to some
 #'   grouping/categorical variable.
 #' @param colkey Vector of name-value pairs relating to value passed to 'col',
-#'   e.g., c(A='forestgreen', B='gold').
+#'   e.g., `c(A='forestgreen', B='gold')`.
 #' @param singlecol If specified, all points will be shaded by this colour.
 #'   Overrides 'col'.
 #' @param shape If NULL, all points will be have the same shape. If not NULL,
-#'   value is assumed to be a column name in pcaobj$metadata relating to some
+#'   value is assumed to be a column name in `pcaobj$metadata` relating to some
 #'   grouping/categorical variable.
 #' @param shapekey Vector of name-value pairs relating to value passed to
-#'   'shape', e.g., c(A=10, B=21).
+#'   'shape', e.g., `c(A=10, B=21)`.
 #' @param pointSize Size of plotted points.
 #' @param legendPosition Position of legend ('top', 'bottom', 'left', 'right',
 #'   'none').
@@ -59,14 +59,14 @@
 #' @param titleLabSize Size of plot title.
 #' @param hline Draw one or more horizontal lines passing through this/these
 #'   values on y-axis. For single values, only a single numerical value is
-#'   necessary. For multiple lines, pass these as a vector, e.g., c(60,90).
+#'   necessary. For multiple lines, pass these as a vector, e.g., `c(60,90)`.
 #' @param hlineType Line type for hline ('blank', 'solid', 'dashed', 'dotted',
 #'   'dotdash', 'longdash', 'twodash').
 #' @param hlineCol Colour of hline.
 #' @param hlineWidth Width of hline.
 #' @param vline Draw one or more vertical lines passing through this/these
 #'   values on x-axis. For single values, only a single numerical value is
-#'   necessary. For multiple lines, pass these as a vector, e.g., c(60,90).
+#'   necessary. For multiple lines, pass these as a vector, e.g., `c(60,90)`.
 #' @param vlineType Line type for vline ('blank', 'solid', 'dashed', 'dotted',
 #'   'dotdash', 'longdash', 'twodash').
 #' @param vlineCol Colour of vline.
@@ -82,7 +82,7 @@
 #'
 #' @details Draw multiple bi-plots.
 #'
-#' @return A \code{\link{cowplot}} object.
+#' @return A `cowplot` object.
 #'
 #' @author Kevin Blighe <kevin@clinicalbioinformatics.co.uk>
 #'

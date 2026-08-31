@@ -179,7 +179,7 @@ gridlines.}
 object.}
 }
 \value{
-A \code{\link{ggplot2}} object.
+A `ggplot2` object.
 }
 \description{
 Plot the component loadings for selected principal components / eigenvectors and label variables driving variation along these.

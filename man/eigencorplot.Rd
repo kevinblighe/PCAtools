@@ -50,7 +50,7 @@ eigencorplot(
 )
 }
 \arguments{
-\item{pcaobj}{Object of class 'pca' created by pca().}
+\item{pcaobj}{Object of class 'pca' created by [pca()].}
 
 \item{components}{The principal components to be included in the plot.}
 
@@ -153,7 +153,7 @@ values.}
 object.}
 }
 \value{
-A \code{\link{lattice}} object.
+A `lattice` object.
 }
 \description{
 Correlate principal components to continuous variable metadata and test significancies of these.

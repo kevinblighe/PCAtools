@@ -54,7 +54,7 @@
 #'
 #' @details Draw a SCREE plot, showing the distribution of explained variance across all or select principal components / eigenvectors.
 #'
-#' @return A \code{\link{ggplot2}} object.
+#' @return A `ggplot2` object.
 #'
 #' @author Kevin Blighe <kevin@clinicalbioinformatics.co.uk>
 #'

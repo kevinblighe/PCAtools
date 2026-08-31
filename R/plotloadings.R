@@ -71,7 +71,7 @@
 #'
 #' @details Plot the component loadings for selected principal components / eigenvectors and label variables driving variation along these.
 #'
-#' @return A \code{\link{ggplot2}} object.
+#' @return A `ggplot2` object.
 #'
 #' @author Kevin Blighe <kevin@clinicalbioinformatics.co.uk>
 #'

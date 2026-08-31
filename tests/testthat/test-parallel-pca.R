@@ -43,7 +43,7 @@ test_that("parallelPCA respects the seed", {
     expect_identical(ncol(ipcs), ncol(pcs))
 
     # With parallelization.
-    BPPARAM <- BiocParallel::SnowParam(3) # define BEFORE set.seed, otherwise this sets its own seed.
+    BPPARAM <- BiocParallel::SnowParam(2) # define BEFORE set.seed, otherwise this sets its own seed.
     set.seed(100)
     alt <- parallelPCA(lcounts, niters=3, BPPARAM=BPPARAM)
     expect_identical(alt, pcs)

@@ -20,17 +20,17 @@ parallelPCA(
 
 \item{max.rank}{Integer scalar specifying the maximum number of PCs to retain.}
 
-\item{...}{Further arguments to pass to \code{\link{pca}}.}
+\item{...}{Further arguments to pass to [pca()].}
 
 \item{niters}{Integer scalar specifying the number of iterations to use for the parallel analysis.}
 
 \item{threshold}{Numeric scalar representing the \dQuote{p-value} threshold above which PCs are to be ignored.}
 
-\item{transposed}{Logical scalar indicating whether \code{mat} is transposed, i.e., rows are samples and columns are variables.}
+\item{transposed}{Logical scalar indicating whether `mat` is transposed, i.e., rows are samples and columns are variables.}
 
-\item{BSPARAM}{A \linkS4class{BiocSingularParam} object specifying the algorithm to use for PCA.}
+\item{BSPARAM}{A [BiocParallel::BiocSingularParam-class] object specifying the algorithm to use for PCA.}
 
-\item{BPPARAM}{A \linkS4class{BiocParallelParam} object specifying how the iterations should be paralellized.}
+\item{BPPARAM}{A [BiocParallel::BiocParallelParam-class] object specifying how the iterations should be paralellized.}
 }
 \value{
 A list is returned, containing:

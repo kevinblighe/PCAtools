@@ -2,12 +2,12 @@
 #'
 #' @param mat A numeric matrix where rows correspond to variables and columns correspond to samples.
 #' @param max.rank Integer scalar specifying the maximum number of PCs to retain.
-#' @param ... Further arguments to pass to \code{\link{pca}}.
+#' @param ... Further arguments to pass to [pca()].
 #' @param niters Integer scalar specifying the number of iterations to use for the parallel analysis.
 #' @param threshold Numeric scalar representing the \dQuote{p-value} threshold above which PCs are to be ignored.
-#' @param transposed Logical scalar indicating whether \code{mat} is transposed, i.e., rows are samples and columns are variables.
-#' @param BSPARAM A \linkS4class{BiocSingularParam} object specifying the algorithm to use for PCA.
-#' @param BPPARAM A \linkS4class{BiocParallelParam} object specifying how the iterations should be paralellized.
+#' @param transposed Logical scalar indicating whether `mat` is transposed, i.e., rows are samples and columns are variables.
+#' @param BSPARAM A [BiocParallel::BiocSingularParam-class] object specifying the algorithm to use for PCA.
+#' @param BPPARAM A [BiocParallel::BiocParallelParam-class] object specifying how the iterations should be paralellized.
 #'
 #' @details Horn's parallel analysis involves shuffling observations within each row of
 #'   \code{x} to create a permuted matrix.  PCA is performed on the permuted matrix
